@@ -13,7 +13,6 @@ import java.io.IOException;
 public class ConstantPoolParser {
     
     public CPEntity parseConstantPoolEntity(DataInputStream dis) throws IOException{
-        
         short cstType = (short) dis.readUnsignedByte();
         CPEntity ent = null;
         
@@ -68,59 +67,112 @@ public class ConstantPoolParser {
         return ent;
     }
     
-    public CPClass parseCPClass(DataInputStream dis){
-        return null;
+    public CPClass parseCPClass(DataInputStream dis) throws IOException{
+        System.out.println("Parsing CPClass");
+        CPClass ent = new CPClass();
+        ent.nameIndex = dis.readUnsignedShort();
+        return ent;
     }
     
-    public CPDouble parseCPDouble(DataInputStream dis){
-        return null;
+    public CPDouble parseCPDouble(DataInputStream dis) throws IOException{
+        System.out.println("Parsing CPDouble");
+        CPDouble ent = new CPDouble();
+        ent.doubleVal = dis.readDouble();
+        return ent;
     }
     
-    public CPFieldRef parseCPFieldRef(DataInputStream dis){
-        return null;
+    public CPFieldRef parseCPFieldRef(DataInputStream dis) throws IOException{
+        System.out.println("Parsing CPFieldRef");
+        CPFieldRef ent = new CPFieldRef();
+        ent.classIndex = dis.readUnsignedShort();
+        ent.nameAndTypeIndex = dis.readUnsignedShort();
+        return ent;
     }
     
-    public CPFloat parseCPFloat(DataInputStream dis){
-        return null;
+    public CPFloat parseCPFloat(DataInputStream dis) throws IOException{
+        System.out.println("Parsing CPFloat");
+        CPFloat ent = new CPFloat();
+        ent.floatVal = dis.readFloat();
+        return ent;
     }
     
-    public CPInteger parseCPInteger(DataInputStream dis){
-        return null;
+    public CPInteger parseCPInteger(DataInputStream dis) throws IOException{
+        System.out.println("Parsing CPInteger");
+        CPInteger ent = new CPInteger();
+        ent.intVal = dis.readInt();
+        return ent;
     }
     
-    public CPInterfaceMethodRef parseCPInterfaceMethodRef(DataInputStream dis){
-        return null;
+    public CPInterfaceMethodRef parseCPInterfaceMethodRef(DataInputStream dis) throws IOException{
+        System.out.println("Parsing CPInterfaceMethodRef");
+        CPInterfaceMethodRef ent = new CPInterfaceMethodRef();
+        ent.classIndex = dis.readUnsignedShort();
+        ent.nameAndTypeIndex = dis.readUnsignedShort();
+        return ent;
     }
     
-    public CPInvokeDynamic parseCPInvokeDynamic(DataInputStream dis){
-        return null;
+    public CPInvokeDynamic parseCPInvokeDynamic(DataInputStream dis) throws IOException{
+        System.out.println("Parsing CPInvokeDynamic");
+        CPInvokeDynamic ent = new CPInvokeDynamic();
+        short c = dis.readShort();
+	ent.bootstrapMethodAttrIndex = dis.readShort();
+        ent.nameAndTypeIndex = dis.readShort();
+        return ent;
     }
     
-    public CPLong parseCPLong(DataInputStream dis){
-        return null;
+    public CPLong parseCPLong(DataInputStream dis) throws IOException{
+        System.out.println("Parsing CPLong");
+        CPLong ent = new CPLong();
+        ent.longVal = dis.readLong();
+        return ent;
     }
     
-    public CPMethodHandle parseCPMethodHandle(DataInputStream dis){
-        return null;
+    public CPMethodHandle parseCPMethodHandle(DataInputStream dis) throws IOException{
+        System.out.println("Parsing CPMethodHandle");
+        CPMethodHandle ent = new CPMethodHandle();
+        ent.referenceKind = dis.readShort();
+        ent.referenceIndex = dis.readShort();
+        
+        return ent;
     }
     
-    public CPMethodType parseCPMethodType(DataInputStream dis){
-        return null;
+    public CPMethodType parseCPMethodType(DataInputStream dis) throws IOException{
+        System.out.println("Parsing CPMethodType");
+        CPMethodType ent = new CPMethodType();
+        ent.descriptorIndex = dis.readShort();
+        return ent;
     }
     
-    public CPMethodref parseCPMethodref(DataInputStream dis){
-        return null;
+    public CPMethodref parseCPMethodref(DataInputStream dis) throws IOException{
+        System.out.println("Parsing CPMethodref");
+        CPMethodref ent = new CPMethodref();
+        ent.classIndex = dis.readShort();
+        ent.nameAndTypeIndex = dis.readShort();
+        return ent;
     }
     
-    public CPNameAndType parseCPNameAndType(DataInputStream dis){
-        return null;
+    public CPNameAndType parseCPNameAndType(DataInputStream dis) throws IOException{
+        System.out.println("Parsing CPNameAndType");
+        CPNameAndType ent = new CPNameAndType();
+        ent.nameIndex = dis.readUnsignedShort();
+        ent.descriptorIndex = dis.readUnsignedShort();
+        return ent;
     }
     
-    public CPString parseCPString(DataInputStream dis){
-        return null;
+    public CPString parseCPString(DataInputStream dis) throws IOException{
+        System.out.println("Parsing CPString");
+        CPString ent = new CPString();
+        ent.stringIndex = dis.readUnsignedShort();
+        return ent;
     }
     
-    public CPUtf8 parseCPUtf8(DataInputStream dis){
-        return null;
+    public CPUtf8 parseCPUtf8(DataInputStream dis) throws IOException{
+        System.out.println("Parsing CPUtf8");
+        CPUtf8 ent = new CPUtf8();
+        // load byte arry
+        ent.length = dis.readUnsignedShort();
+        ent.bytes = new byte[ent.length];
+        dis.read(ent.bytes);
+        return ent;
     }
 }

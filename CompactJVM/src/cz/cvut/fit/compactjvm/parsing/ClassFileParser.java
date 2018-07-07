@@ -3,6 +3,7 @@ package cz.cvut.fit.compactjvm.parsing;
 import cz.cvut.fit.compactjvm.core.ClassFile;
 import cz.cvut.fit.compactjvm.definitions.ConstantPoolType;
 import cz.cvut.fit.compactjvm.entities.CPEntity;
+import cz.cvut.fit.compactjvm.entities.FLEntity;
 import cz.cvut.fit.compactjvm.exceptions.ParsingException;
 import java.io.DataInputStream;
 import java.io.File;
@@ -59,7 +60,16 @@ public class ClassFileParser {
         if (!parseConstantPool(str, cls)) {
             return false;
         }
-        if (!parseClassDeclaration(str, cls)) {
+        if (!parseAccessFlags(str, cls)) {
+            return false;
+        }
+        if (!parseThis(str, cls)){
+            return false;
+        }
+        if (!parseSuper(str, cls)){
+            return false;
+        }
+        if (!parseInterfaces(str, cls)){
             return false;
         }
         if (!parseFields(str, cls)) {
@@ -80,6 +90,7 @@ public class ClassFileParser {
      * Checks whether first 4 bytes contain 0xCA, 0xFE, 0xBA, 0xBE
      */
     private boolean checkClassFile(DataInputStream dis) throws IOException {
+        System.out.println("Checking class file");
         int bt = dis.readInt();
         if (bt != 0xCAFEBABE) {
             System.out.println("Error while reading class file -> it must begin with bytes 0xCAFEBABE");
@@ -92,6 +103,7 @@ public class ClassFileParser {
      * 5th and 6th bit: minor version 7th and 8th bit: major version
      */
     private boolean parseVersion(DataInputStream dis, ClassFile cls) throws IOException {
+        System.out.println("Parsing version");
         short minor = dis.readShort();
         short major = dis.readShort();
 
@@ -105,32 +117,119 @@ public class ClassFileParser {
         return true;
     }
     
+    /**
+     *  9th and 10th bit: cst pool size, then constant pool[cpsize-1] 
+     */
     private boolean parseConstantPool(DataInputStream dis, ClassFile cls) throws IOException {
+        System.out.println("Parsing constant pool");
         int poolSize = dis.readUnsignedShort();
+        System.out.println("Pool size: "+poolSize);
+
+        // according to the specification, size is poolSize-1 :-)
+        cls.cpEntities = new CPEntity[poolSize-1];
+        
         ConstantPoolParser cpParser = new ConstantPoolParser();
 
-        for (int i = 0; i < poolSize; i++) {
+        // first index is 1
+        for (int i = 1; i < poolSize; ) {
             CPEntity ent = cpParser.parseConstantPoolEntity(dis);
             // in case of error, entity will be null
             if(ent == null) return false;
-            cls.cpEntities.add(ent);
+            
+            ent.byteIndex = i;
+            cls.cpEntities[i] = ent;
+            
+            // increment by size of this entity
+            i+=ent.getSize();
         }
         return true;
     }
 
-    private boolean parseClassDeclaration(DataInputStream dis, ClassFile cls) throws IOException {
+    /**
+     * 
+     * 1st and 2nd bit after CP: access flags
+     */
+    private boolean parseAccessFlags(DataInputStream dis, ClassFile cls) throws IOException {
+        System.out.println("Parsing access flags");
+        short accessFlags = dis.readShort();
+        cls.accessFlags = accessFlags;
+        
+        System.out.println("Access flags: "+Integer.toHexString(accessFlags));
+        
+        return true;
+    }
+    
+    /**
+     * 
+     * 3rd and 4th bit after CP: THIS class
+     */
+    private boolean parseThis(DataInputStream dis, ClassFile cls) throws IOException {
+        System.out.println("Parsing this");
+        
+        short index = dis.readShort();
+	cls.thisClassIndex = index;
+        System.out.println("This class index: "+index);
+        return true;
+    }
+    
+    /**
+     * 
+     * 5th and 6th bit after CP: SUPER class
+     */
+    private boolean parseSuper(DataInputStream dis, ClassFile cls) throws IOException {
+        System.out.println("Parsing super");
+        
+        short index = dis.readShort();
+	cls.superClassIndex = index;
+        System.out.println("Super class index: "+index);
+        return true;
+    }
+    
+    /**
+     * 
+     * 7th and 8th bit: interfaces_count, then interfaces[interfaces_count]
+     */
+    private boolean parseInterfaces(DataInputStream dis, ClassFile cls) throws IOException {
+        System.out.println("Parsing interfaces");
+        short intCount = dis.readShort();
+        cls.interfaceCount = intCount;
+	System.out.println("Interface count: "+intCount);
+	short interIndex = dis.readShort();
+        cls.interfaceIndex = interIndex;
+        System.out.println("Interface: "+interIndex);
+        
         return true;
     }
 
     private boolean parseFields(DataInputStream dis, ClassFile cls) throws IOException {
+        System.out.println("Parsing fields");
+        short fldCount = dis.readShort();
+        cls.fieldCount = fldCount;
+	System.out.println("Field count: "+fldCount);
+	
+        FieldInfoParser fldParser = new FieldInfoParser();
+        cls.fieldInfos = new FLEntity[fldCount];
+        
+        for (int i = 0; i < fldCount; i++) {
+	    FLEntity ent = fldParser.parseFieldEntity(dis);
+            // in case of error, entity will be null
+            if(ent == null) return false;
+            
+            cls.fieldInfos[i] = ent;
+        }
+        
         return true;
     }
 
     private boolean parseMethods(DataInputStream dis, ClassFile cls) throws IOException {
+        System.out.println("Parsing methods");
+        
         return true;
     }
 
     private boolean parseAttributes(DataInputStream dis, ClassFile cls) throws IOException {
+        System.out.println("Parsing attributes");
+        
         return true;
     }
 }
