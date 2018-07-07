@@ -1,8 +1,10 @@
 package cz.cvut.fit.compactjvm.core;
 
 import cz.cvut.fit.compactjvm.entities.CPEntity;
+import cz.cvut.fit.compactjvm.entities.EntAttribute;
 import cz.cvut.fit.compactjvm.entities.FLEntity;
-import java.util.ArrayList;
+import cz.cvut.fit.compactjvm.entities.MTHEntity;
+
 
 /**
  *
@@ -21,4 +23,8 @@ public class ClassFile {
     public short interfaceIndex;
     public short fieldCount; // number of fields
     public FLEntity[] fieldInfos; // field info
+    public short methodCount; // number of methods
+    public MTHEntity[] methodInfos; // method info
+    public short attributeCount; // number of attributes
+    public EntAttribute[] attributeInfos; // attribute info
 }

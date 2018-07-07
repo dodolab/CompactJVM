@@ -1,9 +1,10 @@
 package cz.cvut.fit.compactjvm.parsing;
 
 import cz.cvut.fit.compactjvm.core.ClassFile;
-import cz.cvut.fit.compactjvm.definitions.ConstantPoolType;
 import cz.cvut.fit.compactjvm.entities.CPEntity;
+import cz.cvut.fit.compactjvm.entities.EntAttribute;
 import cz.cvut.fit.compactjvm.entities.FLEntity;
+import cz.cvut.fit.compactjvm.entities.MTHEntity;
 import cz.cvut.fit.compactjvm.exceptions.ParsingException;
 import java.io.DataInputStream;
 import java.io.File;
@@ -223,13 +224,40 @@ public class ClassFileParser {
 
     private boolean parseMethods(DataInputStream dis, ClassFile cls) throws IOException {
         System.out.println("Parsing methods");
+        short methodCnt = dis.readShort();
+        cls.methodCount = methodCnt;
+        System.out.println("Method count: "+methodCnt);
+        
+        MethodInfoParser mthParser = new MethodInfoParser();
+        cls.methodInfos = new MTHEntity[methodCnt];
+        
+        for(int i=0; i< methodCnt; i++){
+            MTHEntity ent = mthParser.parseMethodEntity(dis);
+            // in case of error, entity will be null
+            if(ent == null) return false;
+            
+            cls.methodInfos[i] = ent;
+        }
+
         
         return true;
     }
 
     private boolean parseAttributes(DataInputStream dis, ClassFile cls) throws IOException {
         System.out.println("Parsing attributes");
-        
+        short attrsCnt = dis.readShort();
+        cls.attributeCount = attrsCnt;
+        System.out.println("Attributes count: "+attrsCnt);
+       
+        for(int i=0; i<attrsCnt; i++){
+            EntAttribute ent = new EntAttribute();
+            ent.nameIndex = dis.readShort();
+            // in case of error, entity will be null
+            if(ent == null) return false;
+            
+            cls.attributeInfos[i] = ent;
+        }
+
         return true;
     }
 }

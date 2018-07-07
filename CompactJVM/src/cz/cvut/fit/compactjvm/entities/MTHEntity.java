@@ -2,14 +2,14 @@ package cz.cvut.fit.compactjvm.entities;
 
 /**
  *
- * Field info entity
  * @author Adam Vesecky
  */
-public class FLEntity {
+public class MTHEntity {
+    
     public int accessFlags;
     public int nameIndex;
     public int descriptorIndex;
     public int attributesCount;
     
-    public EntAttribute[] attrs; // attributes
+    public EntAttribute[] attrs;
 }

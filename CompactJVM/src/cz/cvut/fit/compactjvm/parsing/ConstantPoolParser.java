@@ -172,6 +172,8 @@ public class ConstantPoolParser {
         // load byte arry
         ent.length = dis.readUnsignedShort();
         ent.bytes = new byte[ent.length];
+        // transform bytes to UTF8 string
+        ent.value = new String(ent.bytes, "UTF-8");  
         dis.read(ent.bytes);
         return ent;
     }
