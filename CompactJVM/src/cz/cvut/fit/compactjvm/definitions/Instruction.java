@@ -45,5 +45,6 @@ public class Instruction {
     //Invoke methods and return values
     public static final int IN_INVOKESTATIC = 0xb8; //184
     public static final int IN_RETURN = 0xb1; //177
+    public static final int IN_IRETURN = 0xac; //172
     // todo...
 }

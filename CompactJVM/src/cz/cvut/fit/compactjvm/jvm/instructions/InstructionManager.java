@@ -56,6 +56,7 @@ public class InstructionManager {
             
             case Instruction.IN_INVOKESTATIC: InvokeStaticInstruction.run(jvmStack, methodArea); break;
             case Instruction.IN_RETURN: ReturnInstruction.run(jvmStack); break;
+            case Instruction.IN_IRETURN: IReturnInstruction.run(jvmStack); break;
         }
     }
     
