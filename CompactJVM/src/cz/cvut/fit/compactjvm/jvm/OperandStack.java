@@ -24,6 +24,10 @@ public class OperandStack {
         this.operandStack = new Stack<>();
     }
         
+    public boolean isEmpty(){
+        return operandStack.isEmpty();
+    }
+    
     public boolean popBoolean() {
         return operandStack.pop() == 1;
     }

@@ -18,6 +18,7 @@ public class ILoadInstruction {
     public static void run(StackFrame stackFrame) {
         byte localVariableIndex = stackFrame.loadInstructionSingleParam();
         int value = stackFrame.localVariables.getInt(localVariableIndex);
+        System.out.println("ILoad: "+value);
         stackFrame.operandStack.pushInt(value);
     }
 

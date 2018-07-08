@@ -10,6 +10,8 @@ public class MTHEntity {
     public int nameIndex;
     public int descriptorIndex;
     public int attributesCount;
+    public String name;
+    public String descriptor;
     
     public Attribute[] attrs;
     

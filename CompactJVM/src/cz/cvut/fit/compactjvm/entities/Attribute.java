@@ -7,4 +7,5 @@ package cz.cvut.fit.compactjvm.entities;
 public class Attribute {
     public int nameIndex;
     public int length;
+    public String name;
 }

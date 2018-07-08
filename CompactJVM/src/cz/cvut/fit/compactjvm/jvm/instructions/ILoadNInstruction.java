@@ -17,6 +17,7 @@ public class ILoadNInstruction {
     
     public static void run(StackFrame stackFrame, int localVariableIndex) {
         int value = stackFrame.localVariables.getInt(localVariableIndex);
+        System.out.println("ILoadN: "+value);
         stackFrame.operandStack.pushInt(value);
     }
 

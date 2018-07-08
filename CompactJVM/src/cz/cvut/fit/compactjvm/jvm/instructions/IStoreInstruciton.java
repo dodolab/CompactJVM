@@ -22,6 +22,7 @@ public class IStoreInstruciton {
     public static void run(StackFrame stackFrame) {
         byte localVariableIndex = stackFrame.loadInstructionSingleParam();
         int value = stackFrame.operandStack.popInt();
+        System.out.println("IStore: "+value);
         stackFrame.localVariables.setInt(localVariableIndex, value);
     }
 

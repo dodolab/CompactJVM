@@ -19,7 +19,12 @@ import cz.cvut.fit.compactjvm.jvm.StackFrame;
 public class IMulInstruction {
     
     public static void run(StackFrame stackFrame) {
-        int value = stackFrame.operandStack.popInt() * stackFrame.operandStack.popInt();
+        int operand1 = stackFrame.operandStack.popInt();
+        int operand2 = stackFrame.operandStack.popInt();
+        
+        System.out.println("IMul: "+operand1+" * "+operand2);
+        
+        int value = operand1*operand2;
         stackFrame.operandStack.pushInt(value);
     }
 

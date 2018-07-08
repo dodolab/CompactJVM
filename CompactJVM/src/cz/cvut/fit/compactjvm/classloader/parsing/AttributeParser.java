@@ -89,7 +89,10 @@ public class AttributeParser {
         }
 
         // set name index at last
-        if(attr != null) attr.nameIndex = nameIndex;
+        if(attr != null){
+            attr.nameIndex = nameIndex;
+            attr.name = name;
+        }
         return attr;
     }
 

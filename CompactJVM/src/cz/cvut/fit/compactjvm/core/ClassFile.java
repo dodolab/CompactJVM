@@ -4,11 +4,13 @@ import cz.cvut.fit.compactjvm.definitions.ConstantPoolType;
 import cz.cvut.fit.compactjvm.entities.CPEntity;
 import cz.cvut.fit.compactjvm.entities.Attribute;
 import cz.cvut.fit.compactjvm.entities.CPClass;
+import cz.cvut.fit.compactjvm.entities.CPFieldRef;
 import cz.cvut.fit.compactjvm.entities.CPMethodref;
 import cz.cvut.fit.compactjvm.entities.CPNameAndType;
 import cz.cvut.fit.compactjvm.entities.CPUtf8;
 import cz.cvut.fit.compactjvm.entities.FLEntity;
 import cz.cvut.fit.compactjvm.entities.MTHEntity;
+import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 
 
 /**
@@ -42,12 +44,18 @@ public class ClassFile {
      * @param index
      * @return 
      */
-    public MTHEntity getMethod(int index) {
+    public MTHEntity getMethod(int index) throws LoadingException {
         if(index >= methodCount) {
-            return null;
-            //@todo nebo vyhodit vyjimku?
+            throw new LoadingException("Method not found");
         }
         return methodInfos[index];
+    }
+    
+    public FLEntity getField(int index) throws LoadingException{
+        if(index >= fieldCount){
+            throw new LoadingException("Field not found");
+        }
+        return fieldInfos[index];
     }
     
     /**
@@ -65,16 +73,36 @@ public class ClassFile {
      * @param methodRefIndex
      * @return 
      */
-    public MethodDefinition getMethodDefinition(int methodRefIndex) {
-        if(cpEntities[methodRefIndex].tag != ConstantPoolType.CPT_Methodref) return null;//@todo Exception
+    public MethodDefinition getMethodDefinition(int methodRefIndex) throws LoadingException {
+        if(cpEntities[methodRefIndex].tag != ConstantPoolType.CPT_Methodref) throw new LoadingException("Wrong method index");
         CPMethodref methodRef = (CPMethodref) cpEntities[methodRefIndex];
         CPNameAndType nameAndType = (CPNameAndType) cpEntities[methodRef.nameAndTypeIndex];
         int classNameIndex = ((CPClass) cpEntities[methodRef.classIndex]).nameIndex;
         String methodClass = ((CPUtf8) cpEntities[classNameIndex]).value;
         String methodName = ((CPUtf8) cpEntities[nameAndType.nameIndex]).value;
         String methodDescriptor = ((CPUtf8) cpEntities[nameAndType.descriptorIndex]).value;
+        
         MethodDefinition method = new MethodDefinition(methodClass, methodName, methodDescriptor);
         return method;
+    }
+    
+    /**
+     * Loads field definition from constant pool according to selected index
+     * @param fieldRefIndex
+     * @return 
+     */
+    public FieldDefinition getFieldDefinition(int fieldRefIndex) throws LoadingException{
+        if(cpEntities[fieldRefIndex].tag != ConstantPoolType.CPT_Fieldref) throw new LoadingException("Wrong field index");
+        
+        CPFieldRef fieldRef = (CPFieldRef) cpEntities[fieldRefIndex];
+        CPNameAndType nameAndType = (CPNameAndType) cpEntities[fieldRef.nameAndTypeIndex];
+        int classNameIndex = ((CPClass) cpEntities[fieldRef.classIndex]).nameIndex;
+        String fieldClass = ((CPUtf8) cpEntities[classNameIndex]).value;
+        String fieldName = ((CPUtf8) cpEntities[nameAndType.nameIndex]).value;
+        String fieldDescriptor = ((CPUtf8) cpEntities[nameAndType.descriptorIndex]).value;
+        
+        FieldDefinition fieldDef = new FieldDefinition(fieldClass, fieldName, fieldDescriptor);
+        return fieldDef;
     }
 
     /**
@@ -91,5 +119,20 @@ public class ClassFile {
         }
         return 0;
         //@todo throw exception
+    }
+    
+    /**
+     * Gets field index by selected name and descriptor
+     * @param fieldName
+     * @param fieldDescriptor
+     * @return 
+     */
+    public int getFieldIndex(String fieldName, String fieldDescriptor) throws LoadingException{
+        for(int i=0; i< fieldInfos.length; i++){
+            if(((CPUtf8) cpEntities[fieldInfos[i].nameIndex]).value.equals(fieldName)
+                && ((CPUtf8) cpEntities[fieldInfos[i].descriptorIndex]).value.equals(fieldDescriptor))
+            return i;
+        }
+        throw new LoadingException("Field index not found");
     }
 }

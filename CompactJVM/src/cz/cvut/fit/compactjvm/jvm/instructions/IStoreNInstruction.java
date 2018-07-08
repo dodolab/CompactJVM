@@ -20,6 +20,7 @@ public class IStoreNInstruction {
      */
     public static void run(StackFrame stackFrame, int localVariableIndex) {
         int value = stackFrame.operandStack.popInt();
+        System.out.println("IStoreN: "+value);
         stackFrame.localVariables.setInt(localVariableIndex, value);
     }
 

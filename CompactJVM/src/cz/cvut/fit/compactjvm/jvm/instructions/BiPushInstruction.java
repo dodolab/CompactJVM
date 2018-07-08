@@ -21,6 +21,7 @@ public class BiPushInstruction {
      */
     public static void run(StackFrame stackFrame) {
         byte value = stackFrame.loadInstructionSingleParam();
+        System.out.println("BiPush: "+value);
         stackFrame.operandStack.pushInt(value);
     }
 

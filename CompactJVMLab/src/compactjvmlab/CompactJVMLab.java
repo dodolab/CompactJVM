@@ -26,7 +26,9 @@ public class CompactJVMLab {
     public static void main() {
         /*int local = 7;
         local = local + 1;*/
-        TestClass.testMethod(4, 5);
+        int test1 = TestClass.testMethod(4, 5);
+        int test2 = TestClass.testMethod(10,8);
+        int test3 = TestClass.testMethod(1,1);
     }
     /*public static int staticPublicProm;
     

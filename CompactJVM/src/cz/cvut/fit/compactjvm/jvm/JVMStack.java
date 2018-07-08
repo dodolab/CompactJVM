@@ -27,6 +27,7 @@ public class JVMStack {
         stack.add(frame);
     }
     
+    
     public void removeCurrentFrame() {
         stack.pop();
     }

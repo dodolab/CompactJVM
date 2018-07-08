@@ -16,6 +16,7 @@ public class PutStaticInstruction {
     public static void run(StackFrame stackFrame) {
         byte localVariableIndex = stackFrame.loadInstructionSingleParam();
         int value = stackFrame.localVariables.getInt(localVariableIndex);
+        System.out.println("PutStatic: "+value);
         stackFrame.operandStack.pushInt(value);
     }
     

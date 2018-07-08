@@ -16,6 +16,7 @@ import cz.cvut.fit.compactjvm.jvm.StackFrame;
 public class IConstIInstruction {
     
     public static void run(StackFrame stackFrame, int value) {
+        System.out.println("IConst: "+value);
         stackFrame.operandStack.pushInt(value);
     }
 

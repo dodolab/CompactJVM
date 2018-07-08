@@ -6,6 +6,8 @@
 package cz.cvut.fit.compactjvm.jvm;
 
 import cz.cvut.fit.compactjvm.core.ClassFile;
+import cz.cvut.fit.compactjvm.entities.MTHEntity;
+import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.instructions.InstructionManager;
 
 /**
@@ -41,29 +43,18 @@ public class JVMThread {
      * @param className
      * @param methodName 
      */
-    public void run(String className) {
-        invokeMethod(className, 2); //@todo nacteni prvni spousteci metody - ted natvrdo vyberu metodu, ktera scita
-        while(jvmStack.getCurrentFrame().hasMoreInstructions()) {
+    public void run(String className) throws LoadingException {
+        
+        // get main method
+        ClassFile classFile = methodArea.getClassFile(className);
+        int mainMethodIndex = classFile.getMethodIndex("main", "()V");
+        StackFrame currentFrame = new StackFrame(classFile, mainMethodIndex);
+        jvmStack.push(currentFrame);
+        
+        while(!jvmStack.isEmpty() && jvmStack.getCurrentFrame().hasMoreInstructions()) {
             instructionManager.runInstruction(jvmStack.getCurrentFrame().getNextInstruction());
         }
     }
-    
-    /**
-     * Vyvola metodu
-     * @todo to bude asi trochu jinak, metoda se bude vyvolavat v instrukci - toto mozna zustane na prvni vyvolani spousteci metody
-     * @param className
-     * @param method
-     * @param methodArea 
-     */
-    private void invokeMethod(String className, int method) {
-        ClassFile classFile = methodArea.getClassFile(className);
-        StackFrame currentFrame = new StackFrame(classFile, method);
-        jvmStack.push(currentFrame);
-    }
-    /*
-    private void returnValueMethod() {
-    
-    }
-    */
+
     
 }

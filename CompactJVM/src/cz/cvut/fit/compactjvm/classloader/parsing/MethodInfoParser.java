@@ -27,6 +27,9 @@ public class MethodInfoParser {
         String name = ((CPUtf8)cls.cpEntities[ent.nameIndex]).value;
         String descriptor = ((CPUtf8)cls.cpEntities[ent.descriptorIndex]).value;
         
+        ent.name = name;
+        ent.descriptor = descriptor;
+        
         System.out.println("    Parsed method entity; access flags: "+ent.accessFlags + 
                 " ;name: "+name+" ;descriptor:"+descriptor+
                 " ;attributesCount: "+ent.attributesCount);

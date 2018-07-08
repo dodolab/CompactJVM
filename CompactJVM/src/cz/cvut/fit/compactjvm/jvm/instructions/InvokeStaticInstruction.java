@@ -8,6 +8,7 @@ package cz.cvut.fit.compactjvm.jvm.instructions;
 import cz.cvut.fit.compactjvm.core.ClassFile;
 import cz.cvut.fit.compactjvm.core.MethodDefinition;
 import cz.cvut.fit.compactjvm.core.Word;
+import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.JVMStack;
 import cz.cvut.fit.compactjvm.jvm.MethodArea;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
@@ -21,16 +22,20 @@ public class InvokeStaticInstruction {
     
     public static final int PARAM_COUNT = 2;
 
-    public static void run(JVMStack stack, MethodArea methodArea) {
+    public static void run(JVMStack stack, MethodArea methodArea) throws LoadingException {
         byte[] bytes = stack.getCurrentFrame().loadInstructionParams(PARAM_COUNT);
         int methodRefIndex = Word.fromByteArray(bytes); //index v CP ve tride, ktera invokuje, nikoliv v te, na ktere je metoda volana
         MethodDefinition method = stack.getCurrentFrame().associatedClass.getMethodDefinition(methodRefIndex);
+        
+        
+        
         ClassFile classFile = methodArea.getClassFile(method.getMethodClass());
         int methodIndex = classFile.getMethodIndex(method.getMethodName(), method.getMethodDescriptor());
         StackFrame frame = new StackFrame(classFile, methodIndex, method);
         loadArgumentsToLocalVariables(stack.getCurrentFrame(), frame, method);
         stack.push(frame);
-        //@todo parser na descriptor metody bude v tride MethodDefinition, tento objekt pridat do StackFrame
+        
+        System.out.println("InvokeStatic: "+method.getMethodName());
     }
     
     /**
@@ -40,6 +45,8 @@ public class InvokeStaticInstruction {
      * @param method
      */
     public static void loadArgumentsToLocalVariables(StackFrame currentFrame, StackFrame newFrame, MethodDefinition method) {
+       
+        System.out.println("LoadArgumentsToLocalVariables");
         int locIndex = method.getMethodParamsWordsCount();
         //Kdyz od locIndex odectu pocet slov vkladaneho argumentu, pak dostanu index,
         //na ktery mam do lokalnich promennych argument vlozit

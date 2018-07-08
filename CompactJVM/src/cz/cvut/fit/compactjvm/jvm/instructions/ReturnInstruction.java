@@ -11,16 +11,22 @@ import cz.cvut.fit.compactjvm.jvm.JVMStack;
  * Return void from method. The interpreter then returns control to the invoker
  * of the method, reinstating the frame of the invoker.
  * https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-6.html#jvms-6.5.return
+ *
  * @author Nick Nemame
  */
 public class ReturnInstruction {
-    
+
     /**
      * @param stack
      */
     public static void run(JVMStack stack) {
-        System.out.println("JUPII, KONEC: "+stack.getCurrentFrame().operandStack.popInt());
+        
+        while(!stack.getCurrentFrame().operandStack.isEmpty()){
+            stack.getCurrentFrame().operandStack.popInt();
+        }
         stack.removeCurrentFrame();
+        System.out.println("Executed return instruction");
+        
     }
 
 }

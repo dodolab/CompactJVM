@@ -8,6 +8,7 @@ package cz.cvut.fit.compactjvm.jvm;
 import cz.cvut.fit.compactjvm.core.ClassFile;
 import cz.cvut.fit.compactjvm.core.MethodDefinition;
 import cz.cvut.fit.compactjvm.entities.AttrCode;
+import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 
 /**
  *
@@ -32,7 +33,7 @@ public class StackFrame {
      * @param methodDefinition
      * 
      */
-    public StackFrame(ClassFile classFile, int invokedMethod, MethodDefinition methodDefinition) {
+    public StackFrame(ClassFile classFile, int invokedMethod, MethodDefinition methodDefinition) throws LoadingException {
         this(classFile, invokedMethod);
         this.methodDefinition = methodDefinition;
     }
@@ -41,7 +42,7 @@ public class StackFrame {
      * @param classFile
      * @param invokedMethod
      */
-    public StackFrame(ClassFile classFile, int invokedMethod) {
+    public StackFrame(ClassFile classFile, int invokedMethod) throws LoadingException {
         associatedClass = classFile;
         associatedMethod = invokedMethod;
         initializeFrame();
@@ -52,7 +53,7 @@ public class StackFrame {
      * - nacte seznam instrukci z volane metody
      * - inicializuje pole lokalnich promennych a zasobnik operandu
      */
-    private void initializeFrame() {
+    private void initializeFrame() throws LoadingException {
         codeAttribute = associatedClass.getMethod(associatedMethod).getCodeAttribute();
         int localVariablesCount = codeAttribute.maxLocals;
         localVariables = new LocalVariableArray(localVariablesCount);

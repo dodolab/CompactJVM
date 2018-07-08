@@ -4,6 +4,7 @@ import cz.cvut.fit.compactjvm.classloader.loading.ClassFileLoader;
 import cz.cvut.fit.compactjvm.core.ClassFile;
 import cz.cvut.fit.compactjvm.exceptions.ParsingException;
 import cz.cvut.fit.compactjvm.classloader.parsing.ClassFileParser;
+import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import java.io.IOException;
 
 /**
@@ -23,7 +24,7 @@ public class CompactJVM {
         methodArea.initialLoad(path);
     }
     
-    public void start(){
+    public void start() throws LoadingException{
         JVMThread thread = new JVMThread(methodArea);
         thread.run("compactjvmlab/CompactJVMLab"); //@todo zatim nacitam fixne porad ten puvodni soubor
     }

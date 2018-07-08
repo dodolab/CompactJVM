@@ -6,6 +6,7 @@
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
 import cz.cvut.fit.compactjvm.definitions.Instruction;
+import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.JVMStack;
 import cz.cvut.fit.compactjvm.jvm.JVMThread;
 import cz.cvut.fit.compactjvm.jvm.MethodArea;
@@ -29,7 +30,7 @@ public class InstructionManager {
         this.jvmStack = jvmStack;
     }
     
-    public void runInstruction(byte instructionCode) {
+    public void runInstruction(byte instructionCode) throws LoadingException {
         int code = instructionCode & 0xFF;
         switch(code) {
             //operand stack and local variables instructions
@@ -57,6 +58,9 @@ public class InstructionManager {
             case Instruction.IN_INVOKESTATIC: InvokeStaticInstruction.run(jvmStack, methodArea); break;
             case Instruction.IN_RETURN: ReturnInstruction.run(jvmStack); break;
             case Instruction.IN_IRETURN: IReturnInstruction.run(jvmStack); break;
+                
+            default:
+                System.out.println("Not implemented instruction: "+code);
         }
     }
     
