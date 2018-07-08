@@ -31,11 +31,27 @@ public class LocalVariableArray {
         
     }
     
+    public boolean getBoolean(int index) {
+        return localVariables[index] == 1;
+    }
+    
+    public void setBoolean(int index, boolean value) {
+        localVariables[index] = value ? 1 : 0;
+    }
+    
     public byte getByte(int index) {
         return (byte) localVariables[index];
     }
     
     public void setByte(int index, byte value) {
+        localVariables[index] = (int) value;
+    }
+    
+    public char getChar(int index) {
+        return (char) localVariables[index];
+    }
+    
+    public void setChar(int index, char value) {
         localVariables[index] = (int) value;
     }
     

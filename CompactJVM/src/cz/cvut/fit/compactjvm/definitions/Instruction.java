@@ -19,8 +19,9 @@ public class Instruction {
     public static final int IN_ASTORE = 0x3a;
     public static final int IN_GETSTATIC = 0xb2;
     public static final int IN_PUTSTATIC = 0xb3;
-    public static final int IN_INVOKESTATIC = 0xb8;
     public static final int IN_ISTORE = 0x36;
+    
+    //Integer operace - nacitani, nahravani do stacku, lokalnich pomennych,...
     public static final int IN_ISTORE0 = 0x3b; //59
     public static final int IN_ISTORE1 = 0x3c; //60
     public static final int IN_ISTORE2 = 0x3d; //61
@@ -42,6 +43,7 @@ public class Instruction {
     public static final int IN_ICONST5 = 0x8; //8
     
     //Invoke methods and return values
+    public static final int IN_INVOKESTATIC = 0xb8; //184
     public static final int IN_RETURN = 0xb1; //177
     // todo...
 }

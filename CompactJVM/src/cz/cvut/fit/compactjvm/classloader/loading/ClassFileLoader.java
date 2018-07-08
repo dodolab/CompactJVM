@@ -36,7 +36,12 @@ public class ClassFileLoader {
     public ClassFile load(String className) {
         
         // load testing class file
-        String classPath = "../CompactJVMLab/build/classes/compactjvmlab/CompactJVMLab.class";
+        String classPath = "";
+        if(className == "compactjvmlab/CompactJVMLab") {
+            classPath = "../CompactJVMLab/build/classes/compactjvmlab/CompactJVMLab.class";
+        } else {
+            classPath = "../CompactJVMLab/build/classes/compactjvmlab/TestClass.class";
+        }
         ClassFile classFile = null;
         try {
             classFile = parseFile(classPath);

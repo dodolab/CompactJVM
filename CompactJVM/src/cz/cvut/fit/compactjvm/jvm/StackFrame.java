@@ -6,6 +6,7 @@
 package cz.cvut.fit.compactjvm.jvm;
 
 import cz.cvut.fit.compactjvm.core.ClassFile;
+import cz.cvut.fit.compactjvm.core.MethodDefinition;
 import cz.cvut.fit.compactjvm.entities.AttrCode;
 
 /**
@@ -16,12 +17,25 @@ public class StackFrame {
     
     public LocalVariableArray localVariables; //obsahuje lokalni promenne
     public OperandStack operandStack; //ukladaji se zde operandy, instrukce
-    private final ClassFile associatedClass; //trida, na niz se tato metoda vola
-    private final int associatedMethod; //index metody v ClassFile
+    public final ClassFile associatedClass; //trida, na niz se tato metoda vola
+    public final int associatedMethod; //index metody v ClassFile
     private AttrCode codeAttribute; //obsahuje instrukce pro vykonani metody
     private int currentInstructionIndex; //index v poli instrukci
+    public MethodDefinition methodDefinition = null; //Definice metody - nazev tridy, nazev metody, rozparsovany descriptor
     /** @todo tohle by melo byt spis v pcRegistru u JVM threadu, ale jak se pak dostanu
      k mistu, kde jsem byl v predchozim framu pred vyvolanim metody? */
+    
+    
+    /**
+     * @param classFile
+     * @param invokedMethod
+     * @param methodDefinition
+     * 
+     */
+    public StackFrame(ClassFile classFile, int invokedMethod, MethodDefinition methodDefinition) {
+        this(classFile, invokedMethod);
+        this.methodDefinition = methodDefinition;
+    }
     
     /**
      * @param classFile

@@ -23,13 +23,28 @@ public class OperandStack {
     public OperandStack() {
         this.operandStack = new Stack<>();
     }
+        
+    public boolean popBoolean() {
+        return operandStack.pop() == 1;
+    }
     
-    
+    public void pushBoolean(boolean value) {
+        operandStack.push(value ? 1 : 0);
+    }
+        
     public byte popByte() {
         return operandStack.pop().byteValue();
     }
     
     public void pushByte(byte value) {
+        operandStack.push(Integer.valueOf(value));
+    }
+        
+    public char popChar() {
+        return (char) operandStack.pop().byteValue();
+    }
+    
+    public void pushChar(char value) {
         operandStack.push(Integer.valueOf(value));
     }
     

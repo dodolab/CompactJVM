@@ -25,6 +25,6 @@ public class CompactJVM {
     
     public void start(){
         JVMThread thread = new JVMThread(methodArea);
-        thread.run(""); //@todo zatim nacitam fixne porad ten puvodni soubor
+        thread.run("compactjvmlab/CompactJVMLab"); //@todo zatim nacitam fixne porad ten puvodni soubor
     }
 }

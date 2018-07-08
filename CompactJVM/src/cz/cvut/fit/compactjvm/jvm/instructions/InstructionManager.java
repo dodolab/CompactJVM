@@ -29,8 +29,9 @@ public class InstructionManager {
         this.jvmStack = jvmStack;
     }
     
-    public void runInstruction(int instructionCode) {
-        switch(instructionCode) {
+    public void runInstruction(byte instructionCode) {
+        int code = instructionCode & 0xFF;
+        switch(code) {
             //operand stack and local variables instructions
             case Instruction.IN_ISTORE: IStoreInstruciton.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_ISTORE0: IStoreNInstruction.run(jvmStack.getCurrentFrame(), 0); break;
@@ -53,6 +54,7 @@ public class InstructionManager {
             case Instruction.IN_ICONST4: IConstIInstruction.run(jvmStack.getCurrentFrame(), 4); break;
             case Instruction.IN_ICONST5: IConstIInstruction.run(jvmStack.getCurrentFrame(), 5); break;
             
+            case Instruction.IN_INVOKESTATIC: InvokeStaticInstruction.run(jvmStack, methodArea); break;
             case Instruction.IN_RETURN: ReturnInstruction.run(jvmStack); break;
         }
     }
