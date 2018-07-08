@@ -19,6 +19,7 @@ public class CompactJVM {
     
     public void loadApplication(String path) throws IOException, ParsingException{
         ClassFile cls = classFileParser.parseClassFile(path);
+        
     }
     
     public void start(){

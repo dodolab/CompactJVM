@@ -11,5 +11,5 @@ public class FLEntity {
     public int descriptorIndex;
     public int attributesCount;
     
-    public EntAttribute[] attrs; // attributes
+    public Attribute[] attrs; // attributes
 }

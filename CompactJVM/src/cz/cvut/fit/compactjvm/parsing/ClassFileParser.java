@@ -2,7 +2,7 @@ package cz.cvut.fit.compactjvm.parsing;
 
 import cz.cvut.fit.compactjvm.core.ClassFile;
 import cz.cvut.fit.compactjvm.entities.CPEntity;
-import cz.cvut.fit.compactjvm.entities.EntAttribute;
+import cz.cvut.fit.compactjvm.entities.Attribute;
 import cz.cvut.fit.compactjvm.entities.FLEntity;
 import cz.cvut.fit.compactjvm.entities.MTHEntity;
 import cz.cvut.fit.compactjvm.exceptions.ParsingException;
@@ -49,7 +49,7 @@ public class ClassFileParser {
         return cls;
     }
 
-    private boolean fillClassFile(DataInputStream str, ClassFile cls) throws IOException {
+    private boolean fillClassFile(DataInputStream str, ClassFile cls) throws IOException, ParsingException {
 
         // parse everything, first fail stops the parsing
         if (!checkClassFile(str)) {
@@ -64,13 +64,13 @@ public class ClassFileParser {
         if (!parseAccessFlags(str, cls)) {
             return false;
         }
-        if (!parseThis(str, cls)){
+        if (!parseThis(str, cls)) {
             return false;
         }
-        if (!parseSuper(str, cls)){
+        if (!parseSuper(str, cls)) {
             return false;
         }
-        if (!parseInterfaces(str, cls)){
+        if (!parseInterfaces(str, cls)) {
             return false;
         }
         if (!parseFields(str, cls)) {
@@ -82,10 +82,11 @@ public class ClassFileParser {
         if (!parseAttributes(str, cls)) {
             return false;
         }
+        
+        System.out.println("Classfile successfully loaded");
 
         return true;
     }
-
 
     /**
      * Checks whether first 4 bytes contain 0xCA, 0xFE, 0xBA, 0xBE
@@ -117,147 +118,160 @@ public class ClassFileParser {
         // todo: some validation here
         return true;
     }
-    
+
     /**
-     *  9th and 10th bit: cst pool size, then constant pool[cpsize-1] 
+     * 9th and 10th bit: cst pool size, then constant pool[cpsize-1]
      */
     private boolean parseConstantPool(DataInputStream dis, ClassFile cls) throws IOException {
         System.out.println("Parsing constant pool");
         int poolSize = dis.readUnsignedShort();
-        System.out.println("Pool size: "+poolSize);
+        System.out.println("Pool size: " + poolSize);
 
         // according to the specification, size is poolSize-1 :-)
-        cls.cpEntities = new CPEntity[poolSize-1];
-        
+        cls.cpEntities = new CPEntity[poolSize];
+
         ConstantPoolParser cpParser = new ConstantPoolParser();
 
         // first index is 1
-        for (int i = 1; i < poolSize; ) {
+        for (int i = 1; i < poolSize;) {
             CPEntity ent = cpParser.parseConstantPoolEntity(dis);
             // in case of error, entity will be null
-            if(ent == null) return false;
-            
+            if (ent == null) {
+                return false;
+            }
+
             ent.byteIndex = i;
             cls.cpEntities[i] = ent;
-            
+
             // increment by size of this entity
-            i+=ent.getSize();
+            i += ent.getSize();
         }
         return true;
     }
 
     /**
-     * 
+     *
      * 1st and 2nd bit after CP: access flags
      */
     private boolean parseAccessFlags(DataInputStream dis, ClassFile cls) throws IOException {
         System.out.println("Parsing access flags");
         short accessFlags = dis.readShort();
         cls.accessFlags = accessFlags;
-        
-        System.out.println("Access flags: "+Integer.toHexString(accessFlags));
-        
+
+        System.out.println("Access flags: " + Integer.toHexString(accessFlags));
+
         return true;
     }
-    
+
     /**
-     * 
+     *
      * 3rd and 4th bit after CP: THIS class
      */
     private boolean parseThis(DataInputStream dis, ClassFile cls) throws IOException {
         System.out.println("Parsing this");
-        
+
         short index = dis.readShort();
-	cls.thisClassIndex = index;
-        System.out.println("This class index: "+index);
+        cls.thisClassIndex = index;
+        System.out.println("This class index: " + index);
         return true;
     }
-    
+
     /**
-     * 
+     *
      * 5th and 6th bit after CP: SUPER class
      */
     private boolean parseSuper(DataInputStream dis, ClassFile cls) throws IOException {
         System.out.println("Parsing super");
-        
+
         short index = dis.readShort();
-	cls.superClassIndex = index;
-        System.out.println("Super class index: "+index);
+        cls.superClassIndex = index;
+        System.out.println("Super class index: " + index);
         return true;
     }
-    
+
     /**
-     * 
+     *
      * 7th and 8th bit: interfaces_count, then interfaces[interfaces_count]
      */
     private boolean parseInterfaces(DataInputStream dis, ClassFile cls) throws IOException {
         System.out.println("Parsing interfaces");
         short intCount = dis.readShort();
         cls.interfaceCount = intCount;
-	System.out.println("Interface count: "+intCount);
-	short interIndex = dis.readShort();
-        cls.interfaceIndex = interIndex;
-        System.out.println("Interface: "+interIndex);
-        
+        System.out.println("Interface count: " + intCount);
+
+        cls.interfIndices = new int[cls.interfaceCount];
+
+        // read interface indices
+        for (int i = 0; i < intCount; i++) {
+            int index = dis.readShort();
+            cls.interfIndices[i] = index;
+        }
+
         return true;
     }
 
-    private boolean parseFields(DataInputStream dis, ClassFile cls) throws IOException {
+    private boolean parseFields(DataInputStream dis, ClassFile cls) throws IOException, ParsingException {
         System.out.println("Parsing fields");
         short fldCount = dis.readShort();
         cls.fieldCount = fldCount;
-	System.out.println("Field count: "+fldCount);
-	
+        System.out.println("Field count: " + fldCount);
+
         FieldInfoParser fldParser = new FieldInfoParser();
         cls.fieldInfos = new FLEntity[fldCount];
-        
+
         for (int i = 0; i < fldCount; i++) {
-	    FLEntity ent = fldParser.parseFieldEntity(dis);
+            FLEntity ent = fldParser.parseFieldEntity(cls, dis);
             // in case of error, entity will be null
-            if(ent == null) return false;
-            
+            if (ent == null) {
+                return false;
+            }
+
             cls.fieldInfos[i] = ent;
         }
-        
+
         return true;
     }
 
-    private boolean parseMethods(DataInputStream dis, ClassFile cls) throws IOException {
+    private boolean parseMethods(DataInputStream dis, ClassFile cls) throws IOException, ParsingException {
         System.out.println("Parsing methods");
         short methodCnt = dis.readShort();
         cls.methodCount = methodCnt;
-        System.out.println("Method count: "+methodCnt);
-        
+        System.out.println("Method count: " + methodCnt);
+
         MethodInfoParser mthParser = new MethodInfoParser();
         cls.methodInfos = new MTHEntity[methodCnt];
-        
-        for(int i=0; i< methodCnt; i++){
-            MTHEntity ent = mthParser.parseMethodEntity(dis);
+
+        for (int i = 0; i < methodCnt; i++) {
+            MTHEntity ent = mthParser.parseMethodEntity(cls, dis);
             // in case of error, entity will be null
-            if(ent == null) return false;
-            
+            if (ent == null) {
+                return false;
+            }
+
             cls.methodInfos[i] = ent;
         }
 
-        
         return true;
     }
 
-    private boolean parseAttributes(DataInputStream dis, ClassFile cls) throws IOException {
+    private boolean parseAttributes(DataInputStream dis, ClassFile cls) throws IOException, ParsingException {
         System.out.println("Parsing attributes");
         short attrsCnt = dis.readShort();
         cls.attributeCount = attrsCnt;
-        System.out.println("Attributes count: "+attrsCnt);
-       
-        for(int i=0; i<attrsCnt; i++){
-            EntAttribute ent = new EntAttribute();
-            ent.nameIndex = dis.readShort();
-            // in case of error, entity will be null
-            if(ent == null) return false;
-            
-            cls.attributeInfos[i] = ent;
-        }
+        System.out.println("Attributes count: " + attrsCnt);
 
+        if (cls.attributeCount != 0) {
+
+            cls.attributeInfos = new Attribute[cls.attributeCount];
+            
+            AttributeParser parser = new AttributeParser();
+            
+            for (int i = 0; i < attrsCnt; i++) {
+                Attribute attr = parser.parseAttributeEntity(cls,dis);
+                cls.attributeInfos[i] = attr;
+            }
+
+        }
         return true;
     }
 }

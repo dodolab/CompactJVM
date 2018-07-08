@@ -14,6 +14,9 @@ public class Main {
      */
     public static void main(String[] args) {
 
+        // load testing class file
+        args = new String[]{"../CompactJVMLab/build/classes/compactjvmlab/CompactJVMLab.class"};
+        
         try {
 
             if (args.length < 1) {
@@ -26,7 +29,7 @@ public class Main {
             jvm.loadApplication(classPath);
             jvm.start();
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 }

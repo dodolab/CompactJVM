@@ -18,6 +18,11 @@ public class CompactJVMLab {
     private int instantPrivateProm;
     public int instantPublicProm;
     
+    public int localVariableMethod() {
+        int a = 13;
+        return a;
+    }
+    
     public static void staticVoidMethod(){
         
     }

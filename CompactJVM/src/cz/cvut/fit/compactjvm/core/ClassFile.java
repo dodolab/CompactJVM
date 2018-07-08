@@ -1,7 +1,7 @@
 package cz.cvut.fit.compactjvm.core;
 
 import cz.cvut.fit.compactjvm.entities.CPEntity;
-import cz.cvut.fit.compactjvm.entities.EntAttribute;
+import cz.cvut.fit.compactjvm.entities.Attribute;
 import cz.cvut.fit.compactjvm.entities.FLEntity;
 import cz.cvut.fit.compactjvm.entities.MTHEntity;
 
@@ -26,5 +26,15 @@ public class ClassFile {
     public short methodCount; // number of methods
     public MTHEntity[] methodInfos; // method info
     public short attributeCount; // number of attributes
-    public EntAttribute[] attributeInfos; // attribute info
+    public Attribute[] attributeInfos; // attribute info
+    // indices into constant pool, each index shoul point to ClassInfo
+    public int[] interfIndices;
+    
+    public MTHEntity getMethod(int index) {
+        if(index >= methodCount) {
+            return null;
+            //@todo nebo vyhodit vyjimku?
+        }
+        return methodInfos[index];
+    }
 }
