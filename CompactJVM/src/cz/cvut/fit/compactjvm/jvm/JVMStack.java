@@ -8,21 +8,30 @@ package cz.cvut.fit.compactjvm.jvm;
 import java.util.Stack;
 
 /**
- *
+ * Zakladni stack JVM, ktery obsahuje stack framy
  * @author Nick Nemame
  */
 public class JVMStack {
-    private Stack<StackFrame> stack;
+    
+    private final Stack<StackFrame> stack;
+
+    public JVMStack() {
+        stack = new Stack<>();
+    }
+    
+    public boolean isEmpty() {
+        return stack.isEmpty();
+    }
     
     public void push(StackFrame frame) {
         stack.add(frame);
     }
     
-    public StackFrame removeCurrentFrame() {
-        return stack.remove(stack.size() - 1);
+    public void removeCurrentFrame() {
+        stack.pop();
     }
     
     public StackFrame getCurrentFrame() {
-        return stack.get(stack.size() - 1);
+        return stack.peek();
     }
 }

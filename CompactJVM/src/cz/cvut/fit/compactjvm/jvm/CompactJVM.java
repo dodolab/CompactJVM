@@ -1,28 +1,30 @@
 package cz.cvut.fit.compactjvm.jvm;
 
+import cz.cvut.fit.compactjvm.classloader.loading.ClassFileLoader;
 import cz.cvut.fit.compactjvm.core.ClassFile;
 import cz.cvut.fit.compactjvm.exceptions.ParsingException;
-import cz.cvut.fit.compactjvm.parsing.ClassFileParser;
+import cz.cvut.fit.compactjvm.classloader.parsing.ClassFileParser;
 import java.io.IOException;
 
 /**
- *
+ * 
  * @author Adam Vesecky
  */
 public class CompactJVM {
     
-    private ClassFileParser classFileParser;
+    private final MethodArea methodArea;
     
     public CompactJVM(){
-        classFileParser = new ClassFileParser();
+        ClassFileLoader classLoader = new ClassFileLoader();
+        methodArea = new MethodArea(classLoader);
     }
     
     public void loadApplication(String path) throws IOException, ParsingException{
-        ClassFile cls = classFileParser.parseClassFile(path);
-        
+        methodArea.initialLoad(path);
     }
     
     public void start(){
-        
+        JVMThread thread = new JVMThread(methodArea);
+        thread.run(""); //@todo zatim nacitam fixne porad ten puvodni soubor
     }
 }

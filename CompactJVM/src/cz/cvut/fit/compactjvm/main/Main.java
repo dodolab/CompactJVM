@@ -13,7 +13,7 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
+        
         // load testing class file
         args = new String[]{"../CompactJVMLab/build/classes/compactjvmlab/CompactJVMLab.class"};
         

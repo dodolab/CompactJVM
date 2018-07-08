@@ -2,6 +2,8 @@ package cz.cvut.fit.compactjvm.core;
 
 import cz.cvut.fit.compactjvm.entities.CPEntity;
 import cz.cvut.fit.compactjvm.entities.Attribute;
+import cz.cvut.fit.compactjvm.entities.CPClass;
+import cz.cvut.fit.compactjvm.entities.CPUtf8;
 import cz.cvut.fit.compactjvm.entities.FLEntity;
 import cz.cvut.fit.compactjvm.entities.MTHEntity;
 
@@ -30,11 +32,27 @@ public class ClassFile {
     // indices into constant pool, each index shoul point to ClassInfo
     public int[] interfIndices;
     
+    public int[] classVariables;
+    
+    /**
+     * Ziska Entitu odpovidajici pozadovane metode
+     * @param index
+     * @return 
+     */
     public MTHEntity getMethod(int index) {
         if(index >= methodCount) {
             return null;
             //@todo nebo vyhodit vyjimku?
         }
         return methodInfos[index];
+    }
+    
+    /**
+     * Ziska nazev tridy z constant poolu
+     * @return 
+     */
+    public String getClassName() {
+        CPClass stringEntity = (CPClass) cpEntities[thisClassIndex];
+        return ((CPUtf8) cpEntities[stringEntity.nameIndex]).value;
     }
 }

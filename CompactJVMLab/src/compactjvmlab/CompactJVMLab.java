@@ -12,8 +12,22 @@ package compactjvmlab;
  */
 public class CompactJVMLab {
 
-    private static int staticPrivateProm;
-    public static int staticPublicProm;
+    private static int staticPrivateProm1;
+    private static int staticPrivateProm2;
+    private static int staticPrivateProm3;
+    
+    
+    private void setStaticProm() {
+        staticPrivateProm1 = 11;
+        staticPrivateProm2 = 12;
+        staticPrivateProm3 = 13;
+    }
+
+    public static void main() {
+        int local = 7;
+        local = local + 1;
+    }
+    /*public static int staticPublicProm;
     
     private int instantPrivateProm;
     public int instantPublicProm;
@@ -47,5 +61,5 @@ public class CompactJVMLab {
         mn.instantVoidMethod();
         mn.instantIntMethod();
     }
-    
+    */
 }
