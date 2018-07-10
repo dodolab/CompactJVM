@@ -11,6 +11,8 @@ import cz.cvut.fit.compactjvm.entities.CPUtf8;
 import cz.cvut.fit.compactjvm.entities.FLEntity;
 import cz.cvut.fit.compactjvm.entities.MTHEntity;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -29,7 +31,9 @@ public class ClassFile {
     public short interfaceCount;
     public short interfaceIndex;
     public short fieldCount; // number of fields
+    public int fieldDataBytes; // number of bytes required for fields to be stored
     public FLEntity[] fieldInfos; // field info
+    public Map<Integer, FLEntity> fieldInfosByCpIndex = null;
     public short methodCount; // number of methods
     public MTHEntity[] methodInfos; // method info
     public short attributeCount; // number of attributes
@@ -136,4 +140,26 @@ public class ClassFile {
         }
         throw new LoadingException("Field index not found");
     }
+    
+    /**
+     * Ziska field info na zaklade indexu v constant poolu. Ten ziskam
+     * jako parametr pro instrukci - napr. putfield
+     * @param cpIndex
+     * @return
+     * @throws LoadingException 
+     */
+    public FLEntity getFieldInfoByCpIndex(int cpIndex) throws LoadingException {
+        if(fieldInfosByCpIndex == null) fieldInfosByCpIndex = new HashMap<>();
+        else if(fieldInfosByCpIndex.containsKey(cpIndex)) {
+            return fieldInfosByCpIndex.get(cpIndex);
+        }
+        CPFieldRef fieldRef = (CPFieldRef) cpEntities[cpIndex];
+        CPNameAndType nameAndType = (CPNameAndType) cpEntities[fieldRef.nameAndTypeIndex];
+        String name = ((CPUtf8) cpEntities[nameAndType.nameIndex]).value;
+        String descriptor = ((CPUtf8) cpEntities[nameAndType.descriptorIndex]).value;
+        FLEntity fieldInfo = fieldInfos[getFieldIndex(name, descriptor)];
+        fieldInfosByCpIndex.put(cpIndex, fieldInfo);
+        return fieldInfo;
+    }
+    
 }

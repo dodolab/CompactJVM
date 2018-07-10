@@ -14,7 +14,7 @@ public class Instruction {
     // load a reference onto the stack from a local variable #index
     public static final int IN_ALOAD = 0x19;
     // load a reference onto the stack from local variable 0
-    public static final int IN_ALOAD0 = 0x2a;
+    public static final int IN_ALOAD0 = 0x2a; //42
     // load a reference onto the stack from local variable 1
     public static final int IN_ALOAD1 = 0x2b;
     // load a reference onto the stack from local variable 2
@@ -34,7 +34,7 @@ public class Instruction {
     // store a reference into a local variable #index
     public static final int IN_ASTORE = 0x3a;
     // store a reference into a local variable 0
-    public static final int IN_ASTORE0 = 0x4b;
+    public static final int IN_ASTORE0 = 0x4b; //75
     // store a reference into a local variable 1
     public static final int IN_ASTORE1 = 0x4c;
     // store a reference into a local variable 2
@@ -117,4 +117,19 @@ public class Instruction {
     public static final int IN_FCONST2 = 0x0d;
     // if value1 is greater than or equal to value2, branch to instruction at branchoffset (signed short constructed from unsigned bytes branchbyte1 << 8 + branchbyte2)
     public static final int IN_IF_ICMPGE = 0xa2;
+    
+    // creates new instance of class defined by two next bytes
+    public static final int IN_NEW = 0xbb; //187 (-69)
+    //Duplicate the top operand stack value
+    public static final int IN_DUP = 0x59; //89
+    // Invoke instance method; special handling for superclass, private, and instance initialization method invocations
+    public static final int IN_INVOKESPECIAL = 0xb7; //183
+    // Invoke instance method; dispatch based on class
+    public static final int IN_INVOKEVIRTUAL = 0xb6; //182
+    // Pop the top operand stack value
+    public static final int IN_POP = 0x57; //87
+    // Set field in object
+    public static final int IN_PUTFIELD = 0xb5; //181
+    // Get field from object
+    public static final int IN_GETFIELD = 0xb4; //180
 }

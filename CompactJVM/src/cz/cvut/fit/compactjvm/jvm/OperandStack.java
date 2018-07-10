@@ -108,4 +108,12 @@ public class OperandStack {
         operandStack.push(byteBuffer.getInt(Integer.BYTES));
     }
     
+    public void pushReference(int objectReference) {
+        pushInt(objectReference);
+    }
+    
+    public int popReference() {
+        return popInt();
+    }
+    
 }

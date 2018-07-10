@@ -63,5 +63,9 @@ public class MethodArea {
     public void initialLoad(String classPath) {
         //return "";
     }
+    
+    public void getClassFileByIndex(int index) {
+        
+    }
 
 };

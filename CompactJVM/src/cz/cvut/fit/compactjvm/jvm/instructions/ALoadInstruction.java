@@ -21,8 +21,8 @@ public class ALoadInstruction {
     }
     
     public static void run(StackFrame stackFrame, int index) {
-        int value = stackFrame.localVariables.getInt(index);
-        stackFrame.operandStack.pushInt(value);
+        int value = stackFrame.localVariables.getReference(index);
+        stackFrame.operandStack.pushReference(value);
         
         JVMLogger.log(JVMLogger.TAG_INSTR, "ALoad; index: "+index+"; value: "+value);
     }

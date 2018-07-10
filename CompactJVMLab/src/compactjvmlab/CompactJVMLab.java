@@ -26,6 +26,18 @@ public class CompactJVMLab {
     public static void main() {
         /*int local = 7;
         local = local + 1;*/
+        
+        /* objects */
+        
+        TestClass testObject1 = new TestClass();
+        //TestClass testObject2 = new TestClass();
+        
+        testObject1.setMyItem(17);
+        testObject1.addToMyItem(10);
+        //testObject2.setMyItem(3);
+        testObject1.getMyItem();
+        
+        /* arrays, cycles, static method calls
         int test1 = TestClass.testMethod(4, 5);
         int test2 = TestClass.testMethod(10,8);
         int test3 = TestClass.testMethod(1,1);
@@ -49,7 +61,7 @@ public class CompactJVMLab {
         for(int j=0; j<10; j++){
             abcd++;
         }
-        
+        */
     }
     /*public static int staticPublicProm;
     

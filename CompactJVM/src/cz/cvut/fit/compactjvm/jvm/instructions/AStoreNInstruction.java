@@ -21,8 +21,8 @@ public class AStoreNInstruction {
     
     public static void run(StackFrame stackFrame, int index) {
         
-        int value = stackFrame.operandStack.popInt();
+        int value = stackFrame.operandStack.popReference();
         JVMLogger.log(JVMLogger.TAG_INSTR, "AStoreN: index: "+index+"; value:"+value);
-        stackFrame.localVariables.setInt(index, value);
+        stackFrame.localVariables.setReference(index, value);
     }
 }

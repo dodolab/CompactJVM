@@ -111,5 +111,12 @@ public class LocalVariableArray {
         localVariables[index] = byteBuffer.getInt(Integer.BYTES);
     }
     
+    public int getReference(int index) {
+        return getInt(index);
+    }
+    
+    public void setReference(int index, int objectReference) {
+        setInt(index, objectReference);
+    }
     
 }

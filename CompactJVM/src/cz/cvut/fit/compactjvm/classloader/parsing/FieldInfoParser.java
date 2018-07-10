@@ -16,6 +16,8 @@ import java.io.IOException;
  */
 public class FieldInfoParser {
 
+    public int nextFieldOffset = 0;
+    
     public FLEntity parseFieldEntity(ClassFile cls, DataInputStream dis) throws IOException, ParsingException {
         FLEntity ent = new FLEntity();
         ent.accessFlags = dis.readShort();
@@ -29,6 +31,8 @@ public class FieldInfoParser {
 
         ent.name = name;
         ent.descriptor = descriptor;
+        
+        ent.dataFieldOffset = getFieldOffset(descriptor);
         
         JVMLogger.log(JVMLogger.TAG_PARSING, "Parsed field entity; access flags: " + ent.accessFlags
                 + " ;name: " + name + " ;descriptor:" + descriptor
@@ -49,4 +53,15 @@ public class FieldInfoParser {
         return ent;
     }
 
+    //Spocita offset v datove casti kazdeho objektu na heape
+    private int getFieldOffset(String descriptor) {
+        int currentFieldOffset = nextFieldOffset;
+        nextFieldOffset += ("L".equals(descriptor) || "D".equals(descriptor)) ? 2 : 1;
+        return currentFieldOffset;
+    }
+
+    public int getFieldDataBytes() {
+        return nextFieldOffset;
+    }
+    
 }

@@ -35,9 +35,9 @@ public class JVMThread {
     
     public JVMThread(MethodArea methodArea, ObjectHeap heap) {
         jvmStack = new JVMStack(this);
-        heap.setJVMThread(this);
+        //heap.setJVMThread(this);
         this.methodArea = methodArea;
-        instructionManager = new InstructionManager(jvmStack, methodArea);
+        instructionManager = new InstructionManager(jvmStack, methodArea, heap);
         this.heap = heap;
     }
     

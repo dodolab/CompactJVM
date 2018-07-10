@@ -16,125 +16,147 @@ public class ObjectHeap {
 
     // number of bytes in object header, used for space calculation
     public static final int OBJECT_HEADER_BYTES = 12;
+    
+    public static final int FORWARDING_POINTER = -1;
 
-    private final byte[] heapA;
-    private final byte[] heapB;
-    private int activeHeap;
-    private int heapPointer;
-    private MethodArea methodArea;
-    private JVMThread jvmThread;
     private final int ARRAY_INDEX = -1000;
+    
+    private final int ARRAY = 1;
+    private final int OBJECT = 2;
 
-    public ObjectHeap(MethodArea methodArea, int size) {
+    private int[] heap;
+    
+    private GarbageCollector garbageCollector;
+    
+    private int activeHeapOffset;
+    private int inactiveHeapOffset;
+    private int heapSize;
+    private int nextFreeSpace;
+    
+    private MethodArea methodArea;
+    
+    public ObjectHeap(MethodArea methodArea, GarbageCollector garbageCollector, int size) {
         this.methodArea = methodArea;
-        heapA = new byte[size / 2];
-        heapB = new byte[size / 2];
-        activeHeap = 0;
-        heapPointer = 0;
-        getActiveHeap()[heapPointer++] = 0; // null pointer
-    }
-
-    public void setJVMThread(JVMThread jvmThread) {
-        this.jvmThread = jvmThread;
+        heap = new int[size];
+        heapSize = size / 2;
+        activeHeapOffset = 0;
+        inactiveHeapOffset = heapSize;
+        nextFreeSpace = 0;
+        this.garbageCollector = garbageCollector;
     }
 
     /**
-     * Allocates array on heap
-     * @param size array size
-     * @return
-     * @throws ClassNotFoundException
-     * @throws OutOfHeapMemException 
+     * Nastavi forwarding pointer na misto v nove halde. Prvni slovo znaci
+     * informaci, ze jde o forwarding pointer, druhe slovo obsahuje tento pointer.
+     * @param oldReference
+     * @param newReference 
      */
-    public int allocArray(int size) throws ClassNotFoundException, OutOfHeapMemException {
-        // this is crap.. we should find another way (maybe implement own Array class)
-        return alloc(ARRAY_INDEX, size, size * 4);
+    public void setForwardingPointer(int oldReference, int newReference) {
+        writeToActiveHeap(oldReference, FORWARDING_POINTER);
+        writeToActiveHeap(oldReference + 1, newReference);
     }
-
-    public int alloc(ClassFile cls, byte[] bytes) throws OutOfHeapMemException {
-        int fieldsL = cls.fieldCount * 4;
-        int start = alloc(cls.index, 0, fieldsL + bytes.length);
-        for (int i = 0; i < bytes.length; i++) {
-            getActiveHeap()[start + OBJECT_HEADER_BYTES + i + fieldsL] = bytes[i];
-        }
-        return start;
+    
+    /**
+     * Zjisti, zda na miste, kam ukazuje puvodni reference, je jiz forwarding pointer
+     * @param oldReference
+     * @return 
+     */
+    public boolean isForwardingPointer(int oldReference) {
+        return readFromActiveHeap(oldReference) == FORWARDING_POINTER;
     }
-
-    private int alloc(int classIndex, int size, int bytes) throws OutOfHeapMemException {
-
-        if (isFull(bytes)) {
-            // todo: run garbage collector
+    
+    public void writeToHeap(int reference, int index, int value) {
+        int headerSize = (getClassIndex(reference) == ARRAY_INDEX) ? getArrayHeaderSize() : getObjectHeaderSize();
+        writeToActiveHeap(reference + headerSize + index, value);
+    }
+    
+    public int readFromHeap(int reference, int index) {
+        int headerSize = (getClassIndex(reference) == ARRAY_INDEX) ? getArrayHeaderSize() : getObjectHeaderSize();
+        return readFromActiveHeap(reference + headerSize + index);
+    }
+    
+    private void writeToActiveHeap(int index, int value) {
+        heap[index + activeHeapOffset] = value;
+    }
+    
+    private int readFromActiveHeap(int index) {
+        return heap[index + activeHeapOffset];
+    }
+    
+    private void writeToSpareHeap(int index, int value) {
+        heap[index + activeHeapOffset] = value;
+    }
+    /*
+    public int readFromSpareHeap(int index) {
+        return heap[index + activeHeapOffset];
+    }*/
+    
+    
+    /**
+     * Alokuje data a vrati referenci na objekt
+     * @param classFile
+     * @return 
+     */
+    public int allocObject(ClassFile classFile) throws OutOfHeapMemException {
+        int reference = nextFreeSpace;
+        int wordsRequired = getObjectHeaderSize() + classFile.fieldDataBytes;
+        checkHeapSpace(wordsRequired);
+        writeToActiveHeap(reference, classFile.index);
+        garbageCollector.initializeDataHeader();
+        nextFreeSpace += wordsRequired;
+        initializeSpace(reference + getObjectHeaderSize(), classFile.fieldDataBytes);
+        return reference;
+    }
+    
+    public int allocArray(int itemSize, int arraySize) throws OutOfHeapMemException {
+        int reference = nextFreeSpace;
+        int wordsRequired = getArrayHeaderSize() + (itemSize * arraySize);
+        checkHeapSpace(wordsRequired);
+        writeToActiveHeap(reference, ARRAY_INDEX);
+        writeToActiveHeap(reference + 1, arraySize);
+        garbageCollector.initializeDataHeader();
+        nextFreeSpace += wordsRequired;
+        initializeSpace(reference + getArrayHeaderSize(), itemSize * arraySize);
+        return reference;
+    }
+    
+    public void initializeSpace(int index, int length) {
+        for(int i = 0; i < length; ++i) {
+            writeToActiveHeap(index + i, 0);
         }
-
-        if (isFull(bytes)) {
+    }
+    
+    public void checkHeapSpace(int wordsRequired) throws OutOfHeapMemException {
+        if(isFull(wordsRequired)) {
+            garbageCollector.collect();
+        }
+        if(isFull(wordsRequired)) {
             throw new OutOfHeapMemException();
         }
-
-        int start = heapPointer;
-        insertIntToHeap(classIndex);
-        insertIntToHeap(size);
-
-        // inicialize to 0
-        for (int i = 0; i < bytes; i++) {
-            getActiveHeap()[heapPointer++] = 0;
-        }
-
-        return start;
     }
-
-    private boolean isFull(int bytes) {
-        return (getActiveHeap().length - heapPointer) < (OBJECT_HEADER_BYTES + bytes);
+    
+    public int getObjectHeaderSize() {
+        return 1 + garbageCollector.getRequiredHeaderBytes();
     }
-
-    public ClassFile loadObject(int address) {
-        ClassFile cls = methodArea.getClassStorage().getClass(byteArrayToInt(getActiveHeap(), address));
-        return cls;
+    
+    public int getArrayHeaderSize() {
+        return 2 + garbageCollector.getRequiredHeaderBytes();
     }
-
-    public int[] loadIntArray(int address) {
-
-        // will be -1000... must be implemented another way
-        int classIndex = byteArrayToInt(getActiveHeap(), address);
-        int size = byteArrayToInt(getActiveHeap(), address + 4);
-
-        int start = address + 8;
-
-        // todo: optimize and transform byte subarray into int array maybe?
-        int[] arrCopy = new int[size];
-
-        for (int i = start; i < size; i += 4) {
-            arrCopy[(i - start) / 4] = byteArrayToInt(getActiveHeap(), i);
-        }
-
-        return arrCopy;
+    
+    public int getClassIndex(int reference) {
+        return readFromActiveHeap(reference);
     }
-
-    private void insertIntToHeap(int value) {
-        byte[] intBytes = intToByteArray(value);
-        getActiveHeap()[heapPointer++] = intBytes[0];
-        getActiveHeap()[heapPointer++] = intBytes[1];
-        getActiveHeap()[heapPointer++] = intBytes[2];
-        getActiveHeap()[heapPointer++] = intBytes[3];
+    
+    /**
+     * Zjisti, zda se vejde potrebny pocet slov do haldy
+     * @todo chtelo by spoustet GC napriklad uz pri 70% zaplneni treba?
+     * @param wordsRequired
+     * @return 
+     */
+    private boolean isFull(int wordsRequired) {
+        return (heapSize - nextFreeSpace) < wordsRequired;
     }
-
-    public byte[] getActiveHeap() {
-        if (activeHeap == 0) {
-            return heapA;
-        }
-        return heapB;
-    }
-
-    public int getHeapPointer() {
-        return heapPointer;
-    }
-
-    public final byte[] intToByteArray(int value) {
-        return new byte[]{(byte) (value >>> 24), (byte) (value >>> 16), (byte) (value >>> 8), (byte) value};
-    }
-
-    public int byteArrayToInt(byte[] bytes, int from) {
-        return bytes[from] << 24 | (bytes[from + 1] & 0xFF) << 16 | (bytes[from + 2] & 0xFF) << 8 | (bytes[from + 3] & 0xFF);
-    }
-
+    /*
     public byte[] getObjectFieldValue(byte[] bytes, int objectStart, int index) {
         byte[] value = new byte[4];
         int start = index * 4 + objectStart + OBJECT_HEADER_BYTES;
@@ -155,4 +177,5 @@ public class ObjectHeap {
 
         return value;
     }
+*/
 }
