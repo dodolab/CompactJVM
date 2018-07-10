@@ -5,6 +5,7 @@
  */
 package cz.cvut.fit.compactjvm.jvm;
 
+import cz.cvut.fit.compactjvm.logging.JVMLogger;
 import java.util.Stack;
 
 /**
@@ -24,11 +25,13 @@ public class JVMStack {
     }
     
     public void push(StackFrame frame) {
+        JVMLogger.increaseGlobalPadding(4);
         stack.add(frame);
     }
     
     
     public void removeCurrentFrame() {
+        JVMLogger.increaseGlobalPadding(-4);
         stack.pop();
     }
     

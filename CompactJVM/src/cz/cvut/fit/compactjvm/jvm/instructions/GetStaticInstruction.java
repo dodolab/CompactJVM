@@ -15,6 +15,7 @@ import cz.cvut.fit.compactjvm.jvm.JVMStack;
 import cz.cvut.fit.compactjvm.jvm.MethodArea;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import static cz.cvut.fit.compactjvm.jvm.instructions.InvokeStaticInstruction.loadArgumentsToLocalVariables;
+import cz.cvut.fit.compactjvm.logging.JVMLogger;
 
 /**
  * @author Nick Nemame
@@ -33,7 +34,7 @@ public class GetStaticInstruction {
         int fieldIndex = cls.getFieldIndex(fieldDef.getFieldName(), fieldDef.getFieldDescriptor());
         FLEntity field = cls.getField(fieldIndex);
         
-        System.out.println("GetStatic");
+        JVMLogger.log(JVMLogger.TAG_INSTR, "GetStatic");
         
         // todo ...
     }

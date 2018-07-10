@@ -7,6 +7,7 @@ package cz.cvut.fit.compactjvm.jvm.instructions;
 
 import cz.cvut.fit.compactjvm.jvm.MethodArea;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
+import cz.cvut.fit.compactjvm.logging.JVMLogger;
 
 /**
  * @author Nick Nemame
@@ -20,7 +21,7 @@ public class IStoreNInstruction {
      */
     public static void run(StackFrame stackFrame, int localVariableIndex) {
         int value = stackFrame.operandStack.popInt();
-        System.out.println("IStoreN: "+value);
+        JVMLogger.log(JVMLogger.TAG_INSTR, "IStoreN: "+value);
         stackFrame.localVariables.setInt(localVariableIndex, value);
     }
 

@@ -7,6 +7,7 @@ package cz.cvut.fit.compactjvm.jvm.instructions;
 
 import cz.cvut.fit.compactjvm.jvm.MethodArea;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
+import cz.cvut.fit.compactjvm.logging.JVMLogger;
 
 /**
  * Load int from local variable
@@ -17,7 +18,7 @@ public class ILoadNInstruction {
     
     public static void run(StackFrame stackFrame, int localVariableIndex) {
         int value = stackFrame.localVariables.getInt(localVariableIndex);
-        System.out.println("ILoadN: "+value);
+        JVMLogger.log(JVMLogger.TAG_INSTR, "ILoadN: "+value);
         stackFrame.operandStack.pushInt(value);
     }
 

@@ -7,6 +7,7 @@ package cz.cvut.fit.compactjvm.jvm.instructions;
 
 import cz.cvut.fit.compactjvm.jvm.MethodArea;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
+import cz.cvut.fit.compactjvm.logging.JVMLogger;
 
 /**
  * Store int into local variable. int value is popped from the operand stack.
@@ -22,7 +23,7 @@ public class IStoreInstruciton {
     public static void run(StackFrame stackFrame) {
         byte localVariableIndex = stackFrame.loadInstructionSingleParam();
         int value = stackFrame.operandStack.popInt();
-        System.out.println("IStore: "+value);
+        JVMLogger.log(JVMLogger.TAG_INSTR, "IStore: "+value);
         stackFrame.localVariables.setInt(localVariableIndex, value);
     }
 

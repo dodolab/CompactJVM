@@ -6,6 +6,7 @@
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
+import cz.cvut.fit.compactjvm.logging.JVMLogger;
 
 /**
  *
@@ -16,7 +17,7 @@ public class PutStaticInstruction {
     public static void run(StackFrame stackFrame) {
         byte localVariableIndex = stackFrame.loadInstructionSingleParam();
         int value = stackFrame.localVariables.getInt(localVariableIndex);
-        System.out.println("PutStatic: "+value);
+        JVMLogger.log(JVMLogger.TAG_INSTR, "PutStatic: "+value);
         stackFrame.operandStack.pushInt(value);
     }
     

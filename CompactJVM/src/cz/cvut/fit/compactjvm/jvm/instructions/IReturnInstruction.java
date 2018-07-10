@@ -6,6 +6,7 @@
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
 import cz.cvut.fit.compactjvm.jvm.JVMStack;
+import cz.cvut.fit.compactjvm.logging.JVMLogger;
 
 /**
  * Return int from method
@@ -20,7 +21,7 @@ public class IReturnInstruction {
      */
     public static void run(JVMStack stack) {
         int value = stack.getCurrentFrame().operandStack.popInt();
-        System.out.println("IReturn: "+value);
+        JVMLogger.log(JVMLogger.TAG_INSTR, "IReturn: "+value);
         stack.removeCurrentFrame();
         stack.getCurrentFrame().operandStack.pushInt(value);
     }

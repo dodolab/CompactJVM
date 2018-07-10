@@ -9,6 +9,7 @@ import cz.cvut.fit.compactjvm.classloader.parsing.ClassFileParser;
 import cz.cvut.fit.compactjvm.core.ClassFile;
 import cz.cvut.fit.compactjvm.exceptions.ParsingException;
 import cz.cvut.fit.compactjvm.jvm.CompactJVM;
+import cz.cvut.fit.compactjvm.logging.JVMLogger;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,8 +47,7 @@ public class ClassFileLoader {
         try {
             classFile = parseFile(classPath);
         } catch (IOException | ParsingException ex) {
-            Logger.getLogger(ClassFileLoader.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("exception");
+            JVMLogger.log(JVMLogger.TAG_OTHER, "exception");
         }
         return classFile;
     }

@@ -12,6 +12,7 @@ import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.JVMStack;
 import cz.cvut.fit.compactjvm.jvm.MethodArea;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
+import cz.cvut.fit.compactjvm.logging.JVMLogger;
 import java.nio.ByteBuffer;
 
 /**
@@ -35,7 +36,7 @@ public class InvokeStaticInstruction {
         loadArgumentsToLocalVariables(stack.getCurrentFrame(), frame, method);
         stack.push(frame);
         
-        System.out.println("InvokeStatic: "+method.getMethodName());
+        JVMLogger.log(JVMLogger.TAG_INSTR, "InvokeStatic: "+method.getMethodName());
     }
     
     /**
@@ -46,7 +47,8 @@ public class InvokeStaticInstruction {
      */
     public static void loadArgumentsToLocalVariables(StackFrame currentFrame, StackFrame newFrame, MethodDefinition method) {
        
-        System.out.println("LoadArgumentsToLocalVariables");
+        JVMLogger.log(JVMLogger.TAG_INSTR, "LoadArgumentsToLocalVariables");
+        
         int locIndex = method.getMethodParamsWordsCount();
         //Kdyz od locIndex odectu pocet slov vkladaneho argumentu, pak dostanu index,
         //na ktery mam do lokalnich promennych argument vlozit

@@ -1,6 +1,7 @@
 package cz.cvut.fit.compactjvm.main;
 
 import cz.cvut.fit.compactjvm.jvm.CompactJVM;
+import cz.cvut.fit.compactjvm.logging.JVMLogger;
 
 
 /**
@@ -24,6 +25,9 @@ public class Main {
                 return;
             }
 
+            JVMLogger.enableLogging(JVMLogger.TAG_INSTR);
+            JVMLogger.enableLogging(JVMLogger.TAG_OTHER);
+            
             String classPath = args[0];
             CompactJVM jvm = new CompactJVM();
             jvm.loadApplication(classPath);

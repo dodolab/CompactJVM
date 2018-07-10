@@ -6,6 +6,7 @@
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
 import cz.cvut.fit.compactjvm.jvm.JVMStack;
+import cz.cvut.fit.compactjvm.logging.JVMLogger;
 
 /**
  * Return void from method. The interpreter then returns control to the invoker
@@ -25,7 +26,7 @@ public class ReturnInstruction {
             stack.getCurrentFrame().operandStack.popInt();
         }
         stack.removeCurrentFrame();
-        System.out.println("Executed return instruction");
+        JVMLogger.log(JVMLogger.TAG_INSTR, "Executed return instruction");
         
     }
 

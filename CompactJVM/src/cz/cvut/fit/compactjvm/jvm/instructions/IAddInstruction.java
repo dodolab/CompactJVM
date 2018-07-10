@@ -7,6 +7,7 @@ package cz.cvut.fit.compactjvm.jvm.instructions;
 
 import cz.cvut.fit.compactjvm.jvm.MethodArea;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
+import cz.cvut.fit.compactjvm.logging.JVMLogger;
 
 /**
  * Add int
@@ -22,7 +23,7 @@ public class IAddInstruction {
         int operand1 = stackFrame.operandStack.popInt();
         int operand2 = stackFrame.operandStack.popInt();
         
-        System.out.println("IAdd: "+operand1+" + "+operand2);
+        JVMLogger.log(JVMLogger.TAG_INSTR, "IAdd: "+operand1+" + "+operand2);
         
         int value = operand1 + operand2;
         stackFrame.operandStack.pushInt(value);

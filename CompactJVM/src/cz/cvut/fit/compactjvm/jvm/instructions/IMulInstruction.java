@@ -7,6 +7,7 @@ package cz.cvut.fit.compactjvm.jvm.instructions;
 
 import cz.cvut.fit.compactjvm.jvm.MethodArea;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
+import cz.cvut.fit.compactjvm.logging.JVMLogger;
 
 /**
  * Multiply int
@@ -22,8 +23,7 @@ public class IMulInstruction {
         int operand1 = stackFrame.operandStack.popInt();
         int operand2 = stackFrame.operandStack.popInt();
         
-        System.out.println("IMul: "+operand1+" * "+operand2);
-        
+        JVMLogger.log(JVMLogger.TAG_INSTR, "IMul: "+operand1+" * "+operand2);
         int value = operand1*operand2;
         stackFrame.operandStack.pushInt(value);
     }

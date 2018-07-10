@@ -4,6 +4,7 @@ import cz.cvut.fit.compactjvm.core.ClassFile;
 import cz.cvut.fit.compactjvm.definitions.AttributeType;
 import cz.cvut.fit.compactjvm.entities.*;
 import cz.cvut.fit.compactjvm.exceptions.ParsingException;
+import cz.cvut.fit.compactjvm.logging.JVMLogger;
 import java.io.DataInputStream;
 import java.io.IOException;
 
@@ -21,7 +22,7 @@ public class AttributeParser {
 
         Attribute attr = null;
 
-        System.out.println("          Parsing attribute "+name);
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing attribute "+name,10);
         
         switch (name) {
             case AttributeType.ATTR_ANNOTDEF:
@@ -97,7 +98,7 @@ public class AttributeParser {
     }
 
     private void skipAttribute(ClassFile cls, DataInputStream dis) throws IOException{
-        System.out.print("              Not supported ---> skipping");
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Not supported ---> skipping",14);
         int length = dis.readInt();
         byte[] arrToSkip = new byte[length];
         dis.read(arrToSkip);
@@ -115,8 +116,8 @@ public class AttributeParser {
         dis.read(attr.code);
         attr.exceptionTableLength = dis.readShort();
 
-        System.out.println("          MaxStack: "+attr.maxStack+"; MaxLocals: "+attr.maxLocals+
-                "; CodeLength: "+attr.codeLength);
+        JVMLogger.log(JVMLogger.TAG_PARSING, "MaxStack: "+attr.maxStack+"; MaxLocals: "+attr.maxLocals+
+                "; CodeLength: "+attr.codeLength,10);
         
         // parse exception table
         if (attr.exceptionTableLength != 0) {
@@ -137,7 +138,7 @@ public class AttributeParser {
         attr.attributesCount = dis.readShort();
 
         if (attr.attributesCount != 0) {
-            System.out.println("          Parsing inner attributes");
+            JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing inner attributes",10);
             attr.attrs = new Attribute[attr.attributesCount];
 
             for (int i = 0; i < attr.attributesCount; i++) {
@@ -156,7 +157,7 @@ public class AttributeParser {
         attr.constantValIndex = dis.readShort();
         
         String constantVal = ((CPUtf8)cls.cpEntities[attr.constantValIndex]).value;
-        System.out.println("          Constant value: "+constantVal);
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Constant value: "+constantVal,10);
         return attr;
     }
 
@@ -167,7 +168,7 @@ public class AttributeParser {
         attr.sourceFileIndex = dis.readShort();
         
         String sourceFile = ((CPUtf8)cls.cpEntities[attr.sourceFileIndex]).value;
-        System.out.println("          Source file: "+sourceFile);
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Source file: "+sourceFile,10);
         return attr;
     }
 

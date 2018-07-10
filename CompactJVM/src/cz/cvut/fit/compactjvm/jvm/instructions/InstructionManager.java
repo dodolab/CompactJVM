@@ -11,6 +11,7 @@ import cz.cvut.fit.compactjvm.jvm.JVMStack;
 import cz.cvut.fit.compactjvm.jvm.JVMThread;
 import cz.cvut.fit.compactjvm.jvm.MethodArea;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
+import cz.cvut.fit.compactjvm.logging.JVMLogger;
 
 /**
  * Spusti instrukci prislusnou danemu kodu
@@ -60,7 +61,7 @@ public class InstructionManager {
             case Instruction.IN_IRETURN: IReturnInstruction.run(jvmStack); break;
                 
             default:
-                System.out.println("Not implemented instruction: "+code);
+                JVMLogger.log(JVMLogger.TAG_INSTR, "Not implemented instruction: "+code);
         }
     }
     
