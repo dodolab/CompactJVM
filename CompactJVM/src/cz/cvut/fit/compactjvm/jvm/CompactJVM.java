@@ -5,6 +5,7 @@ import cz.cvut.fit.compactjvm.core.ClassFile;
 import cz.cvut.fit.compactjvm.exceptions.ParsingException;
 import cz.cvut.fit.compactjvm.classloader.parsing.ClassFileParser;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
+import cz.cvut.fit.compactjvm.exceptions.OutOfHeapMemException;
 import java.io.IOException;
 
 /**
@@ -24,8 +25,9 @@ public class CompactJVM {
         methodArea.initialLoad(path);
     }
     
-    public void start() throws LoadingException{
-        JVMThread thread = new JVMThread(methodArea);
+    public void start() throws LoadingException, ClassNotFoundException, OutOfHeapMemException{
+        ObjectHeap heap = new ObjectHeap(methodArea, 10000);
+        JVMThread thread = new JVMThread(methodArea, heap);
         thread.run("compactjvmlab/CompactJVMLab"); //@todo zatim nacitam fixne porad ten puvodni soubor
     }
 }

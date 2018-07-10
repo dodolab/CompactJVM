@@ -25,7 +25,7 @@ public class StackFrame {
     public MethodDefinition methodDefinition = null; //Definice metody - nazev tridy, nazev metody, rozparsovany descriptor
     /** @todo tohle by melo byt spis v pcRegistru u JVM threadu, ale jak se pak dostanu
      k mistu, kde jsem byl v predchozim framu pred vyvolanim metody? */
-    public final ArrayStorage arrayStorage; // dummy storage for arrays
+    public JVMThread jvmThread;
     
     /**
      * @param classFile
@@ -33,8 +33,8 @@ public class StackFrame {
      * @param methodDefinition
      * 
      */
-    public StackFrame(ClassFile classFile, int invokedMethod, MethodDefinition methodDefinition) throws LoadingException {
-        this(classFile, invokedMethod);
+    public StackFrame(ClassFile classFile, int invokedMethod, MethodDefinition methodDefinition, JVMThread jvmThread) throws LoadingException {
+        this(classFile, invokedMethod, jvmThread);
         this.methodDefinition = methodDefinition;
     }
     
@@ -42,10 +42,10 @@ public class StackFrame {
      * @param classFile
      * @param invokedMethod
      */
-    public StackFrame(ClassFile classFile, int invokedMethod) throws LoadingException {
+    public StackFrame(ClassFile classFile, int invokedMethod, JVMThread jvmThread) throws LoadingException {
+        this.jvmThread = jvmThread;
         associatedClass = classFile;
         associatedMethod = invokedMethod;
-        arrayStorage = new ArrayStorage();
         initializeFrame();
     }
     
@@ -115,6 +115,14 @@ public class StackFrame {
      */
     public void setCurrentInstructionIndex(int val){
         currentInstructionIndex = val;
+    }
+    
+    /**
+     * Gets complete code in byte array
+     * @return 
+     */
+    public byte[] getCode(){
+        return codeAttribute.code;
     }
     
     /**

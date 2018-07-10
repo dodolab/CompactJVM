@@ -7,6 +7,7 @@ package cz.cvut.fit.compactjvm.jvm.instructions;
 
 import cz.cvut.fit.compactjvm.definitions.Instruction;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
+import cz.cvut.fit.compactjvm.exceptions.OutOfHeapMemException;
 import cz.cvut.fit.compactjvm.jvm.JVMStack;
 import cz.cvut.fit.compactjvm.jvm.JVMThread;
 import cz.cvut.fit.compactjvm.jvm.MethodArea;
@@ -31,7 +32,7 @@ public class InstructionManager {
         this.jvmStack = jvmStack;
     }
     
-    public void runInstruction(byte instructionCode) throws LoadingException {
+    public void runInstruction(byte instructionCode) throws LoadingException, ClassNotFoundException, OutOfHeapMemException {
         int code = instructionCode & 0xFF;
         switch(code) {
             //operand stack and local variables instructions

@@ -15,8 +15,10 @@ import java.util.Stack;
 public class JVMStack {
     
     private final Stack<StackFrame> stack;
-
-    public JVMStack() {
+    public JVMThread jvmThread;
+    
+    public JVMStack(JVMThread jvmThread) {
+        this.jvmThread = jvmThread;
         stack = new Stack<>();
     }
     
@@ -37,5 +39,9 @@ public class JVMStack {
     
     public StackFrame getCurrentFrame() {
         return stack.peek();
+    }
+    
+    public Stack<StackFrame> getAllFrames(){
+        return stack;
     }
 }

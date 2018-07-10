@@ -6,6 +6,7 @@
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
+import cz.cvut.fit.compactjvm.exceptions.OutOfHeapMemException;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.logging.JVMLogger;
 
@@ -15,7 +16,7 @@ import cz.cvut.fit.compactjvm.logging.JVMLogger;
  */
 public class NewArrayInstruction {
     
-    public static void run(StackFrame stackFrame) throws LoadingException {
+    public static void run(StackFrame stackFrame) throws LoadingException, ClassNotFoundException, OutOfHeapMemException {
         
         int arrayType = stackFrame.getNextInstruction();
 
@@ -23,8 +24,7 @@ public class NewArrayInstruction {
         
         if(size < 0) throw new LoadingException("Array size cant' be lower than 0");
         
-        int[] arr = new int[size];
-        int arrayReference = stackFrame.arrayStorage.storeArray(arr);
+        int arrayReference = stackFrame.jvmThread.getHeap().allocArray(size);
         stackFrame.operandStack.pushInt(arrayReference);
         
         JVMLogger.log(JVMLogger.TAG_INSTR, "NewArray: size "+size);

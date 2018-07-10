@@ -38,6 +38,7 @@ public class ClassFile {
     public int[] interfIndices;
     
     public int[] classVariables;
+    public int index; // index of parsed class
     
     /**
      * Ziska Entitu odpovidajici pozadovane metode

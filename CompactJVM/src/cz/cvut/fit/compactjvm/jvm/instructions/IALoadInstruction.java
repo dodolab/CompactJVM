@@ -19,7 +19,7 @@ public class IALoadInstruction {
         
         int index = stackFrame.operandStack.popInt();
         int arrayRef = stackFrame.operandStack.popInt();
-        int[] array = stackFrame.arrayStorage.getArray(arrayRef);
+        int[] array = stackFrame.jvmThread.getHeap().loadIntArray(arrayRef);
         
         int value = array[index];
         stackFrame.operandStack.pushInt(value);

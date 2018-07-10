@@ -32,7 +32,7 @@ public class InvokeStaticInstruction {
         
         ClassFile classFile = methodArea.getClassFile(method.getMethodClass());
         int methodIndex = classFile.getMethodIndex(method.getMethodName(), method.getMethodDescriptor());
-        StackFrame frame = new StackFrame(classFile, methodIndex, method);
+        StackFrame frame = new StackFrame(classFile, methodIndex, method, stack.jvmThread);
         loadArgumentsToLocalVariables(stack.getCurrentFrame(), frame, method);
         stack.push(frame);
         

@@ -8,6 +8,7 @@ package cz.cvut.fit.compactjvm.jvm;
 import cz.cvut.fit.compactjvm.core.ClassFile;
 import cz.cvut.fit.compactjvm.entities.MTHEntity;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
+import cz.cvut.fit.compactjvm.exceptions.OutOfHeapMemException;
 import cz.cvut.fit.compactjvm.jvm.instructions.InstructionManager;
 
 /**
@@ -27,14 +28,21 @@ public class JVMThread {
     private final InstructionManager instructionManager; //spousti pozadovane instrukce, poskytuje instrukcim potrebne datove zdroje
     private final JVMStack jvmStack;
     private final MethodArea methodArea; //sdilena s ostatnimi JVM vlakny
+    private final ObjectHeap heap; // shared with others threads
     
     //private StackFrame currentFrame;
     //@todo pc register misto currentFrame?
     
-    public JVMThread(MethodArea methodArea) {
-        jvmStack = new JVMStack();
+    public JVMThread(MethodArea methodArea, ObjectHeap heap) {
+        jvmStack = new JVMStack(this);
+        heap.setJVMThread(this);
         this.methodArea = methodArea;
         instructionManager = new InstructionManager(jvmStack, methodArea);
+        this.heap = heap;
+    }
+    
+    public JVMStack getStack(){
+        return jvmStack;
     }
     
     /**
@@ -43,12 +51,12 @@ public class JVMThread {
      * @param className
      * @param methodName 
      */
-    public void run(String className) throws LoadingException {
+    public void run(String className) throws LoadingException, ClassNotFoundException, OutOfHeapMemException {
         
         // get main method
         ClassFile classFile = methodArea.getClassFile(className);
         int mainMethodIndex = classFile.getMethodIndex("main", "()V");
-        StackFrame currentFrame = new StackFrame(classFile, mainMethodIndex);
+        StackFrame currentFrame = new StackFrame(classFile, mainMethodIndex, this);
         jvmStack.push(currentFrame);
         
         while(!jvmStack.isEmpty() && jvmStack.getCurrentFrame().hasMoreInstructions()) {
@@ -56,5 +64,8 @@ public class JVMThread {
         }
     }
 
+    public ObjectHeap getHeap(){
+        return this.heap;
+    }
     
 }

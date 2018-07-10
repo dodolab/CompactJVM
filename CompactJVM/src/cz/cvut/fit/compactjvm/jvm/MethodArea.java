@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Tato trida uchovava parsovane definice trid.
@@ -27,11 +29,16 @@ public class MethodArea {
     
     private final ClassFileLoader classLoader;
     
-    Map<String, ClassFile> classMap;
+    // simple class storage
+    private final JVMClassStorage classStorage;
 
     public MethodArea(ClassFileLoader classLoader) {
         this.classLoader = classLoader;
-        classMap = new HashMap<>();
+        classStorage = new JVMClassStorage();
+    }
+    
+    public JVMClassStorage getClassStorage(){
+        return classStorage;
     }
     
     /**
@@ -41,10 +48,15 @@ public class MethodArea {
      * @return 
      */
     public ClassFile getClassFile(String className) {
-        if(classMap.containsKey(className)) {
-            return classMap.get(className);
+        if(classStorage.containsClass(className)) {
+            try {
+                return classStorage.getClass(className);
+            } catch (ClassNotFoundException ex) {
+               // never thrown :-)
+            }
         }
         ClassFile classFile = classLoader.load(className);
+        classStorage.addClass(classFile);
         return classFile;
     }
     
