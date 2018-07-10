@@ -14,6 +14,7 @@ import cz.cvut.fit.compactjvm.jvm.MethodArea;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.logging.JVMLogger;
 import java.nio.ByteBuffer;
+import cz.cvut.fit.compactjvm.structures.*;
 
 /**
  *
@@ -43,7 +44,7 @@ public class InvokeSpecialInstruction {
      * @param newFrame
      * @param method
      */
-    public static void loadArgumentsToLocalVariables(StackFrame currentFrame, StackFrame newFrame, MethodDefinition method) {
+    public static void loadArgumentsToLocalVariables(StackFrame currentFrame, StackFrame newFrame, MethodDefinition method) throws LoadingException {
        
         JVMLogger.log(JVMLogger.TAG_INSTR, "LoadArgumentsToLocalVariables");
         
@@ -52,46 +53,49 @@ public class InvokeSpecialInstruction {
         //na ktery mam do lokalnich promennych argument vlozit
         for(int i = method.getMethodParams().size() - 1; i >= 0; --i) {
             switch(method.getMethodParams().get(i)) {
+                // local variable is set once below (powerful generics will distinct types)
+                
                 case "Z": //boolean
                     locIndex -= Word.BOOLEAN_WORDS;
-                    newFrame.localVariables.setBoolean(locIndex, currentFrame.operandStack.popBoolean());
                     break;
                 case "B": //byte
                     locIndex -= Word.BYTE_WORDS;
-                    newFrame.localVariables.setByte(locIndex, currentFrame.operandStack.popByte());
+                    //newFrame.localVariables.setByte(locIndex, currentFrame.operandStack.popByte());
                     break;
                 case "C": //char
                     locIndex -= Word.CHAR_WORDS;
-                    newFrame.localVariables.setChar(locIndex, currentFrame.operandStack.popChar());
+                    //newFrame.localVariables.setChar(locIndex, currentFrame.operandStack.popChar());
                     break;
                 case "S": //short
                     locIndex -= Word.SHORT_WORDS;
-                    newFrame.localVariables.setShort(locIndex, currentFrame.operandStack.popShort());
+                    //newFrame.localVariables.setShort(locIndex, currentFrame.operandStack.popShort());
                     break;
                 case "I": //int
                     locIndex -= Word.INT_WORDS;
-                    newFrame.localVariables.setInt(locIndex, currentFrame.operandStack.popInt());
+                    //newFrame.localVariables.setInt(locIndex, currentFrame.operandStack.popInt());
                     break;
                 case "J": //long
                     locIndex -= Word.LONG_WORDS;
-                    newFrame.localVariables.setLong(locIndex, currentFrame.operandStack.popLong());
+                    //newFrame.localVariables.setLong(locIndex, currentFrame.operandStack.popLong());
                     break;
                 case "F": //float
                     locIndex -= Word.FLOAT_WORDS;
-                    newFrame.localVariables.setFloat(locIndex, currentFrame.operandStack.popFloat());
+                    //newFrame.localVariables.setFloat(locIndex, currentFrame.operandStack.popFloat());
                     break;
                 case "D": //double
                     locIndex -= Word.DOUBLE_WORDS;
-                    newFrame.localVariables.setDouble(locIndex, currentFrame.operandStack.popDouble());
+                    //newFrame.localVariables.setDouble(locIndex, currentFrame.operandStack.popDouble());
                     break;
                 default: //array, class, ...
                     locIndex -= Word.REFERENCE_WORDS;
-                    newFrame.localVariables.setInt(locIndex, currentFrame.operandStack.popInt());
+                    //newFrame.localVariables.setInt(locIndex, currentFrame.operandStack.popInt());
                     break;
             }
+            
+            newFrame.localVariables.setVar(locIndex, currentFrame.operandStack.pop());
         }
         //nastavi na pozici 0 lokalnich promennych referenci na objekt
-        newFrame.localVariables.setReference(0, currentFrame.operandStack.popReference());
+        newFrame.localVariables.setVar(0, currentFrame.operandStack.pop());
     }
 
 }

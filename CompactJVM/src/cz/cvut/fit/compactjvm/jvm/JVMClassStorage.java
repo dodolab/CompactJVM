@@ -46,5 +46,9 @@ public class JVMClassStorage {
 	public ClassFile getClass(int address) {
 		return classes.get(address);
 	}
+        
+        public List<ClassFile> getClassFiles() {
+            return classes;
+        }
     
 }

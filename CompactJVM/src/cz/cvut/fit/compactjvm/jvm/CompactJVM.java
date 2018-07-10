@@ -42,4 +42,12 @@ public class CompactJVM {
         threads.add(thread);
         thread.run("compactjvmlab/CompactJVMLab"); //@todo zatim nacitam fixne porad ten puvodni soubor
     }
+    
+    public MethodArea getMethodArea() {
+        return methodArea;
+    }
+    
+    public ObjectHeap getObjectHeap() {
+        return heap;
+    }
 }

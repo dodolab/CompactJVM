@@ -5,8 +5,10 @@
  */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
+import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.JVMStack;
 import cz.cvut.fit.compactjvm.logging.JVMLogger;
+import cz.cvut.fit.compactjvm.structures.*;
 
 /**
  * Return int from method
@@ -19,11 +21,11 @@ public class IReturnInstruction {
     /**
      * @param stack
      */
-    public static void run(JVMStack stack) {
-        int value = stack.getCurrentFrame().operandStack.popInt();
+    public static void run(JVMStack stack) throws LoadingException{
+        SInt value = stack.getCurrentFrame().operandStack.pop();
         JVMLogger.log(JVMLogger.TAG_INSTR, "IReturn: "+value);
         stack.removeCurrentFrame();
-        stack.getCurrentFrame().operandStack.pushInt(value);
+        stack.getCurrentFrame().operandStack.push(value);
     }
 
 }

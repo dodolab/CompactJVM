@@ -12,6 +12,7 @@ import cz.cvut.fit.compactjvm.jvm.JVMStack;
 import cz.cvut.fit.compactjvm.jvm.ObjectHeap;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.logging.JVMLogger;
+import cz.cvut.fit.compactjvm.structures.*;
 
 /**
  * Set field in object
@@ -29,10 +30,10 @@ public class GetfieldInstruction {
         
         FLEntity fieldInfo = stackFrame.associatedClass.getFieldInfoByCpIndex(cpIndex);
         
-        int reference = stackFrame.operandStack.popReference();
-        int value = heap.readFromHeap(reference, fieldInfo.dataFieldOffset);
+        SObjectRef reference = stackFrame.operandStack.pop();
+        int value = heap.readFromHeap(reference.getReference(), fieldInfo.dataFieldOffset);
         //@todo zalezi na typu, nejen int
-        stackFrame.operandStack.pushInt(value);
+        stackFrame.operandStack.push(new SInt(value));
         
         JVMLogger.log(JVMLogger.TAG_INSTR, "Get field from heap (reference: "+reference+", value: "+value+")");
     }

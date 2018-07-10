@@ -5,8 +5,10 @@
  */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
+import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.logging.JVMLogger;
+import cz.cvut.fit.compactjvm.structures.*;
 
 /**
  * if value is less than or equal to 0, branch to instruction at branchoffset (signed short constructed from unsigned bytes branchbyte1 << 8 + branchbyte2)
@@ -14,15 +16,15 @@ import cz.cvut.fit.compactjvm.logging.JVMLogger;
  */
 public class IfleInstruction {
     
-    public static void run(StackFrame stackFrame) {
+    public static void run(StackFrame stackFrame) throws LoadingException{
 
         // two bytes
         stackFrame.loadInstructionSingleParam();
         byte nextInstruction = stackFrame.loadInstructionSingleParam();
         
-        int value = stackFrame.operandStack.popInt();
+        SInt value = stackFrame.operandStack.pop();
         
-        if(value <= 0){
+        if(value.getValue() <= 0){
             JVMLogger.log(JVMLogger.TAG_INSTR, "Ifle: "+value+" <= 0; goto "+nextInstruction);
             stackFrame.setCurrentInstructionIndex(stackFrame.getCurrentInstructionIndex() + nextInstruction - 3);
         }else{

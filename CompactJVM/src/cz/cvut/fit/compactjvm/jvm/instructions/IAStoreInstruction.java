@@ -5,9 +5,11 @@
  */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
+import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.ObjectHeap;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.logging.JVMLogger;
+import cz.cvut.fit.compactjvm.structures.*;
 
 /**
  * store an int into an array
@@ -15,13 +17,13 @@ import cz.cvut.fit.compactjvm.logging.JVMLogger;
  */
 public class IAStoreInstruction {
     
-    public static void run(StackFrame stackFrame, ObjectHeap heap) {
+    public static void run(StackFrame stackFrame, ObjectHeap heap) throws LoadingException{
 
-        int valueToAdd = stackFrame.operandStack.popInt();
-        int index = stackFrame.operandStack.popInt();
-        int arrayRef = stackFrame.operandStack.popInt();
+        SInt valueToAdd = stackFrame.operandStack.pop();
+        SInt index = stackFrame.operandStack.pop();
+        SArrayRef arrayRef = stackFrame.operandStack.pop();
         
-        heap.writeToHeap(arrayRef, index, valueToAdd);
+        heap.writeToHeap(arrayRef.getReference(), index.getValue(), valueToAdd.getValue());
         
         JVMLogger.log(JVMLogger.TAG_INSTR,"IAStore: array["+index+"] = "+valueToAdd);
         

@@ -5,9 +5,11 @@
  */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
+import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.OperandStack;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.logging.JVMLogger;
+import cz.cvut.fit.compactjvm.structures.*;
 
 /**
  * perform no operation
@@ -15,9 +17,9 @@ import cz.cvut.fit.compactjvm.logging.JVMLogger;
  */
 public class PopInstruction {
     
-    public static void run(StackFrame stackFrame) {
+    public static void run(StackFrame stackFrame) throws LoadingException{
 
-        stackFrame.operandStack.popInt();
+        stackFrame.operandStack.pop();
         
         JVMLogger.log(JVMLogger.TAG_INSTR, "Pop; Pop from stack");
     }

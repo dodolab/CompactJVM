@@ -90,8 +90,12 @@ public class MethodArea {
         //return "";
     }
     
-    public void getClassFileByIndex(int index) {
-        
+    public ClassFile getClassFileByIndex(int index) {
+        return null;
+    }
+    
+    public List<ClassFile> getLoadedClassFiles() {
+        return classStorage.getClassFiles();
     }
     
     /**

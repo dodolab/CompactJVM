@@ -5,8 +5,10 @@
  */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
+import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.logging.JVMLogger;
+import cz.cvut.fit.compactjvm.structures.*;
 
 /**
  * increment local variable #index by signed byte const
@@ -14,12 +16,12 @@ import cz.cvut.fit.compactjvm.logging.JVMLogger;
  */
 public class IIncInstruction {
     
-    public static void run(StackFrame stackFrame) {
+    public static void run(StackFrame stackFrame) throws LoadingException{
         int index = stackFrame.loadInstructionSingleParam();
         int constant = stackFrame.loadInstructionSingleParam();
         
-        int localVar = stackFrame.localVariables.getInt(index);
-        stackFrame.localVariables.setInt(index, localVar+constant);
+        SInt localVar = stackFrame.localVariables.getVar(index);
+        stackFrame.localVariables.setVar(index, new SInt(localVar.getValue()+constant));
         
         JVMLogger.log(JVMLogger.TAG_INSTR, "IInc: "+localVar+"+="+constant);
     }

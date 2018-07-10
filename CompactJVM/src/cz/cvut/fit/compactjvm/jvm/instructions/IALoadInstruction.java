@@ -5,25 +5,12 @@
  */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
+import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.ObjectHeap;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import static cz.cvut.fit.compactjvm.jvm.instructions.ALoadInstruction.run;
 import cz.cvut.fit.compactjvm.logging.JVMLogger;
-import static cz.cvut.fit.compactjvm.jvm.instructions.ALoadInstruction.run;
-import static cz.cvut.fit.compactjvm.jvm.instructions.ALoadInstruction.run;
-import static cz.cvut.fit.compactjvm.jvm.instructions.ALoadInstruction.run;
-import static cz.cvut.fit.compactjvm.jvm.instructions.ALoadInstruction.run;
-import static cz.cvut.fit.compactjvm.jvm.instructions.ALoadInstruction.run;
-import static cz.cvut.fit.compactjvm.jvm.instructions.ALoadInstruction.run;
-import static cz.cvut.fit.compactjvm.jvm.instructions.ALoadInstruction.run;
-import static cz.cvut.fit.compactjvm.jvm.instructions.ALoadInstruction.run;
-import static cz.cvut.fit.compactjvm.jvm.instructions.ALoadInstruction.run;
-import static cz.cvut.fit.compactjvm.jvm.instructions.ALoadInstruction.run;
-import static cz.cvut.fit.compactjvm.jvm.instructions.ALoadInstruction.run;
-import static cz.cvut.fit.compactjvm.jvm.instructions.ALoadInstruction.run;
-import static cz.cvut.fit.compactjvm.jvm.instructions.ALoadInstruction.run;
-import static cz.cvut.fit.compactjvm.jvm.instructions.ALoadInstruction.run;
-import static cz.cvut.fit.compactjvm.jvm.instructions.ALoadInstruction.run;
+import cz.cvut.fit.compactjvm.structures.*;
 
 /**
  * load an int from an array
@@ -31,13 +18,13 @@ import static cz.cvut.fit.compactjvm.jvm.instructions.ALoadInstruction.run;
  */
 public class IALoadInstruction {
 
-    public static void run(StackFrame stackFrame, ObjectHeap heap){
+    public static void run(StackFrame stackFrame, ObjectHeap heap) throws LoadingException{
         
-        int index = stackFrame.operandStack.popInt();
-        int arrayRef = stackFrame.operandStack.popInt();
+        SInt index = stackFrame.operandStack.pop();
+        SArrayRef arrayRef = stackFrame.operandStack.pop();
         
-        int value = heap.readFromHeap(arrayRef, index);
-        stackFrame.operandStack.pushInt(value);
+        int value = heap.readFromHeap(arrayRef.getReference(), index.getValue());
+        stackFrame.operandStack.push(new SInt(value));
         
         JVMLogger.log(JVMLogger.TAG_INSTR, "IALoad: array["+index+"] : "+value);
     }

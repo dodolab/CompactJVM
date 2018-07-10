@@ -5,8 +5,10 @@
  */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
+import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.logging.JVMLogger;
+import cz.cvut.fit.compactjvm.structures.*;
 
 /**
  *  load a reference onto the stack from a local variable #index
@@ -14,15 +16,15 @@ import cz.cvut.fit.compactjvm.logging.JVMLogger;
  */
 public class ALoadInstruction {
 
-    public static void run(StackFrame stackFrame){
+    public static void run(StackFrame stackFrame) throws LoadingException{
         // for instruction ALOAD where index is specified by parameter
         byte index = stackFrame.loadInstructionSingleParam();
         run(stackFrame, index);
     }
     
-    public static void run(StackFrame stackFrame, int index) {
-        int value = stackFrame.localVariables.getReference(index);
-        stackFrame.operandStack.pushReference(value);
+    public static void run(StackFrame stackFrame, int index) throws LoadingException {
+        SObjectRef value = stackFrame.localVariables.getVar(index);
+        stackFrame.operandStack.push(value);
         
         JVMLogger.log(JVMLogger.TAG_INSTR, "ALoad; index: "+index+"; value: "+value);
     }

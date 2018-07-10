@@ -10,6 +10,7 @@ import cz.cvut.fit.compactjvm.exceptions.OutOfHeapMemException;
 import cz.cvut.fit.compactjvm.jvm.ObjectHeap;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.logging.JVMLogger;
+import cz.cvut.fit.compactjvm.structures.*;
 
 /**
  * create a new array of references of length count and component type identified by the class reference index (indexbyte1 << 8 + indexbyte2) in the constant pool
@@ -21,13 +22,13 @@ public class NewArrayInstruction {
         
         int arrayType = stackFrame.getNextInstruction();
 
-        int size = stackFrame.operandStack.popByte();
+        SInt size = stackFrame.operandStack.pop();
         
-        if(size < 0) throw new LoadingException("Array size cant' be lower than 0");
+        if(size.getValue() < 0) throw new LoadingException("Array size cant' be lower than 0");
         
-        int arrayReference = heap.allocArray(1, size);
+        int arrayReference = heap.allocArray(1, size.getValue());
         
-        stackFrame.operandStack.pushInt(arrayReference);
+        stackFrame.operandStack.push(new SArrayRef(arrayReference));
         
         JVMLogger.log(JVMLogger.TAG_INSTR, "NewArray: size "+size);
     }

@@ -5,8 +5,10 @@
  */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
+import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.logging.JVMLogger;
+import cz.cvut.fit.compactjvm.structures.*;
 
 /**
  * push the long #value onto the stack
@@ -14,11 +16,10 @@ import cz.cvut.fit.compactjvm.logging.JVMLogger;
  */
 public class LConstNInstruction {
     
-    public static void run(StackFrame stackFrame, int value) {
+    public static void run(StackFrame stackFrame, int value) throws LoadingException{
         JVMLogger.log(JVMLogger.TAG_INSTR, "LConst: "+value);
         
         // push long
-        stackFrame.operandStack.pushInt(0);
-        stackFrame.operandStack.pushInt(value);
+        stackFrame.operandStack.push(new SLong(value));
     }
 }

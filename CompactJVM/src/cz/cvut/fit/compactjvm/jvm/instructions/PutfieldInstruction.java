@@ -17,6 +17,7 @@ import cz.cvut.fit.compactjvm.jvm.ObjectHeap;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import static cz.cvut.fit.compactjvm.jvm.instructions.InvokeSpecialInstruction.PARAM_COUNT;
 import cz.cvut.fit.compactjvm.logging.JVMLogger;
+import cz.cvut.fit.compactjvm.structures.*;
 
 /**
  * Set field in object
@@ -35,11 +36,11 @@ public class PutfieldInstruction {
         FLEntity fieldInfo = stackFrame.associatedClass.getFieldInfoByCpIndex(cpIndex);
         
         //@todo zalezi na typu
-        int value = stackFrame.operandStack.popInt();
-        int reference = stackFrame.operandStack.popReference();
+        SInt value = stackFrame.operandStack.pop();
+        SObjectRef reference = stackFrame.operandStack.pop();
         //@todo otestovat, zda reference neni pole
         
-        heap.writeToHeap(reference, fieldInfo.dataFieldOffset, value);
+        heap.writeToHeap(reference.getReference(), fieldInfo.dataFieldOffset, value.getValue());
         JVMLogger.log(JVMLogger.TAG_INSTR, "Put field to heap: (reference: "+reference+", value: "+value+")");
     }
 

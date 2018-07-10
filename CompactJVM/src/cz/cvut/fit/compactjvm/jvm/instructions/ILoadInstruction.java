@@ -5,9 +5,11 @@
  */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
+import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.MethodArea;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.logging.JVMLogger;
+import cz.cvut.fit.compactjvm.structures.*;
 
 /**
  * Load int from local variable and push onto the operand stack
@@ -16,11 +18,11 @@ import cz.cvut.fit.compactjvm.logging.JVMLogger;
  */
 public class ILoadInstruction {
     
-    public static void run(StackFrame stackFrame) {
+    public static void run(StackFrame stackFrame) throws LoadingException{
         byte localVariableIndex = stackFrame.loadInstructionSingleParam();
-        int value = stackFrame.localVariables.getInt(localVariableIndex);
+        SInt value = stackFrame.localVariables.getVar(localVariableIndex);
         JVMLogger.log(JVMLogger.TAG_INSTR, "ILoad: "+value);
-        stackFrame.operandStack.pushInt(value);
+        stackFrame.operandStack.push(value);
     }
 
 }

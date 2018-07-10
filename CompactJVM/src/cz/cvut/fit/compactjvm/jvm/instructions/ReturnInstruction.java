@@ -5,8 +5,10 @@
  */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
+import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.JVMStack;
 import cz.cvut.fit.compactjvm.logging.JVMLogger;
+import cz.cvut.fit.compactjvm.structures.*;
 
 /**
  * Return void from method. The interpreter then returns control to the invoker
@@ -20,10 +22,10 @@ public class ReturnInstruction {
     /**
      * @param stack
      */
-    public static void run(JVMStack stack) {
+    public static void run(JVMStack stack) throws LoadingException{
         
         while(!stack.getCurrentFrame().operandStack.isEmpty()){
-            stack.getCurrentFrame().operandStack.popInt();
+            stack.getCurrentFrame().operandStack.pop();
         }
         stack.removeCurrentFrame();
         JVMLogger.log(JVMLogger.TAG_INSTR, "Executed return instruction");

@@ -5,9 +5,11 @@
  */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
+import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.MethodArea;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.logging.JVMLogger;
+import cz.cvut.fit.compactjvm.structures.*;
 
 /**
  * Add int
@@ -19,14 +21,14 @@ import cz.cvut.fit.compactjvm.logging.JVMLogger;
  */
 public class IAddInstruction {
     
-    public static void run(StackFrame stackFrame) {
-        int operand1 = stackFrame.operandStack.popInt();
-        int operand2 = stackFrame.operandStack.popInt();
+    public static void run(StackFrame stackFrame)throws LoadingException {
+        SInt operand1 = stackFrame.operandStack.pop();
+        SInt operand2 = stackFrame.operandStack.pop();
         
         JVMLogger.log(JVMLogger.TAG_INSTR, "IAdd: "+operand1+" + "+operand2);
         
-        int value = operand1 + operand2;
-        stackFrame.operandStack.pushInt(value);
+        SInt value = new SInt(operand1.getValue() + operand2.getValue());
+        stackFrame.operandStack.push(value);
     }
 
 }

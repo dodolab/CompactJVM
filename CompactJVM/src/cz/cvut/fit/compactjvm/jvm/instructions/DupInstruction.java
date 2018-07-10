@@ -5,20 +5,21 @@
  */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
+import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.logging.JVMLogger;
-
+import cz.cvut.fit.compactjvm.structures.*;
 /**
  * push the long #value onto the stack
  * @author Adam Vesecky
  */
 public class DupInstruction {
     
-    public static void run(StackFrame stackFrame) {
+    public static void run(StackFrame stackFrame) throws LoadingException{
         
-        int value = stackFrame.operandStack.popInt();
-        stackFrame.operandStack.pushInt(value);
-        stackFrame.operandStack.pushInt(value);
+        SInt value = stackFrame.operandStack.pop();
+        stackFrame.operandStack.push(value);
+        stackFrame.operandStack.push(value.makeCopy());
         
         JVMLogger.log(JVMLogger.TAG_INSTR, "Dup: "+value);
     }

@@ -5,6 +5,8 @@
  */
 package cz.cvut.fit.compactjvm.jvm;
 
+import cz.cvut.fit.compactjvm.exceptions.LoadingException;
+import cz.cvut.fit.compactjvm.structures.*;
 import java.nio.ByteBuffer;
 import java.util.Stack;
 
@@ -18,65 +20,33 @@ import java.util.Stack;
  */
 public class OperandStack {
     
-    Stack<Integer> operandStack;
+    Stack<SStruct> operandStack;
+    
+    StackFrameReferences references;
 
-    public OperandStack() {
+    public OperandStack(StackFrameReferences references) {
         this.operandStack = new Stack<>();
+        this.references = references;
     }
         
     public boolean isEmpty(){
         return operandStack.isEmpty();
     }
     
-    public boolean popBoolean() {
-        return operandStack.pop() == 1;
-    }
-    
-    public void pushBoolean(boolean value) {
-        operandStack.push(value ? 1 : 0);
-    }
+    public <T extends SStruct> T pop() throws LoadingException{
+        SStruct ent = operandStack.pop();
+        T entity = (T)ent;
         
-    public byte popByte() {
-        return operandStack.pop().byteValue();
+        if(entity == null) throw new LoadingException("Wrong type! Found: "+ent.toString());
+        return entity;
     }
     
-    public void pushByte(byte value) {
-        operandStack.push(Integer.valueOf(value));
-    }
-        
-    public char popChar() {
-        return (char) operandStack.pop().byteValue();
-    }
-    
-    public void pushChar(char value) {
-        operandStack.push(Integer.valueOf(value));
-    }
-    
-    public int popInt() {
-        return operandStack.pop();
-    }
-    
-    public void pushInt(int value) {
+    public <T extends SStruct> void push(T value){
         operandStack.push(value);
     }
     
-    public short popShort() {
-        return operandStack.pop().shortValue();
-    }
-    
-    public void pushShort(short value) {
-        operandStack.push(Integer.valueOf(value));
-    }
-    
-    public float popFloat() {
-        return operandStack.pop().floatValue();
-    }
-    
-    public void pushFloat(float value) {
-        operandStack.push(Float.floatToIntBits(value));
-    }
-    
-    public double popDouble() {
+    /*
+    public SDouble popDouble() {
         byte[] bytes = new byte[Double.BYTES];
         ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
         byteBuffer.putInt(Integer.BYTES, operandStack.pop());
@@ -110,10 +80,13 @@ public class OperandStack {
     
     public void pushReference(int objectReference) {
         pushInt(objectReference);
+        references.addReference(objectReference);
     }
     
     public int popReference() {
-        return popInt();
+        int objectReference = popInt();
+        references.removeReference(objectReference);
+        return objectReference;
     }
-    
+    */
 }

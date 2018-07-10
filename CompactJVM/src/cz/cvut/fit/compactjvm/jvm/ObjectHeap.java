@@ -6,7 +6,10 @@
 package cz.cvut.fit.compactjvm.jvm;
 
 import cz.cvut.fit.compactjvm.core.ClassFile;
+import cz.cvut.fit.compactjvm.entities.FLEntity;
 import cz.cvut.fit.compactjvm.exceptions.OutOfHeapMemException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @todp Tady bude prostor pro alokovane objekty, pole atd.
@@ -215,5 +218,35 @@ public class ObjectHeap {
      */
     private boolean isFull(int wordsRequired) {
         return (heapSize - nextFreeSpace) < wordsRequired;
+    }
+    
+    /**
+     * Ziska reference objektu, ktery je umisten na halde.
+     * Pokud jde o tridu, pak nacte pole fields a z nej podle deskriptoru najde
+     * reference na pole a objekty.
+     * Pokud jde o pole, pak musim rozlisit, zda jde o pole jednoduchych typu
+     * (ty neobsahuji dalsi reference), nebo zda jde o pole objektu
+     * @todo vyresit
+     * 
+     * @param objectReference
+     * @return 
+     */
+    private List<Integer> getObjectReferences(int objectReference) {
+        List<Integer> references = new ArrayList<>();
+        int classIndex = getClassIndex(objectReference);
+        if(classIndex == ARRAY_INDEX) {
+            /*for(int i = 0; i < heap[classIndex + 1]; ++i) {
+                references.add(heap[classIndex + getObjectHeaderSize() + i]);
+            }*/
+        } else {
+            ClassFile classFile = methodArea.getClassFileByIndex(classIndex);
+            for(FLEntity field : classFile.fieldInfos) {
+                if(field.descriptor.startsWith("L") || field.descriptor.startsWith("[")) {
+                    references.add(field.dataFieldOffset);
+                }
+            }
+            
+        }
+        return references;
     }
 }

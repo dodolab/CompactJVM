@@ -5,9 +5,11 @@
  */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
+import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.MethodArea;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.logging.JVMLogger;
+import cz.cvut.fit.compactjvm.structures.*;
 
 /**
  * Load int from local variable
@@ -16,10 +18,10 @@ import cz.cvut.fit.compactjvm.logging.JVMLogger;
  */
 public class ILoadNInstruction {
     
-    public static void run(StackFrame stackFrame, int localVariableIndex) {
-        int value = stackFrame.localVariables.getInt(localVariableIndex);
+    public static void run(StackFrame stackFrame, int localVariableIndex) throws LoadingException{
+        SInt value = stackFrame.localVariables.getVar(localVariableIndex);
         JVMLogger.log(JVMLogger.TAG_INSTR, "ILoadN: "+value);
-        stackFrame.operandStack.pushInt(value);
+        stackFrame.operandStack.push(value);
     }
 
 }

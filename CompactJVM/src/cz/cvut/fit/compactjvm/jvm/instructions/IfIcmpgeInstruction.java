@@ -5,8 +5,10 @@
  */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
+import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.logging.JVMLogger;
+import cz.cvut.fit.compactjvm.structures.*;
 
 /**
  *  if value1 is greater than or equal to value2, branch to instruction at branchoffset (signed short constructed from unsigned bytes branchbyte1 << 8 + branchbyte2)
@@ -14,16 +16,16 @@ import cz.cvut.fit.compactjvm.logging.JVMLogger;
  */
 public class IfIcmpgeInstruction {
     
-    public static void run(StackFrame stackFrame) {
+    public static void run(StackFrame stackFrame) throws LoadingException{
 
         // two bytes
         stackFrame.loadInstructionSingleParam();
         byte nextInstruction = stackFrame.loadInstructionSingleParam();
         
-        int value2 = stackFrame.operandStack.popInt();
-        int value1 = stackFrame.operandStack.popInt();
+        SInt value2 = stackFrame.operandStack.pop();
+        SInt value1 = stackFrame.operandStack.pop();
         
-        if(value1 >= value2){
+        if(value1.getValue() >= value2.getValue()){
             JVMLogger.log(JVMLogger.TAG_INSTR, "IfIcmpge: "+value1+" >= "+value2+"; goto "+nextInstruction);
             stackFrame.setCurrentInstructionIndex(stackFrame.getCurrentInstructionIndex() + nextInstruction - 3);
         }else{

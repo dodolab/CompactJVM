@@ -5,6 +5,8 @@
  */
 package cz.cvut.fit.compactjvm.jvm;
 
+import cz.cvut.fit.compactjvm.exceptions.LoadingException;
+import cz.cvut.fit.compactjvm.structures.*;
 import java.nio.ByteBuffer;
 
 /**
@@ -20,17 +22,32 @@ public class LocalVariableArray {
     /**
      * Pole slov pro jednotlive lokalni promenne
      */
-    int[] localVariables;
+    SStruct[] localVariables;
+    
+    StackFrameReferences references;
     
     /**
      * @param size Velikost pole lokalnich promennych, ziskano z ClassFile
      * @todo pridat moznost vlozit "this" referenci pro instancni volani metody
      */
-    public LocalVariableArray(int size) {
-        localVariables = new int[size];
+    public LocalVariableArray(int size, StackFrameReferences references) {
+        localVariables = new SStruct[size];
+        this.references = references;
         
     }
     
+    public <T extends SStruct> T getVar(int index) throws LoadingException{
+        SStruct ent = localVariables[index];
+        T entity = (T)ent;
+        
+        if(entity == null) throw new LoadingException("Wrong type! Found: "+ent.toString());
+        return entity;
+    }
+    
+    public <T extends SStruct> void setVar(int index, T value){
+        localVariables[index] = value;
+    }
+    /*
     public boolean getBoolean(int index) {
         return localVariables[index] == 1;
     }
@@ -116,7 +133,10 @@ public class LocalVariableArray {
     }
     
     public void setReference(int index, int objectReference) {
+        int oldObjectReference = getInt(index);
+        if(oldObjectReference != 0) references.removeReference(objectReference);
         setInt(index, objectReference);
+        references.addReference(objectReference);
     }
-    
+    */
 }

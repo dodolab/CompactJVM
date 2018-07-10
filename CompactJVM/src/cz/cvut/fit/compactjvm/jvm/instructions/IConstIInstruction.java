@@ -5,9 +5,11 @@
  */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
+import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.MethodArea;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.logging.JVMLogger;
+import cz.cvut.fit.compactjvm.structures.*;
 
 /**
  * Push int constant onto the operand stack
@@ -16,9 +18,9 @@ import cz.cvut.fit.compactjvm.logging.JVMLogger;
  */
 public class IConstIInstruction {
     
-    public static void run(StackFrame stackFrame, int value) {
+    public static void run(StackFrame stackFrame, int value) throws LoadingException{
         JVMLogger.log(JVMLogger.TAG_INSTR, "IConst: "+value);
-        stackFrame.operandStack.pushInt(value);
+        stackFrame.operandStack.push(new SInt(value));
     }
 
 }
