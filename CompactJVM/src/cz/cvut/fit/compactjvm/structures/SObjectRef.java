@@ -46,7 +46,7 @@ public class SObjectRef extends SGenericRef{
         if(this.isNull()){
             return "SObjectRef[null]";
         }else{
-            return "SObjectRef["+this.classFile.getClassName()+"]["+this.heapReference+"]";
+            return "SObjectRef["+(this.classFile == null ? "???" : this.classFile.getClassName())+"]["+this.heapReference+"]";
         }
     }
 

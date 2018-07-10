@@ -31,9 +31,9 @@ public class GetfieldInstruction {
         FLEntity fieldInfo = stackFrame.associatedClass.getFieldInfoByCpIndex(cpIndex);
         
         SObjectRef reference = stackFrame.operandStack.pop();
-        int value = heap.readFromHeap(reference.getReference(), fieldInfo.dataFieldOffset);
+        SInt value = heap.readFromHeap(reference.getReference(), fieldInfo.dataFieldOffset);
         //@todo zalezi na typu, nejen int
-        stackFrame.operandStack.push(new SInt(value));
+        stackFrame.operandStack.push(value);
         
         JVMLogger.log(JVMLogger.TAG_INSTR, "Get field from heap (reference: "+reference+", value: "+value+")");
     }

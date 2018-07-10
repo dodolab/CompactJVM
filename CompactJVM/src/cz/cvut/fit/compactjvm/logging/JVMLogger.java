@@ -21,6 +21,8 @@ public class JVMLogger {
     public static final String TAG_INSTR = "INSTR";
     // other - will be replaced continuously
     public static final String TAG_OTHER = "OTHER";
+    // garbage collector
+    public static final String TAG_GC = "GC";
     
     private static final ArrayList<String> tags = new ArrayList<String>();
     private static int globalPadding = 0;

@@ -5,6 +5,9 @@
  */
 package compactjvmlab;
 
+import compactjvmlab.satsolver.FileLoader;
+import java.io.IOException;
+
 /**
  * Simple class that will be used for testing CompactJVM project
  * Just write anything, compile into class file and load it, using CompactJVM
@@ -23,11 +26,24 @@ public class CompactJVMLab {
         staticPrivateProm3 = 13;
     }
 
-    public static void main() {
-    
-        /** TEST 5 - volani metody v rodicovske tride **/
+    public static void main(String[] args) {
+        if(args.length != 1) {
+            System.out.println("Neplatny pocet argumentu");
+            System.exit(1);
+        }
+        
+        int[][] clauses = null;
+        try {
+            clauses = FileLoader.readFile(args[0]);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            System.exit(1);
+        }
+        
+        /** TEST 5 - volani metody v rodicovske tride **
         TestClass t = new TestClass();
         int i = t.getValueFromSuperclass();
+        */
         
         /** TEST 1 - zachovani funkcnosti poli
         int[] myarray = new int[2];

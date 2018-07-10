@@ -23,7 +23,7 @@ public class ALoadInstruction {
     }
     
     public static void run(StackFrame stackFrame, int index) throws LoadingException {
-        SObjectRef value = stackFrame.localVariables.getVar(index);
+        SGenericRef value = stackFrame.localVariables.getVar(index);
         stackFrame.operandStack.push(value);
         
         JVMLogger.log(JVMLogger.TAG_INSTR, "ALoad; index: "+index+"; value: "+value);

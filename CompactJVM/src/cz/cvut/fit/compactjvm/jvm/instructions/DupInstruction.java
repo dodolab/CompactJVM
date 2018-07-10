@@ -17,7 +17,7 @@ public class DupInstruction {
     
     public static void run(StackFrame stackFrame) throws LoadingException{
         
-        SInt value = stackFrame.operandStack.pop();
+        SObjectRef value = stackFrame.operandStack.pop();
         stackFrame.operandStack.push(value);
         stackFrame.operandStack.push(value.makeCopy());
         

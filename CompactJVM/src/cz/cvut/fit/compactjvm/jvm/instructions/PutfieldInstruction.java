@@ -36,11 +36,11 @@ public class PutfieldInstruction {
         FLEntity fieldInfo = stackFrame.associatedClass.getFieldInfoByCpIndex(cpIndex);
         
         //@todo zalezi na typu
-        SInt value = stackFrame.operandStack.pop();
+        SStruct value = stackFrame.operandStack.pop();
         SObjectRef reference = stackFrame.operandStack.pop();
         //@todo otestovat, zda reference neni pole
         
-        heap.writeToHeap(reference.getReference(), fieldInfo.dataFieldOffset, value.getValue());
+        heap.writeToHeap(reference.getReference(), fieldInfo.dataFieldOffset, value);
         JVMLogger.log(JVMLogger.TAG_INSTR, "Put field to heap: (reference: "+reference+", value: "+value+")");
     }
 

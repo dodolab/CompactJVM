@@ -39,6 +39,7 @@ public class JVMThread {
         this.methodArea = methodArea;
         instructionManager = new InstructionManager(jvmStack, methodArea, heap);
         this.heap = heap;
+        heap.setJVMThread(this);
     }
     
     public JVMStack getStack(){
@@ -62,6 +63,7 @@ public class JVMThread {
         while(!jvmStack.isEmpty() && jvmStack.getCurrentFrame().hasMoreInstructions()) {
             instructionManager.runInstruction(jvmStack.getCurrentFrame().getNextInstruction());
         }
+       
     }
 
     public ObjectHeap getHeap(){

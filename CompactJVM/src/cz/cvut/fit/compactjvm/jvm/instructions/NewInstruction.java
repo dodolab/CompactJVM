@@ -5,6 +5,7 @@
  */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
+import cz.cvut.fit.compactjvm.core.ClassFile;
 import cz.cvut.fit.compactjvm.core.Word;
 import cz.cvut.fit.compactjvm.entities.CPClass;
 import cz.cvut.fit.compactjvm.entities.CPUtf8;
@@ -30,9 +31,10 @@ public class NewInstruction {
         int classNameIndex = ((CPClass) stackFrame.associatedClass.cpEntities[cpIndex]).nameIndex;
         String className = ((CPUtf8) stackFrame.associatedClass.cpEntities[classNameIndex]).value;
         
-        int objectReference = heap.allocObject(methodArea.getClassFile(className));
+        ClassFile cls = methodArea.getClassFile(className);
+        SObjectRef objectReference = heap.allocObject(cls);
         
-        stackFrame.operandStack.push(new SObjectRef(objectReference));
+        stackFrame.operandStack.push(objectReference);
         
         JVMLogger.log(JVMLogger.TAG_INSTR, "New class: "+className);
         

@@ -23,7 +23,7 @@ public class IAStoreInstruction {
         SInt index = stackFrame.operandStack.pop();
         SArrayRef arrayRef = stackFrame.operandStack.pop();
         
-        heap.writeToHeap(arrayRef.getReference(), index.getValue(), valueToAdd.getValue());
+        heap.writeToHeap(arrayRef.getReference(), index.getValue(), valueToAdd);
         
         JVMLogger.log(JVMLogger.TAG_INSTR,"IAStore: array["+index+"] = "+valueToAdd);
         

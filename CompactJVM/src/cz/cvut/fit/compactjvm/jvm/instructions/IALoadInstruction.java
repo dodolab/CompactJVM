@@ -23,8 +23,8 @@ public class IALoadInstruction {
         SInt index = stackFrame.operandStack.pop();
         SArrayRef arrayRef = stackFrame.operandStack.pop();
         
-        int value = heap.readFromHeap(arrayRef.getReference(), index.getValue());
-        stackFrame.operandStack.push(new SInt(value));
+        SInt value = heap.readFromHeap(arrayRef.getReference(), index.getValue());
+        stackFrame.operandStack.push(value);
         
         JVMLogger.log(JVMLogger.TAG_INSTR, "IALoad: array["+index+"] : "+value);
     }

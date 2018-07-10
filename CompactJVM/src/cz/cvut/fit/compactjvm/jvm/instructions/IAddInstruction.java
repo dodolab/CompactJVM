@@ -6,6 +6,7 @@
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
+import cz.cvut.fit.compactjvm.jvm.AnotherGarbageCollector;
 import cz.cvut.fit.compactjvm.jvm.MethodArea;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.logging.JVMLogger;
@@ -27,8 +28,10 @@ public class IAddInstruction {
         
         JVMLogger.log(JVMLogger.TAG_INSTR, "IAdd: "+operand1+" + "+operand2);
         
-        SInt value = new SInt(operand1.getValue() + operand2.getValue());
+        SStruct value = new SInt(operand1.getValue() + operand2.getValue());
         stackFrame.operandStack.push(value);
+        
+        new AnotherGarbageCollector(stackFrame.jvmThread.getHeap()).cleanHeap(stackFrame.jvmThread.getStack().getAllFrames());
     }
 
 }
