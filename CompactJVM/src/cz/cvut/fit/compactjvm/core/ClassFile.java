@@ -44,6 +44,32 @@ public class ClassFile {
     public int[] classVariables;
     public int index; // index of parsed class
     
+    public boolean fieldOffsetsRecalculated = false; //Pri inicializaci je prepocitat offset vlastnosti, jak budou ukladana na halde podle predku tridy
+    public ClassFile superClass = null;
+    
+    /**
+     * Ziska nazev tridy z constant poolu
+     * @return 
+     */
+    public String getClassName() {
+        CPClass stringEntity = (CPClass) cpEntities[thisClassIndex];
+        return ((CPUtf8) cpEntities[stringEntity.nameIndex]).value;
+    }
+    
+    /**
+     * Get name of superclass
+     * @return 
+     */
+    public String getSuperclassName() {
+        if(cpEntities[superClassIndex] == null) return null;
+        CPClass cpClass = (CPClass) cpEntities[superClassIndex];
+        return ((CPUtf8) cpEntities[cpClass.nameIndex]).value;
+    }
+    
+    public ClassFile getSuperClass() {
+        return superClass;
+    }
+    
     /**
      * Ziska Entitu odpovidajici pozadovane metode
      * @param index
@@ -61,15 +87,6 @@ public class ClassFile {
             throw new LoadingException("Field not found");
         }
         return fieldInfos[index];
-    }
-    
-    /**
-     * Ziska nazev tridy z constant poolu
-     * @return 
-     */
-    public String getClassName() {
-        CPClass stringEntity = (CPClass) cpEntities[thisClassIndex];
-        return ((CPUtf8) cpEntities[stringEntity.nameIndex]).value;
     }
     
     /**
@@ -95,6 +112,7 @@ public class ClassFile {
      * Loads field definition from constant pool according to selected index
      * @param fieldRefIndex
      * @return 
+     * @throws cz.cvut.fit.compactjvm.exceptions.LoadingException 
      */
     public FieldDefinition getFieldDefinition(int fieldRefIndex) throws LoadingException{
         if(cpEntities[fieldRefIndex].tag != ConstantPoolType.CPT_Fieldref) throw new LoadingException("Wrong field index");
@@ -122,28 +140,14 @@ public class ClassFile {
                 && ((CPUtf8) cpEntities[methodInfos[i].descriptorIndex]).value.equals(methodDescriptor))
             return i;
         }
-        return 0;
+        return -1;
         //@todo throw exception
-    }
-    
-    /**
-     * Gets field index by selected name and descriptor
-     * @param fieldName
-     * @param fieldDescriptor
-     * @return 
-     */
-    public int getFieldIndex(String fieldName, String fieldDescriptor) throws LoadingException{
-        for(int i=0; i< fieldInfos.length; i++){
-            if(((CPUtf8) cpEntities[fieldInfos[i].nameIndex]).value.equals(fieldName)
-                && ((CPUtf8) cpEntities[fieldInfos[i].descriptorIndex]).value.equals(fieldDescriptor))
-            return i;
-        }
-        throw new LoadingException("Field index not found");
     }
     
     /**
      * Ziska field info na zaklade indexu v constant poolu. Ten ziskam
      * jako parametr pro instrukci - napr. putfield
+     * Pokud neni v teto tride, pokusi se vyhledat i v rodicovskych tridach
      * @param cpIndex
      * @return
      * @throws LoadingException 
@@ -157,9 +161,31 @@ public class ClassFile {
         CPNameAndType nameAndType = (CPNameAndType) cpEntities[fieldRef.nameAndTypeIndex];
         String name = ((CPUtf8) cpEntities[nameAndType.nameIndex]).value;
         String descriptor = ((CPUtf8) cpEntities[nameAndType.descriptorIndex]).value;
-        FLEntity fieldInfo = fieldInfos[getFieldIndex(name, descriptor)];
+        
+        //Projdu nejen tuto tridu, ale zkusim hledat i v rodicovskych tridach, pokud je field definovan tam
+        ClassFile _classFile = this;
+        FLEntity fieldInfo;
+        while((fieldInfo = _classFile.getFieldInfo(name, descriptor)) == null && _classFile.getSuperclassName() != null) {
+            _classFile = _classFile.getSuperClass();
+        }
+        //FLEntity fieldInfo = fieldInfos[getFieldIndex(name, descriptor)];
         fieldInfosByCpIndex.put(cpIndex, fieldInfo);
         return fieldInfo;
+    }
+
+    /**
+     * Gets field index by selected name and descriptor
+     * @param fieldName
+     * @param fieldDescriptor
+     * @return 
+     */
+    public FLEntity getFieldInfo(String fieldName, String fieldDescriptor) throws LoadingException{
+        for (FLEntity fieldInfo : fieldInfos) {
+            if (((CPUtf8) cpEntities[fieldInfo.nameIndex]).value.equals(fieldName) && ((CPUtf8) cpEntities[fieldInfo.descriptorIndex]).value.equals(fieldDescriptor)) {
+                return fieldInfo;
+            }
+        }
+        return null;
     }
     
 }

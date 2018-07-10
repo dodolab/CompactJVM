@@ -37,17 +37,13 @@ public class ClassFileLoader {
     public ClassFile load(String className) {
         
         // load testing class file
-        String classPath = "";
-        if(className == "compactjvmlab/CompactJVMLab") {
-            classPath = "../CompactJVMLab/build/classes/compactjvmlab/CompactJVMLab.class";
-        } else {
-            classPath = "../CompactJVMLab/build/classes/compactjvmlab/TestClass.class";
-        }
+        String classPath = "../CompactJVMLab/build/classes/"+className+".class";
+        
         ClassFile classFile = null;
         try {
             classFile = parseFile(classPath);
         } catch (IOException | ParsingException ex) {
-            JVMLogger.log(JVMLogger.TAG_OTHER, "exception");
+            JVMLogger.log(JVMLogger.TAG_OTHER, "Cannot parse file. File may not exist.");
         }
         return classFile;
     }

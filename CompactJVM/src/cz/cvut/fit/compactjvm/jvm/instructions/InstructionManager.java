@@ -92,9 +92,12 @@ public class InstructionManager {
             case Instruction.IN_NEW: NewInstruction.run(jvmStack, methodArea, heap); break;
             case Instruction.IN_DUP: DupInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_INVOKESPECIAL: InvokeSpecialInstruction.run(jvmStack, methodArea); break;
-            case Instruction.IN_PUTFIELD: PutfieldInstruction.run(jvmStack, heap); break;
+            case Instruction.IN_PUTFIELD: PutfieldInstruction.run(jvmStack, heap, methodArea); break;
             case Instruction.IN_GETFIELD: GetfieldInstruction.run(jvmStack, heap); break;
             case Instruction.IN_INVOKEVIRTUAL: InvokeVirtualInstruction.run(jvmStack, methodArea); break;
+            
+            case Instruction.IN_PUTSTATIC: PutStaticInstruction.run(jvmStack.getCurrentFrame());break;
+            case Instruction.IN_GETSTATIC: GetStaticInstruction.run(jvmStack, methodArea);
             default:
                 JVMLogger.log(JVMLogger.TAG_INSTR, "Not implemented instruction: "+code+" (0x"+Integer.toHexString(code)+")");
         }

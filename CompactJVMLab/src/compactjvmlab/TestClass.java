@@ -9,13 +9,23 @@ package compactjvmlab;
  *
  * @author Nick Nemame
  */
-public class TestClass {
+public class TestClass extends TestSuperclass {
     
     private int myItem;
     private double myDoubleItem;
     
+    protected static int static2;
+    
+    public void setStatic1() {
+        static1 = 13;
+    }
+    
+    public void setStatic2() {
+        static2 = 14;
+    }
+    
     public void setMyItem(int value) {
-        myItem = value;
+        protectedSuperVar = value;
     }
     
     public void addToMyItem(int add) {

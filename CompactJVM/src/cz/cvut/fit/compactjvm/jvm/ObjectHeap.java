@@ -13,24 +13,25 @@ import cz.cvut.fit.compactjvm.exceptions.OutOfHeapMemException;
  * @author Nick Nemame
  */
 public class ObjectHeap {
-
-    // number of bytes in object header, used for space calculation
-    public static final int OBJECT_HEADER_BYTES = 12;
     
     public static final int FORWARDING_POINTER = -1;
 
     private final int ARRAY_INDEX = -1000;
     
-    private final int ARRAY = 1;
-    private final int OBJECT = 2;
-
+    // Halda - puleni haldy je definovano pomoci activeHeapOffset a inactiveHeapOffset
+    // Pri stridani se budou tyto dve hodnoty stridat
     private int[] heap;
     
     private GarbageCollector garbageCollector;
     
+    // Offset aktivni a neaktivni casti (0 nebo polovina velikosti)
     private int activeHeapOffset;
     private int inactiveHeapOffset;
+    
+    //Velikost aktivni haldy, tzn. velikost jedne poloviny.
     private int heapSize;
+    
+    //index prvniho volneho mista v aktivni casti haldy (0 - heapSize)
     private int nextFreeSpace;
     
     private MethodArea methodArea;
@@ -65,35 +66,33 @@ public class ObjectHeap {
         return readFromActiveHeap(oldReference) == FORWARDING_POINTER;
     }
     
+    /**
+     * Zapise do haldy (index je index v datove casti)
+     * Pr: Obsahuje-li zaznam 2 slova v hlavicce (1. slovo index tridy, 2. slovo napriklad pro GC),
+     * pak pokud zadam chci zapsat na index = 0, pak zapise na misto reference + 2 + index = reference + 2.
+     * @param reference
+     * @param index
+     * @param value 
+     */
     public void writeToHeap(int reference, int index, int value) {
         int headerSize = (getClassIndex(reference) == ARRAY_INDEX) ? getArrayHeaderSize() : getObjectHeaderSize();
         writeToActiveHeap(reference + headerSize + index, value);
     }
     
+    /**
+     * Cte z haldy
+     * stejne jako u zapisu, index je index v datove casti.
+     * @param reference
+     * @param index
+     * @return 
+     */
     public int readFromHeap(int reference, int index) {
         int headerSize = (getClassIndex(reference) == ARRAY_INDEX) ? getArrayHeaderSize() : getObjectHeaderSize();
         return readFromActiveHeap(reference + headerSize + index);
     }
     
-    private void writeToActiveHeap(int index, int value) {
-        heap[index + activeHeapOffset] = value;
-    }
-    
-    private int readFromActiveHeap(int index) {
-        return heap[index + activeHeapOffset];
-    }
-    
-    private void writeToSpareHeap(int index, int value) {
-        heap[index + activeHeapOffset] = value;
-    }
-    /*
-    public int readFromSpareHeap(int index) {
-        return heap[index + activeHeapOffset];
-    }*/
-    
-    
     /**
-     * Alokuje data a vrati referenci na objekt
+     * Alokuje misto pro data objektu a vrati referenci na objekt
      * @param classFile
      * @return 
      */
@@ -108,6 +107,13 @@ public class ObjectHeap {
         return reference;
     }
     
+    /**
+     * Alokuje misto pro pole
+     * @param itemSize velikost jedne polozky
+     * @param arraySize pocet prvku pole
+     * @return
+     * @throws OutOfHeapMemException 
+     */
     public int allocArray(int itemSize, int arraySize) throws OutOfHeapMemException {
         int reference = nextFreeSpace;
         int wordsRequired = getArrayHeaderSize() + (itemSize * arraySize);
@@ -120,13 +126,54 @@ public class ObjectHeap {
         return reference;
     }
     
-    public void initializeSpace(int index, int length) {
+    /**
+     * Zapise do aktivni casti haldy (index je realny index od zacatku teto casti haldy)
+     * @param index
+     * @param value 
+     */
+    private void writeToActiveHeap(int index, int value) {
+        heap[index + activeHeapOffset] = value;
+    }
+    
+    /**
+     * Cte z aktivni casti haldy (index je realny index od zacatku teto casti haldy)
+     * @param index
+     * @return 
+     */
+    private int readFromActiveHeap(int index) {
+        return heap[index + activeHeapOffset];
+    }
+    
+    /**
+     * Zapise do aktualne nekativni casti haldy (index je realny index od zacatku teto casti haldy)
+     * @param index
+     * @param value 
+     */
+    private void writeToSpareHeap(int index, int value) {
+        heap[index + activeHeapOffset] = value;
+    }
+    
+    /**
+     * Cte z aktualne neaktivni casti haldy (index je realny index od zacatku teto casti haldy)
+     * @param index
+     * @return 
+     */
+    public int readFromSpareHeap(int index) {
+        return heap[index + activeHeapOffset];
+    }
+    
+    private void initializeSpace(int index, int length) {
         for(int i = 0; i < length; ++i) {
             writeToActiveHeap(index + i, 0);
         }
     }
     
-    public void checkHeapSpace(int wordsRequired) throws OutOfHeapMemException {
+    /**
+     * Zkontroluje, zda se do haldy vejde urcity pocet slov, pokud ne, spusti GC.
+     * @param wordsRequired
+     * @throws OutOfHeapMemException 
+     */
+    private void checkHeapSpace(int wordsRequired) throws OutOfHeapMemException {
         if(isFull(wordsRequired)) {
             garbageCollector.collect();
         }
@@ -135,47 +182,38 @@ public class ObjectHeap {
         }
     }
     
-    public int getObjectHeaderSize() {
+    /**
+     * Vrati velikost hlavicky objektu (zavisi mj. na implementaci GC)
+     * @return 
+     */
+    private int getObjectHeaderSize() {
         return 1 + garbageCollector.getRequiredHeaderBytes();
     }
     
-    public int getArrayHeaderSize() {
+    /**
+     * Vrati velikost hlavicky objektu (zavisi mj. na implementaci GC)
+     * @return 
+     */
+    private int getArrayHeaderSize() {
         return 2 + garbageCollector.getRequiredHeaderBytes();
     }
     
+    /**
+     * Vrati class index (tzn. prvni slovo, kam ukazuje reference, pokud jde o pole)
+     * @param reference
+     * @return 
+     */
     public int getClassIndex(int reference) {
         return readFromActiveHeap(reference);
     }
     
     /**
      * Zjisti, zda se vejde potrebny pocet slov do haldy
-     * @todo chtelo by spoustet GC napriklad uz pri 70% zaplneni treba?
+     * @todo neni lepsi spoustet GC napriklad uz pri 70% zaplneni treba? Nebo to bychom museli spoustet ve vedlejsim vlakne?
      * @param wordsRequired
      * @return 
      */
     private boolean isFull(int wordsRequired) {
         return (heapSize - nextFreeSpace) < wordsRequired;
     }
-    /*
-    public byte[] getObjectFieldValue(byte[] bytes, int objectStart, int index) {
-        byte[] value = new byte[4];
-        int start = index * 4 + objectStart + OBJECT_HEADER_BYTES;
-
-        for (int i = 0; i < value.length; i++) {
-            value[i] = bytes[start + i];
-        }
-
-        return value;
-    }
-
-    public static byte[] getValue(byte[] bytes, int from) {
-        byte[] value = new byte[4];
-
-        for (int i = 0; i < value.length; i++) {
-            value[i] = bytes[from + i];
-        }
-
-        return value;
-    }
-*/
 }

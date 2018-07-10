@@ -28,8 +28,6 @@ public class InvokeSpecialInstruction {
         int methodRefIndex = Word.fromByteArray(bytes); //index v CP ve tride, ktera invokuje, nikoliv v te, na ktere je metoda volana
         MethodDefinition method = stack.getCurrentFrame().associatedClass.getMethodDefinition(methodRefIndex);
         
-        if(method.getMethodClass().equals("java/lang/Object")) return;
-        
         ClassFile classFile = methodArea.getClassFile(method.getMethodClass());
         int methodIndex = classFile.getMethodIndex(method.getMethodName(), method.getMethodDescriptor());
         StackFrame frame = new StackFrame(classFile, methodIndex, method, stack.jvmThread);

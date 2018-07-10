@@ -24,18 +24,41 @@ public class CompactJVMLab {
     }
 
     public static void main() {
-        /*int local = 7;
-        local = local + 1;*/
+    
+        /** TEST 5 - volani metody v rodicovske tride **/
+        TestClass t = new TestClass();
+        int i = t.getValueFromSuperclass();
         
-        /* objects */
+        /** TEST 1 - zachovani funkcnosti poli
+        int[] myarray = new int[2];
+        myarray[0] = 13;
+        myarray[1] = 14;
         
+        int i = myarray[0];
+        
+        */
+        
+        /** TEST 2 - v setMyItem nastavuju field, ktery je definova v predkovi tridy **
         TestClass testObject1 = new TestClass();
         //TestClass testObject2 = new TestClass();
         
         testObject1.setMyItem(17);
+        */
+        /*
         testObject1.addToMyItem(10);
         //testObject2.setMyItem(3);
         testObject1.getMyItem();
+        */
+        /** TEST 3 - pristup ke statickemu fieldu svemu **
+        
+        TestClass testObject1 = new TestClass();
+        testObject1.setStatic2();
+        */
+        /** TEST 4 - pristup ke statickemu fieldu sveho predka **
+        
+        TestClass testObject1 = new TestClass();
+        testObject1.setStatic1();
+        */
         
         /* arrays, cycles, static method calls
         int test1 = TestClass.testMethod(4, 5);

@@ -11,6 +11,7 @@ import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.JVMStack;
 import cz.cvut.fit.compactjvm.jvm.ObjectHeap;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
+import cz.cvut.fit.compactjvm.logging.JVMLogger;
 
 /**
  * Set field in object
@@ -26,16 +27,14 @@ public class GetfieldInstruction {
         byte[] bytes = stackFrame.loadInstructionParams(PARAM_COUNT);
         int cpIndex = Word.fromByteArray(bytes);
         
-        //int fieldIndex = ((CPFieldRef) stackFrame.associatedClass.cpEntities[cpIndex]).nameAndTypeIndex;
         FLEntity fieldInfo = stackFrame.associatedClass.getFieldInfoByCpIndex(cpIndex);
         
         int reference = stackFrame.operandStack.popReference();
         int value = heap.readFromHeap(reference, fieldInfo.dataFieldOffset);
         //@todo zalezi na typu, nejen int
         stackFrame.operandStack.pushInt(value);
-        //int value = stackFrame.localVariables.getInt(localVariableIndex);
-        //JVMLogger.log(JVMLogger.TAG_INSTR, "ILoadN: "+value);
-        //stackFrame.operandStack.pushInt(value);
+        
+        JVMLogger.log(JVMLogger.TAG_INSTR, "Get field from heap (reference: "+reference+", value: "+value+")");
     }
 
 }

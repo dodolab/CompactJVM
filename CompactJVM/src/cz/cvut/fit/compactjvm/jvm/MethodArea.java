@@ -44,6 +44,9 @@ public class MethodArea {
     /**
      * Vrati ClassFile, pokud jej JVM jeste nema naparsovany, musi jej nejprve
      * nacist a pak naparsovat - momentalne takto lazy-load.
+     * V pripade, ze nacitana Class dedi nejakou jinou tridu, je v zapeti rekurzivne
+     * nactena i tato nadtrida. V ClassFile potom existuje vazba na nadtridu
+     * a zaroven se z nadtridy prepocitaji indexy vlastnosti tridy v halde.
      * @param className
      * @return 
      */
@@ -57,6 +60,29 @@ public class MethodArea {
         }
         ClassFile classFile = classLoader.load(className);
         classStorage.addClass(classFile);
+        
+        //Nacitani podtrid a vytvoreni vazeb mezi ClassFile objekty rodicu a potomku
+        ClassFile _classFile = classFile;
+        boolean superClassAlreadyLoaded = false;
+        while(_classFile.getSuperclassName() != null && !superClassAlreadyLoaded) {
+            String superClassName = _classFile.getSuperclassName();
+            if(!classStorage.containsClass(superClassName)) {
+                ClassFile _superClassFile = classLoader.load(superClassName);
+                classStorage.addClass(_superClassFile);
+                _classFile.superClass = _superClassFile;
+                _classFile = _superClassFile;
+            } else {
+                try {
+                _classFile.superClass = classStorage.getClass(_classFile.getSuperclassName());
+                } catch (ClassNotFoundException e) {
+                    // trida by jiz mela byt nactena, nic by se nemelo stat
+                }
+                superClassAlreadyLoaded = true;
+            }
+        }
+    
+        recalculateFieldOffsets(classFile);
+        
         return classFile;
     }
     
@@ -67,5 +93,24 @@ public class MethodArea {
     public void getClassFileByIndex(int index) {
         
     }
-
+    
+    /**
+     * Bez informace o predcich tridy nejsme schopni presne spocitat offset vlastnosti
+     * v halde. Proto prepocitame
+     */
+    private void recalculateFieldOffsets(ClassFile classFile) {
+        if(!classFile.fieldOffsetsRecalculated) {
+            if(classFile.getSuperclassName() != null) {
+                ClassFile superClassFile = getClassFile(classFile.getSuperclassName());
+                recalculateFieldOffsets(superClassFile);
+                int superClassDataOffset = superClassFile.fieldDataBytes;
+                for(int i = 0; i < classFile.fieldInfos.length; ++i) {
+                    classFile.fieldInfos[i].dataFieldOffset += superClassDataOffset;
+                }
+                classFile.fieldDataBytes += superClassDataOffset;
+            }
+            classFile.fieldOffsetsRecalculated = true;
+        }
+    }
+    
 };

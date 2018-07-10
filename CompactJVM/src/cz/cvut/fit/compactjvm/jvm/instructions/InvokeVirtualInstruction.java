@@ -28,15 +28,20 @@ public class InvokeVirtualInstruction {
         int methodRefIndex = Word.fromByteArray(bytes); //index v CP ve tride, ktera invokuje, nikoliv v te, na ktere je metoda volana
         MethodDefinition method = stack.getCurrentFrame().associatedClass.getMethodDefinition(methodRefIndex);
         
-        if(method.getMethodClass().equals("java/lang/Object")) return;
-        
         ClassFile classFile = methodArea.getClassFile(method.getMethodClass());
-        int methodIndex = classFile.getMethodIndex(method.getMethodName(), method.getMethodDescriptor());
+        
+        //Lookup metody v rodicovskych tridach, pokud neni nalezena v aktualni tride
+        int methodIndex;
+        while((methodIndex = classFile.getMethodIndex(method.getMethodName(), method.getMethodDescriptor())) == -1) {
+            if(classFile.getSuperclassName() == null) throw new LoadingException("Invoke virtual lookup failed - no method found");
+            classFile = classFile.getSuperClass();
+        }
+        
         StackFrame frame = new StackFrame(classFile, methodIndex, method, stack.jvmThread);
         loadArgumentsToLocalVariables(stack.getCurrentFrame(), frame, method);
         stack.push(frame);
         
-        JVMLogger.log(JVMLogger.TAG_INSTR, "InvokeStatic: "+method.getMethodName());
+        JVMLogger.log(JVMLogger.TAG_INSTR, "InvokeVirtual: "+method.getMethodName());
     }
     
     /**

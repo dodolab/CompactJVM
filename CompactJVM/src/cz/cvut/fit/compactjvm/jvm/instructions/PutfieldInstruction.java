@@ -27,22 +27,20 @@ public class PutfieldInstruction {
     
     public static final int PARAM_COUNT = 2;
     
-    public static void run(JVMStack stack, ObjectHeap heap) throws LoadingException {
+    public static void run(JVMStack stack, ObjectHeap heap, MethodArea methodArea) throws LoadingException {
         StackFrame stackFrame = stack.getCurrentFrame();
         byte[] bytes = stackFrame.loadInstructionParams(PARAM_COUNT);
         int cpIndex = Word.fromByteArray(bytes);
         
-        //int fieldIndex = ((CPFieldRef) stackFrame.associatedClass.cpEntities[cpIndex]).nameAndTypeIndex;
         FLEntity fieldInfo = stackFrame.associatedClass.getFieldInfoByCpIndex(cpIndex);
         
         //@todo zalezi na typu
         int value = stackFrame.operandStack.popInt();
         int reference = stackFrame.operandStack.popReference();
+        //@todo otestovat, zda reference neni pole
         
         heap.writeToHeap(reference, fieldInfo.dataFieldOffset, value);
-        //int value = stackFrame.localVariables.getInt(localVariableIndex);
-        //JVMLogger.log(JVMLogger.TAG_INSTR, "ILoadN: "+value);
-        //stackFrame.operandStack.pushInt(value);
+        JVMLogger.log(JVMLogger.TAG_INSTR, "Put field to heap: (reference: "+reference+", value: "+value+")");
     }
 
 }

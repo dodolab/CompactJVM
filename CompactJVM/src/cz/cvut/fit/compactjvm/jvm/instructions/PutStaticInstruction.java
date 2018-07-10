@@ -9,16 +9,19 @@ import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.logging.JVMLogger;
 
 /**
- *
+ * Set static field in class
  * @author Nick Nemame
  */
 public class PutStaticInstruction {
     
+    public static final int PARAM_COUNT = 2;
+    
     public static void run(StackFrame stackFrame) {
-        byte localVariableIndex = stackFrame.loadInstructionSingleParam();
-        int value = stackFrame.localVariables.getInt(localVariableIndex);
-        JVMLogger.log(JVMLogger.TAG_INSTR, "PutStatic: "+value);
-        stackFrame.operandStack.pushInt(value);
+        //byte[] fieldRefIndexBytes = stackFrame.loadInstructionParams(PARAM_COUNT);
+        //int fieldRefIndex = 
+        //int value = stackFrame.operandStack.popInt();
+        JVMLogger.log(JVMLogger.TAG_INSTR, "PutStatic: TODO");
+        //stackFrame.operandStack.pushInt(value);
     }
     
 }
