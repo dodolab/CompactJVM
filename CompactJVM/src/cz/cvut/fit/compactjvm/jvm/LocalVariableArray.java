@@ -62,7 +62,7 @@ public class LocalVariableArray {
     public void setInt(int index, int value) {
         localVariables[index] = value;
     }
-    
+   
     public short getShort(int index) {
         return (short) localVariables[index];
     }

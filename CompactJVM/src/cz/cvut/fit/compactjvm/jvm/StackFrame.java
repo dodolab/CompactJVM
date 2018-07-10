@@ -25,7 +25,7 @@ public class StackFrame {
     public MethodDefinition methodDefinition = null; //Definice metody - nazev tridy, nazev metody, rozparsovany descriptor
     /** @todo tohle by melo byt spis v pcRegistru u JVM threadu, ale jak se pak dostanu
      k mistu, kde jsem byl v predchozim framu pred vyvolanim metody? */
-    
+    public final ArrayStorage arrayStorage; // dummy storage for arrays
     
     /**
      * @param classFile
@@ -45,6 +45,7 @@ public class StackFrame {
     public StackFrame(ClassFile classFile, int invokedMethod) throws LoadingException {
         associatedClass = classFile;
         associatedMethod = invokedMethod;
+        arrayStorage = new ArrayStorage();
         initializeFrame();
     }
     

@@ -29,6 +29,18 @@ public class CompactJVMLab {
         int test1 = TestClass.testMethod(4, 5);
         int test2 = TestClass.testMethod(10,8);
         int test3 = TestClass.testMethod(1,1);
+        
+        test1 = test2+test3*test1;
+        
+        int[] array = new int[20];
+        array[8] = 21;
+        
+        int[] secondArray = new int[10];
+        secondArray[9] = 6;
+        
+        //for(int i=0; i<array.length; i++){
+        //    array[i] = 5;
+       // }
     }
     /*public static int staticPublicProm;
     

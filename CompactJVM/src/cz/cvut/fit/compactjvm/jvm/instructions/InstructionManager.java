@@ -35,7 +35,7 @@ public class InstructionManager {
         int code = instructionCode & 0xFF;
         switch(code) {
             //operand stack and local variables instructions
-            case Instruction.IN_ISTORE: IStoreInstruciton.run(jvmStack.getCurrentFrame()); break;
+            case Instruction.IN_ISTORE: IStoreInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_ISTORE0: IStoreNInstruction.run(jvmStack.getCurrentFrame(), 0); break;
             case Instruction.IN_ISTORE1: IStoreNInstruction.run(jvmStack.getCurrentFrame(), 1); break;
             case Instruction.IN_ISTORE2: IStoreNInstruction.run(jvmStack.getCurrentFrame(), 2); break;
@@ -45,6 +45,11 @@ public class InstructionManager {
             case Instruction.IN_ILOAD1: ILoadNInstruction.run(jvmStack.getCurrentFrame(), 1); break;
             case Instruction.IN_ILOAD2: ILoadNInstruction.run(jvmStack.getCurrentFrame(), 2); break;
             case Instruction.IN_ILOAD3: ILoadNInstruction.run(jvmStack.getCurrentFrame(), 3); break;
+            case Instruction.IN_ALOAD: ALoadInstruction.run(jvmStack.getCurrentFrame()); break;
+            case Instruction.IN_ALOAD0: ALoadInstruction.run(jvmStack.getCurrentFrame(),0); break;
+            case Instruction.IN_ALOAD1: ALoadInstruction.run(jvmStack.getCurrentFrame(),1); break;
+            case Instruction.IN_ALOAD2: ALoadInstruction.run(jvmStack.getCurrentFrame(),2); break;
+            case Instruction.IN_ALOAD3: ALoadInstruction.run(jvmStack.getCurrentFrame(),3); break;
             case Instruction.IN_IADD: IAddInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_IMUL: IMulInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_BIPUSH: BiPushInstruction.run(jvmStack.getCurrentFrame()); break;
@@ -59,9 +64,17 @@ public class InstructionManager {
             case Instruction.IN_INVOKESTATIC: InvokeStaticInstruction.run(jvmStack, methodArea); break;
             case Instruction.IN_RETURN: ReturnInstruction.run(jvmStack); break;
             case Instruction.IN_IRETURN: IReturnInstruction.run(jvmStack); break;
-                
+            
+            case Instruction.IN_NEWARRAY: NewArrayInstruction.run(jvmStack.getCurrentFrame()); break;
+            case Instruction.IN_LCONST1: LConstNInstruction.run(jvmStack.getCurrentFrame(),1); break;
+            case Instruction.IN_ASTORE: AStoreNInstruction.run(jvmStack.getCurrentFrame()); break;
+            case Instruction.IN_ASTORE0: AStoreNInstruction.run(jvmStack.getCurrentFrame(),0); break;
+            case Instruction.IN_ASTORE1: AStoreNInstruction.run(jvmStack.getCurrentFrame(),1); break;
+            case Instruction.IN_ASTORE2: AStoreNInstruction.run(jvmStack.getCurrentFrame(),2); break;
+            case Instruction.IN_ASTORE3: AStoreNInstruction.run(jvmStack.getCurrentFrame(),3); break;
+            case Instruction.IN_IASTORE: IAStoreInstruction.run(jvmStack.getCurrentFrame());break;
             default:
-                JVMLogger.log(JVMLogger.TAG_INSTR, "Not implemented instruction: "+code);
+                JVMLogger.log(JVMLogger.TAG_INSTR, "Not implemented instruction: "+code+" (0x"+Integer.toHexString(code)+")");
         }
     }
     
