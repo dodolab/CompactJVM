@@ -9,16 +9,14 @@ import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.logging.JVMLogger;
 
 /**
- * push the long #value onto the stack
+ * perform no operation
  * @author Adam Vesecky
  */
-public class LConstNInstruction {
+public class NopInstruction {
     
-    public static void run(StackFrame stackFrame, int value) {
-        JVMLogger.log(JVMLogger.TAG_INSTR, "LConst: "+value);
-        
-        // push long
-        stackFrame.operandStack.pushInt(0);
-        stackFrame.operandStack.pushInt(value);
+    public static void run(StackFrame stackFrame) {
+
+        JVMLogger.log(JVMLogger.TAG_INSTR, "Nop; doing nothing useful");
     }
+    
 }

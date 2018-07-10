@@ -9,20 +9,20 @@ import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.logging.JVMLogger;
 
 /**
- * store a reference into a local variable #index (or 0, 1, 2, 3)
+ * increment local variable #index by signed byte const
  * @author Adam Vesecky
  */
-public class AStoreNInstruction {
+public class IIncInstruction {
     
     public static void run(StackFrame stackFrame) {
         int index = stackFrame.loadInstructionSingleParam();
-        run(stackFrame, index);
-    }
-    
-    public static void run(StackFrame stackFrame, int index) {
+        int constant = stackFrame.loadInstructionSingleParam();
         
-        int value = stackFrame.operandStack.popInt();
-        JVMLogger.log(JVMLogger.TAG_INSTR, "AStoreN: index: "+index+"; value:"+value);
-        stackFrame.localVariables.setInt(index, value);
+        int localVar = stackFrame.localVariables.getInt(index);
+        stackFrame.localVariables.setInt(index, localVar+constant);
+        
+        JVMLogger.log(JVMLogger.TAG_INSTR, "IInc: "+localVar+"+="+constant);
     }
+
+    
 }

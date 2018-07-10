@@ -9,7 +9,7 @@ import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.logging.JVMLogger;
 
 /**
- *
+ *  load a reference onto the stack from a local variable #index
  * @author Adam Vesecky
  */
 public class ALoadInstruction {

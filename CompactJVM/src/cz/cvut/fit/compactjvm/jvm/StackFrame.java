@@ -102,6 +102,22 @@ public class StackFrame {
     }
     
     /**
+     * Gets current instruction index
+     */
+    public int getCurrentInstructionIndex(){
+        return currentInstructionIndex;
+    }
+    
+    /**
+     * Sets new instruction index; this method is used e.g. 
+     * by GOTO instruction or in IF-ELSE branch hop
+     * @param val 
+     */
+    public void setCurrentInstructionIndex(int val){
+        currentInstructionIndex = val;
+    }
+    
+    /**
      * Nacte dalsi byte z kodu a posune index, vyuziva se pri nacteni instrukci
      * a jejich parametru z bytecodu
      * @return 

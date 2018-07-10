@@ -38,9 +38,18 @@ public class CompactJVMLab {
         int[] secondArray = new int[10];
         secondArray[9] = 6;
         
-        //for(int i=0; i<array.length; i++){
-        //    array[i] = 5;
-       // }
+        array[8] = secondArray[9];
+        
+        int i = 5;
+        
+        while(i > 0) i--;
+        
+        int abcd = 12;
+        
+        for(int j=0; j<10; j++){
+            abcd++;
+        }
+        
     }
     /*public static int staticPublicProm;
     

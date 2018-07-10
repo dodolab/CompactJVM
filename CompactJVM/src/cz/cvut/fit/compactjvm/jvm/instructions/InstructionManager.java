@@ -66,6 +66,7 @@ public class InstructionManager {
             case Instruction.IN_IRETURN: IReturnInstruction.run(jvmStack); break;
             
             case Instruction.IN_NEWARRAY: NewArrayInstruction.run(jvmStack.getCurrentFrame()); break;
+            case Instruction.IN_LCONST0: LConstNInstruction.run(jvmStack.getCurrentFrame(),0); break;
             case Instruction.IN_LCONST1: LConstNInstruction.run(jvmStack.getCurrentFrame(),1); break;
             case Instruction.IN_ASTORE: AStoreNInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_ASTORE0: AStoreNInstruction.run(jvmStack.getCurrentFrame(),0); break;
@@ -73,6 +74,15 @@ public class InstructionManager {
             case Instruction.IN_ASTORE2: AStoreNInstruction.run(jvmStack.getCurrentFrame(),2); break;
             case Instruction.IN_ASTORE3: AStoreNInstruction.run(jvmStack.getCurrentFrame(),3); break;
             case Instruction.IN_IASTORE: IAStoreInstruction.run(jvmStack.getCurrentFrame());break;
+            case Instruction.IN_IALOAD : IALoadInstruction.run(jvmStack.getCurrentFrame()); break;
+            case Instruction.IN_IFLE : IfleInstruction.run(jvmStack.getCurrentFrame()); break;
+            case Instruction.IN_NOP : NopInstruction.run(jvmStack.getCurrentFrame()); break;
+            case Instruction.IN_GOTO : GotoInstruction.run(jvmStack.getCurrentFrame()); break;
+            case Instruction.IN_IINC: IIncInstruction.run(jvmStack.getCurrentFrame()); break;
+            case Instruction.IN_FCONST0: FConstInstruction.run(jvmStack.getCurrentFrame(), 0.0f); break;
+            case Instruction.IN_FCONST1: FConstInstruction.run(jvmStack.getCurrentFrame(), 1.0f); break;
+            case Instruction.IN_FCONST2: FConstInstruction.run(jvmStack.getCurrentFrame(), 2.0f); break;
+            case Instruction.IN_IF_ICMPGE: IfIcmpgeInstruction.run(jvmStack.getCurrentFrame()); break;
             default:
                 JVMLogger.log(JVMLogger.TAG_INSTR, "Not implemented instruction: "+code+" (0x"+Integer.toHexString(code)+")");
         }

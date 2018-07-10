@@ -10,6 +10,7 @@ import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.logging.JVMLogger;
 
 /**
+ *  store int value into variable #index
  * @author Nick Nemame
  */
 public class IStoreNInstruction {

@@ -21,6 +21,8 @@ public class Instruction {
     public static final int IN_ALOAD2 = 0x2c;
     // load a reference onto the stack from local variable 3
     public static final int IN_ALOAD3 = 0x2d;
+    // load an int from an array
+    public static final int IN_IALOAD = 0x2e;
     // create a new array of references of length count and component type identified by the class reference index (indexbyte1 << 8 + indexbyte2) in the constant pool
     public static final int IN_ANEWARRAY = 0xbd;
     // create new array with count elements of primitive type identified by atype
@@ -86,6 +88,8 @@ public class Instruction {
     // load the int value 5 onto the stack
     public static final int IN_ICONST5 = 0x8; //8
     
+    // push the long 0 onto the stack
+    public static final int IN_LCONST0 = 0x9;
     // push the long 1 onto the stack
     public static final int IN_LCONST1 = 0xa; // 10
     // invoke a static method and puts the result on the stack (might be void); the method is identified by method reference index in constant pool (indexbyte1 << 8 + indexbyte2)
@@ -94,5 +98,23 @@ public class Instruction {
     public static final int IN_RETURN = 0xb1; //177
     // return an integer from a method
     public static final int IN_IRETURN = 0xac; //172
-    // todo...
+   
+    // if value is less than or equal to 0, branch to instruction at branchoffset (signed short constructed from unsigned bytes branchbyte1 << 8 + branchbyte2)
+    public static final int IN_IFLE = 0x9e;
+    // perform no operation
+    public static final int IN_NOP = 0x0;
+    // increment local variable #index by signed byte const
+    public static final int IN_IINC = 0x84;
+    // reserved for implementation-dependent operations within debuggers; should not appear in any class file
+    public static final int IN_IMPDEP2 = 0xff;
+    // goes to another instruction at branchoffset (signed short constructed from unsigned bytes branchbyte1 << 8 + branchbyte2)
+    public static final int IN_GOTO = 0xa7;
+    // push 0.0f on the stack
+    public static final int IN_FCONST0 = 0x0b;
+    // push 1.0f on the stack
+    public static final int IN_FCONST1 = 0x0c;
+    // push 2.0f on the stack
+    public static final int IN_FCONST2 = 0x0d;
+    // if value1 is greater than or equal to value2, branch to instruction at branchoffset (signed short constructed from unsigned bytes branchbyte1 << 8 + branchbyte2)
+    public static final int IN_IF_ICMPGE = 0xa2;
 }
