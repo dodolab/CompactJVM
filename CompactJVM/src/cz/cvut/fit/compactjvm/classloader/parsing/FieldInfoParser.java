@@ -56,11 +56,11 @@ public class FieldInfoParser {
     //Spocita offset v datove casti kazdeho objektu na heape
     private int getFieldOffset(String descriptor) {
         int currentFieldOffset = nextFieldOffset;
-        nextFieldOffset += ("L".equals(descriptor) || "D".equals(descriptor)) ? 2 : 1;
+        nextFieldOffset += 1;//("J".equals(descriptor) || "D".equals(descriptor)) ? 2 : 1;
         return currentFieldOffset;
     }
 
-    public int getFieldDataBytes() {
+    public int getRecursiveFieldCount() {
         return nextFieldOffset;
     }
     

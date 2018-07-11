@@ -152,7 +152,7 @@ public class ObjectHeap {
      */
     public SObjectRef allocObject(ClassFile classFile) throws OutOfHeapMemException {
         int reference = nextFreeSpace;
-        int wordsRequired = /*getObjectHeaderSize() +*/ 1+ classFile.fieldCount;
+        int wordsRequired = /*getObjectHeaderSize() +*/ 1+ classFile.recursiveFieldCount;
         checkHeapSpace(wordsRequired);
         
         JVMLogger.log(JVMLogger.TAG_HEAP, "Allocating object ["+reference+"][sz="+wordsRequired+"]-->"+classFile.className);
@@ -161,7 +161,7 @@ public class ObjectHeap {
         writeToActiveHeap(reference, ref);
         garbageCollector.initializeDataHeader();
         nextFreeSpace += wordsRequired;
-        initializeSpace(reference + 1/*getObjectHeaderSize()*/, classFile.fieldCount);
+        initializeSpace(reference + 1/*getObjectHeaderSize()*/, classFile.recursiveFieldCount);
         return ref;
     }
 

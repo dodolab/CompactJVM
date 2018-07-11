@@ -10,6 +10,7 @@ import cz.cvut.fit.compactjvm.entities.CPNameAndType;
 import cz.cvut.fit.compactjvm.entities.CPUtf8;
 import cz.cvut.fit.compactjvm.entities.FLEntity;
 import cz.cvut.fit.compactjvm.entities.MTHEntity;
+import cz.cvut.fit.compactjvm.entities.NameDesc;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +32,7 @@ public class ClassFile {
     public short interfaceCount;
     public short interfaceIndex;
     public short fieldCount; // number of fields
-    public int fieldDataBytes; // number of bytes required for fields to be stored
+    public int recursiveFieldCount; // number of fields (recursive counted with superclass fields)
     public FLEntity[] fieldInfos; // field info
     public Map<Integer, FLEntity> fieldInfosByCpIndex = null;
     public short methodCount; // number of methods
@@ -148,55 +149,49 @@ public class ClassFile {
         return -1;
         //@todo throw exception
     }
-    
-    /**
-     * Ziska field info na zaklade indexu v constant poolu. Ten ziskam
-     * jako parametr pro instrukci - napr. putfield
-     * Pokud neni v teto tride, pokusi se vyhledat i v rodicovskych tridach
+
+        /**
+     * Gets name and descriptor by cp index
      * @param cpIndex
-     * @return
-     * @throws LoadingException 
+     * @return 
      */
-    public FLEntity getFieldInfoByCpIndex(int cpIndex) throws LoadingException {
-        if(fieldInfosByCpIndex == null) fieldInfosByCpIndex = new HashMap<>();
-        else if(fieldInfosByCpIndex.containsKey(cpIndex)) {
-            return fieldInfosByCpIndex.get(cpIndex);
-        }
+    public NameDesc getNameAndDescriptorByCpIndex(int cpIndex){
         CPFieldRef fieldRef = (CPFieldRef) cpEntities[cpIndex];
         CPNameAndType nameAndType = (CPNameAndType) cpEntities[fieldRef.nameAndTypeIndex];
         String name = ((CPUtf8) cpEntities[nameAndType.nameIndex]).value;
         String descriptor = ((CPUtf8) cpEntities[nameAndType.descriptorIndex]).value;
         
-        //Projdu nejen tuto tridu, ale zkusim hledat i v rodicovskych tridach, pokud je field definovan tam
+        NameDesc nm = new NameDesc();
+        nm.name = name;
+        nm.descriptor = descriptor;
+        return nm;
+    }
+    
+    /**
+     * Gets field info based on its name, descriptor and constant pool index
+     * @param name
+     * @param descriptor
+     * @param cpIndex
+     * @return
+     * @throws LoadingException 
+     */
+    public FLEntity getFieldInfo(String name, String descriptor, int cpIndex) throws LoadingException{
+        
+        if(fieldInfosByCpIndex == null) fieldInfosByCpIndex = new HashMap<>();
+        else if(fieldInfosByCpIndex.containsKey(cpIndex)) {
+            return fieldInfosByCpIndex.get(cpIndex);
+        }
+                
         ClassFile _classFile = this;
         FLEntity fieldInfo;
         while((fieldInfo = _classFile.getFieldInfo(name, descriptor)) == null && _classFile.getSuperclassName() != null) {
             _classFile = _classFile.getSuperClass();
         }
-        //FLEntity fieldInfo = fieldInfos[getFieldIndex(name, descriptor)];
+        
         fieldInfosByCpIndex.put(cpIndex, fieldInfo);
         return fieldInfo;
     }
     
-    /**
-     * Gets field info based on constant pool index; tries to search the entity
-     * inside selected classFile; this method is used when we are looking for
-     * an entity of a object member (object inside another object)
-     * @param cpIndex
-     * @param classFile
-     * @return 
-     */
-    public FLEntity getFieldInfoByCpIndex(int cpIndex, ClassFile classFile) throws LoadingException{
-        CPFieldRef fieldRef = (CPFieldRef) cpEntities[cpIndex];
-        CPNameAndType nameAndType = (CPNameAndType) cpEntities[fieldRef.nameAndTypeIndex];
-        String name = ((CPUtf8) cpEntities[nameAndType.nameIndex]).value;
-        String descriptor = ((CPUtf8) cpEntities[nameAndType.descriptorIndex]).value;
-        
-        FLEntity fieldInfo = classFile.getFieldInfo(name, descriptor);
-        
-        if(fieldInfo == null) throw new LoadingException("Field info couldn't be found; searching for "+name+" in "+classFile.className);
-        return fieldInfo;
-    }
 
     /**
      * Gets field index by selected name and descriptor
@@ -204,7 +199,7 @@ public class ClassFile {
      * @param fieldDescriptor
      * @return 
      */
-    public FLEntity getFieldInfo(String fieldName, String fieldDescriptor) throws LoadingException{
+    private FLEntity getFieldInfo(String fieldName, String fieldDescriptor) throws LoadingException{
         for (FLEntity fieldInfo : fieldInfos) {
             if (((CPUtf8) cpEntities[fieldInfo.nameIndex]).value.equals(fieldName) && ((CPUtf8) cpEntities[fieldInfo.descriptorIndex]).value.equals(fieldDescriptor)) {
                 return fieldInfo;

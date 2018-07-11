@@ -232,7 +232,7 @@ public class ClassFileParser {
             cls.fieldInfos[i] = ent;
         }
         //fldParser now contains count of bytes, fields requires for store on heap
-        cls.fieldDataBytes = fldParser.getFieldDataBytes();
+        cls.recursiveFieldCount = fldParser.getRecursiveFieldCount();
         
         return true;
     }

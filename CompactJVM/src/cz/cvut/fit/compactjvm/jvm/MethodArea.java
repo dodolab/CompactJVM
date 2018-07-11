@@ -107,11 +107,11 @@ public class MethodArea {
             if(classFile.getSuperclassName() != null) {
                 ClassFile superClassFile = getClassFile(classFile.getSuperclassName());
                 recalculateFieldOffsets(superClassFile);
-                int superClassDataOffset = superClassFile.fieldDataBytes;
+                int superClassDataOffset = superClassFile.recursiveFieldCount;
                 for(int i = 0; i < classFile.fieldInfos.length; ++i) {
                     classFile.fieldInfos[i].dataFieldOffset += superClassDataOffset;
                 }
-                classFile.fieldDataBytes += superClassDataOffset;
+                classFile.recursiveFieldCount += superClassDataOffset;
             }
             classFile.fieldOffsetsRecalculated = true;
         }

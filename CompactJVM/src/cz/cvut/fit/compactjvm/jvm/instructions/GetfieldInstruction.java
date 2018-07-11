@@ -7,6 +7,7 @@ package cz.cvut.fit.compactjvm.jvm.instructions;
 
 import cz.cvut.fit.compactjvm.core.Word;
 import cz.cvut.fit.compactjvm.entities.FLEntity;
+import cz.cvut.fit.compactjvm.entities.NameDesc;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.JVMStack;
 import cz.cvut.fit.compactjvm.jvm.ObjectHeap;
@@ -32,13 +33,12 @@ public class GetfieldInstruction {
         
         
         SObjectRef reference = stackFrame.operandStack.pop();
+        NameDesc nd = stackFrame.associatedClass.getNameAndDescriptorByCpIndex(cpIndex);
+        fieldInfo = stackFrame.associatedClass.getFieldInfo(nd.name, nd.descriptor, cpIndex);
         
-        fieldInfo = stackFrame.associatedClass.getFieldInfoByCpIndex(cpIndex);
-        
-        
-        // tak jeste takto a melo by to jit...
+        // search in reference classFile
         if(fieldInfo == null){
-           fieldInfo = stackFrame.associatedClass.getFieldInfoByCpIndex(cpIndex, reference.getClassFile());
+           fieldInfo = reference.getClassFile().getFieldInfo(nd.name, nd.descriptor, cpIndex);
         }
         
         SStruct value = heap.readFromHeap(reference.getReference(), fieldInfo.dataFieldOffset);

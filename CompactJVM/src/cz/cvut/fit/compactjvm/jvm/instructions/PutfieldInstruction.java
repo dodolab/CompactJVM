@@ -11,6 +11,7 @@ import cz.cvut.fit.compactjvm.entities.CPEntity;
 import cz.cvut.fit.compactjvm.entities.CPFieldRef;
 import cz.cvut.fit.compactjvm.entities.CPUtf8;
 import cz.cvut.fit.compactjvm.entities.FLEntity;
+import cz.cvut.fit.compactjvm.entities.NameDesc;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.JVMStack;
 import cz.cvut.fit.compactjvm.jvm.MethodArea;
@@ -34,22 +35,13 @@ public class PutfieldInstruction {
         byte[] bytes = stackFrame.loadInstructionParams(PARAM_COUNT);
         int cpIndex = Word.fromByteArray(bytes);
         
-        FLEntity fieldInfo = null;
-        
         SStruct value = stackFrame.operandStack.pop();
         SObjectRef reference = stackFrame.operandStack.pop();
         
-        if(value instanceof SObjectRef){
-            // fieldinfo will be stored inside the object
-            fieldInfo = stackFrame.associatedClass.getFieldInfoByCpIndex(cpIndex, reference.getClassFile());
-        }else{
-            fieldInfo = stackFrame.associatedClass.getFieldInfoByCpIndex(cpIndex);
-        }
+        NameDesc nd = stackFrame.associatedClass.getNameAndDescriptorByCpIndex(cpIndex);
+        FLEntity fieldInfo = reference.getClassFile().getFieldInfo(nd.name, nd.descriptor, cpIndex);
         
-        // tak jeste takto a melo by to jit...
-        if(fieldInfo == null){
-           fieldInfo = stackFrame.associatedClass.getFieldInfoByCpIndex(cpIndex, reference.getClassFile());
-        }
+        
         
         heap.writeToHeap(reference.getReference(), fieldInfo.dataFieldOffset, value);
         JVMLogger.log(JVMLogger.TAG_INSTR, "Put field to heap: (reference: "+reference+", value: "+value+")");
