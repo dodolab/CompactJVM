@@ -16,13 +16,18 @@ import java.util.List;
  * @author Adam Vesecky
  */
 public class CompactJVM {
-    
+    private static CompactJVM instance;
     private final MethodArea methodArea;
     private final ObjectHeap heap;
     
     private List<JVMThread> threads = new LinkedList<>();
     
+    public static CompactJVM getInstance(){
+        return instance;
+    }
+    
     public CompactJVM(){
+        instance = this; // this is only for logging (logger sometimes needs to access the JVM)
         ClassFileLoader classLoader = new ClassFileLoader();
         methodArea = new MethodArea(classLoader);
         GarbageCollector garbageCollector = new GarbageCollector(this);

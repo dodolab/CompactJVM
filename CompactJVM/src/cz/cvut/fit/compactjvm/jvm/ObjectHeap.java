@@ -54,6 +54,7 @@ public class ObjectHeap {
         inactiveHeapOffset = heapSize;
         nextFreeSpace = 0;
         this.garbageCollector = garbageCollector;
+        JVMLogger.log(JVMLogger.TAG_HEAP, "Creating heap");
     }
 
     public JVMThread getJVMThread() {
@@ -99,6 +100,7 @@ public class ObjectHeap {
      * @param value
      */
     public <T extends SStruct> void writeToHeap(int reference, int index, T value) {
+        JVMLogger.log(JVMLogger.TAG_HEAP, "Write ["+reference+"]["+index+"]-->"+value);
         int headerSize = 1; //(getClassIndex(reference) == ARRAY_INDEX) ? getArrayHeaderSize() : getObjectHeaderSize();
         writeToActiveHeap(reference + headerSize + index, value);
     }
@@ -112,7 +114,34 @@ public class ObjectHeap {
      */
     public <T extends SStruct> T readFromHeap(int reference, int index) {
         int headerSize = 1; //(getClassIndex(reference) == ARRAY_INDEX) ? getArrayHeaderSize() : getObjectHeaderSize();
-        return readFromActiveHeap(reference + headerSize + index);
+        T output = readFromActiveHeap(reference + headerSize + index);
+        JVMLogger.log(JVMLogger.TAG_HEAP, "Read ["+reference+"]["+index+"]-->"+output);
+        return output;
+    }
+    
+    /**
+     * Reads object array from active heap
+     * @param reference
+     * @return 
+     */
+    public SObjectRef[] readObjectArrayFromHeap(int reference){
+        SArrayRef arrayRef = readFromActiveHeap(reference);
+        SObjectRef[] arr = new SObjectRef[arrayRef.getSize()];
+        
+        JVMLogger.log(JVMLogger.TAG_HEAP, "Read object array ["+reference+"]-->"+arrayRef);
+        
+        // disable logging for that moment
+        boolean loggingEnabled = JVMLogger.loggingEnabled(JVMLogger.TAG_HEAP);
+        JVMLogger.disableLogging(JVMLogger.TAG_HEAP);
+        
+        for(int i=0; i<arrayRef.getSize(); i++){
+            SObjectRef ref = readFromHeap(reference,i+1);
+            arr[i] = ref;
+        }
+        
+        if(loggingEnabled) JVMLogger.enableLogging(JVMLogger.TAG_HEAP);
+        
+        return arr;
     }
 
     /**
@@ -123,14 +152,16 @@ public class ObjectHeap {
      */
     public SObjectRef allocObject(ClassFile classFile) throws OutOfHeapMemException {
         int reference = nextFreeSpace;
-        int wordsRequired = /*getObjectHeaderSize() +*/ 1+ classFile.fieldDataBytes;
+        int wordsRequired = /*getObjectHeaderSize() +*/ 1+ classFile.fieldCount;
         checkHeapSpace(wordsRequired);
+        
+        JVMLogger.log(JVMLogger.TAG_HEAP, "Allocating object ["+reference+"][sz="+wordsRequired+"]-->"+classFile.className);
         
         SObjectRef ref = new SObjectRef(reference,classFile);
         writeToActiveHeap(reference, ref);
         garbageCollector.initializeDataHeader();
         nextFreeSpace += wordsRequired;
-        initializeSpace(reference + 1/*getObjectHeaderSize()*/, classFile.fieldDataBytes);
+        initializeSpace(reference + 1/*getObjectHeaderSize()*/, classFile.fieldCount);
         return ref;
     }
 
@@ -142,21 +173,55 @@ public class ObjectHeap {
      * @return
      * @throws OutOfHeapMemException
      */
-    public SArrayRef allocArray(int itemSize, int arraySize) throws OutOfHeapMemException {
+    public <T extends SStruct> SArrayRef allocPrimitiveArray(T[] arr, int arraySize) throws OutOfHeapMemException {
         
         int reference = nextFreeSpace;
-        int wordsRequired = /*getArrayHeaderSize()*/ 1 + (itemSize * arraySize);
+        int wordsRequired = /*getArrayHeaderSize()*/ 1 + arraySize;
         checkHeapSpace(wordsRequired);
         
+        JVMLogger.log(JVMLogger.TAG_HEAP, "Allocating primitive array ["+reference+"][sz="+arraySize+"]-->");
+        JVMLogger.increaseGlobalPadding(4);
         SArrayRef ref = new SArrayRef(reference,null, arraySize);
         writeToActiveHeap(reference, ref);
+        
+        // write default values into heap
+        for(int i=0; i<arraySize; i++){
+            writeToHeap(reference, reference+i,arr[i]);
+        }
+        JVMLogger.decreaseGlobalPadding(4);
+        nextFreeSpace+=wordsRequired;
+        
         //writeToActiveHeap(reference + 1, arraySize);
         garbageCollector.initializeDataHeader();
-        nextFreeSpace += wordsRequired;
-        initializeSpace(reference + 1/*getArrayHeaderSize()*/, itemSize * arraySize);
+        //nextFreeSpace += wordsRequired;
+        //initializeSpace(reference + 1/*getArrayHeaderSize()*/, itemSize * arraySize);
         return ref;
     }
 
+    public SArrayRef allocObjectArray(ClassFile classFile, int arraySize) throws OutOfHeapMemException{
+        
+        int reference = nextFreeSpace;
+        int wordsRequired = 1 + arraySize;
+        checkHeapSpace(wordsRequired);
+        
+        JVMLogger.log(JVMLogger.TAG_HEAP, "Allocating object array ["+reference+"][sz="+arraySize+"]-->"+classFile.className);
+        
+        SArrayRef arrayRef = new SArrayRef(reference,classFile, arraySize);
+        writeToActiveHeap(reference, arrayRef);
+        
+        JVMLogger.increaseGlobalPadding(4);
+        // write references to the heap
+        for(int i=0; i<arraySize; i++){
+            writeToHeap(reference, reference+i,new SObjectRef(reference+1+i,classFile));
+        }
+        JVMLogger.decreaseGlobalPadding(4);
+        
+        nextFreeSpace+=wordsRequired;
+        
+        return arrayRef;
+
+    }
+    
     /**
      * Zapise do aktivni casti haldy (index je realny index od zacatku teto
      * casti haldy)

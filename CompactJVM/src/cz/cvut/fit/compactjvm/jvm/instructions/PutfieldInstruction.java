@@ -7,6 +7,7 @@ package cz.cvut.fit.compactjvm.jvm.instructions;
 
 import cz.cvut.fit.compactjvm.core.Word;
 import cz.cvut.fit.compactjvm.entities.CPClass;
+import cz.cvut.fit.compactjvm.entities.CPEntity;
 import cz.cvut.fit.compactjvm.entities.CPFieldRef;
 import cz.cvut.fit.compactjvm.entities.CPUtf8;
 import cz.cvut.fit.compactjvm.entities.FLEntity;
@@ -33,12 +34,22 @@ public class PutfieldInstruction {
         byte[] bytes = stackFrame.loadInstructionParams(PARAM_COUNT);
         int cpIndex = Word.fromByteArray(bytes);
         
-        FLEntity fieldInfo = stackFrame.associatedClass.getFieldInfoByCpIndex(cpIndex);
+        FLEntity fieldInfo = null;
         
-        //@todo zalezi na typu
         SStruct value = stackFrame.operandStack.pop();
         SObjectRef reference = stackFrame.operandStack.pop();
-        //@todo otestovat, zda reference neni pole
+        
+        if(value instanceof SObjectRef){
+            // fieldinfo will be stored inside the object
+            fieldInfo = stackFrame.associatedClass.getFieldInfoByCpIndex(cpIndex, reference.getClassFile());
+        }else{
+            fieldInfo = stackFrame.associatedClass.getFieldInfoByCpIndex(cpIndex);
+        }
+        
+        // tak jeste takto a melo by to jit...
+        if(fieldInfo == null){
+           fieldInfo = stackFrame.associatedClass.getFieldInfoByCpIndex(cpIndex, reference.getClassFile());
+        }
         
         heap.writeToHeap(reference.getReference(), fieldInfo.dataFieldOffset, value);
         JVMLogger.log(JVMLogger.TAG_INSTR, "Put field to heap: (reference: "+reference+", value: "+value+")");

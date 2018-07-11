@@ -34,4 +34,8 @@ public abstract class SGenericRef extends SStruct{
     @Override
     public abstract SStruct makeCopy();
 
+    @Override
+    public boolean isReference(){
+        return true;
+    }
 }

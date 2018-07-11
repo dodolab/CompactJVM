@@ -41,6 +41,11 @@ public class JVMStack {
         return stack.peek();
     }
     
+    public int getCurrentInstructionIndex(){
+        if(stack.empty()) return -1;
+        else return getCurrentFrame().getCurrentInstructionIndex();
+    }
+    
     public Stack<StackFrame> getAllFrames(){
         return stack;
     }

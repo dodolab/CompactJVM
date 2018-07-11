@@ -49,6 +49,7 @@ public class InstructionManager {
             case Instruction.IN_ILOAD1: ILoadNInstruction.run(jvmStack.getCurrentFrame(), 1); break;
             case Instruction.IN_ILOAD2: ILoadNInstruction.run(jvmStack.getCurrentFrame(), 2); break;
             case Instruction.IN_ILOAD3: ILoadNInstruction.run(jvmStack.getCurrentFrame(), 3); break;
+            case Instruction.IN_AALOAD: AALoadInstruction.run(jvmStack.getCurrentFrame(), heap);break;
             case Instruction.IN_ALOAD: ALoadInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_ALOAD0: ALoadInstruction.run(jvmStack.getCurrentFrame(),0); break;
             case Instruction.IN_ALOAD1: ALoadInstruction.run(jvmStack.getCurrentFrame(),1); break;
@@ -57,6 +58,7 @@ public class InstructionManager {
             case Instruction.IN_IADD: IAddInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_IMUL: IMulInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_BIPUSH: BiPushInstruction.run(jvmStack.getCurrentFrame()); break;
+            case Instruction.IN_SIPUSH: SiPushInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_ICONSTM1: IConstIInstruction.run(jvmStack.getCurrentFrame(), -1); break;
             case Instruction.IN_ICONST0: IConstIInstruction.run(jvmStack.getCurrentFrame(), 0); break;
             case Instruction.IN_ICONST1: IConstIInstruction.run(jvmStack.getCurrentFrame(), 1); break;
@@ -67,11 +69,13 @@ public class InstructionManager {
             
             case Instruction.IN_INVOKESTATIC: InvokeStaticInstruction.run(jvmStack, methodArea); break;
             case Instruction.IN_RETURN: ReturnInstruction.run(jvmStack); break;
+            case Instruction.IN_ARETURN: AReturnInstruction.run(jvmStack);break;
             case Instruction.IN_IRETURN: IReturnInstruction.run(jvmStack); break;
-            
             case Instruction.IN_NEWARRAY: NewArrayInstruction.run(jvmStack.getCurrentFrame(), heap); break;
+            case Instruction.IN_ANEWARRAY: ANewArrayInstruction.run(jvmStack.getCurrentFrame(),methodArea, heap);break;
             case Instruction.IN_LCONST0: LConstNInstruction.run(jvmStack.getCurrentFrame(),0); break;
             case Instruction.IN_LCONST1: LConstNInstruction.run(jvmStack.getCurrentFrame(),1); break;
+            case Instruction.IN_AASTORE: AAStoreInstruction.run(jvmStack.getCurrentFrame(), heap); break;
             case Instruction.IN_ASTORE: AStoreNInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_ASTORE0: AStoreNInstruction.run(jvmStack.getCurrentFrame(),0); break;
             case Instruction.IN_ASTORE1: AStoreNInstruction.run(jvmStack.getCurrentFrame(),1); break;
@@ -88,18 +92,21 @@ public class InstructionManager {
             case Instruction.IN_FCONST1: FConstInstruction.run(jvmStack.getCurrentFrame(), 1.0f); break;
             case Instruction.IN_FCONST2: FConstInstruction.run(jvmStack.getCurrentFrame(), 2.0f); break;
             case Instruction.IN_IF_ICMPGE: IfIcmpgeInstruction.run(jvmStack.getCurrentFrame()); break;
-            
+            case Instruction.IN_IF_ICMPEQ: IfcmpeqInstruction.run(jvmStack.getCurrentFrame()); break;
+            case Instruction.IN_IF_ICMPNE: IfcmpneInstruction.run(jvmStack.getCurrentFrame()); break;
+            case Instruction.IN_IF_NULL: IfnullInstruction.run(jvmStack.getCurrentFrame());break;
+            case Instruction.IN_IF_NON_NULL: IfnonnullInstruction.run(jvmStack.getCurrentFrame());break;
+            case Instruction.IN_IF_EQ: IfeqInstruction.run(jvmStack.getCurrentFrame());break;
             case Instruction.IN_NEW: NewInstruction.run(jvmStack, methodArea, heap); break;
             case Instruction.IN_DUP: DupInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_INVOKESPECIAL: InvokeSpecialInstruction.run(jvmStack, methodArea); break;
             case Instruction.IN_PUTFIELD: PutfieldInstruction.run(jvmStack, heap, methodArea); break;
             case Instruction.IN_GETFIELD: GetfieldInstruction.run(jvmStack, heap); break;
             case Instruction.IN_INVOKEVIRTUAL: InvokeVirtualInstruction.run(jvmStack, methodArea); break;
-            
             case Instruction.IN_PUTSTATIC: PutStaticInstruction.run(jvmStack.getCurrentFrame());break;
             case Instruction.IN_GETSTATIC: GetStaticInstruction.run(jvmStack, methodArea);
             default:
-                JVMLogger.log(JVMLogger.TAG_INSTR, "Not implemented instruction: "+code+" (0x"+Integer.toHexString(code)+")");
+                JVMLogger.log(JVMLogger.TAG_OTHER, "Not implemented instruction: "+code+" (0x"+Integer.toHexString(code)+")");
         }
     }
     

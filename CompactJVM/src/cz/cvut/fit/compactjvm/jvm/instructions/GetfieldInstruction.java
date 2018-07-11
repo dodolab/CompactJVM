@@ -28,11 +28,20 @@ public class GetfieldInstruction {
         byte[] bytes = stackFrame.loadInstructionParams(PARAM_COUNT);
         int cpIndex = Word.fromByteArray(bytes);
         
-        FLEntity fieldInfo = stackFrame.associatedClass.getFieldInfoByCpIndex(cpIndex);
+        FLEntity fieldInfo;
+        
         
         SObjectRef reference = stackFrame.operandStack.pop();
-        SInt value = heap.readFromHeap(reference.getReference(), fieldInfo.dataFieldOffset);
-        //@todo zalezi na typu, nejen int
+        
+        fieldInfo = stackFrame.associatedClass.getFieldInfoByCpIndex(cpIndex);
+        
+        
+        // tak jeste takto a melo by to jit...
+        if(fieldInfo == null){
+           fieldInfo = stackFrame.associatedClass.getFieldInfoByCpIndex(cpIndex, reference.getClassFile());
+        }
+        
+        SStruct value = heap.readFromHeap(reference.getReference(), fieldInfo.dataFieldOffset);
         stackFrame.operandStack.push(value);
         
         JVMLogger.log(JVMLogger.TAG_INSTR, "Get field from heap (reference: "+reference+", value: "+value+")");

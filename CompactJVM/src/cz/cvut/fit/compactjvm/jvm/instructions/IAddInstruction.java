@@ -31,7 +31,9 @@ public class IAddInstruction {
         SStruct value = new SInt(operand1.getValue() + operand2.getValue());
         stackFrame.operandStack.push(value);
         
-        new AnotherGarbageCollector(stackFrame.jvmThread.getHeap()).cleanHeap(stackFrame.jvmThread.getStack().getAllFrames());
+      
+        // run garbage collector
+        new AnotherGarbageCollector(stackFrame.jvmThread.getHeap(),stackFrame.jvmThread.getStack()).runGC();
     }
 
 }

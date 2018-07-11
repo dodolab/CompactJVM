@@ -25,8 +25,10 @@ public class Main {
                 return;
             }
 
-            JVMLogger.enableLogging(JVMLogger.TAG_INSTR);
+            //JVMLogger.enableLogging(JVMLogger.TAG_INSTR);
             JVMLogger.enableLogging(JVMLogger.TAG_OTHER);
+            JVMLogger.enableLogging(JVMLogger.TAG_HEAP);
+            JVMLogger.enableLogging(JVMLogger.TAG_GC);
             
             String classPath = args[0];
             CompactJVM jvm = new CompactJVM();

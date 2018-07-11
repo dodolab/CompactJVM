@@ -73,6 +73,8 @@ public class Instruction {
     public static final int IN_IMUL = 0x68; //104
     // push a byte onto the stack as an integer value
     public static final int IN_BIPUSH = 0x10; //16
+    // push a short onto the stack as an integer value
+    public static final int IN_SIPUSH = 0x11; // 17
     // load the int value −1 onto the stack
     public static final int IN_ICONSTM1 = 0x2; //2
     // load the int value 0 onto the stack
@@ -117,6 +119,16 @@ public class Instruction {
     public static final int IN_FCONST2 = 0x0d;
     // if value1 is greater than or equal to value2, branch to instruction at branchoffset (signed short constructed from unsigned bytes branchbyte1 << 8 + branchbyte2)
     public static final int IN_IF_ICMPGE = 0xa2;
+    // if value is null, branch to instruction at branchoffset
+    public static final int IN_IF_NULL = 0xc6;
+    // if value is not null, branch to instruction at branchoffset
+    public static final int IN_IF_NON_NULL = 0xc7;
+    // if value is equal to zero, branch to instruction at branchoffset
+    public static final int IN_IF_EQ = 0x99;
+    // if value1 == value2
+    public static final int IN_IF_ICMPEQ = 0x9f;
+    // if value1 != value2
+    public static final int IN_IF_ICMPNE = 0xa0;
     
     // creates new instance of class defined by two next bytes
     public static final int IN_NEW = 0xbb; //187 (-69)

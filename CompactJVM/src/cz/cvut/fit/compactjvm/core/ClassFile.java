@@ -46,6 +46,7 @@ public class ClassFile {
     
     public boolean fieldOffsetsRecalculated = false; //Pri inicializaci je prepocitat offset vlastnosti, jak budou ukladana na halde podle predku tridy
     public ClassFile superClass = null;
+    public String className;
     
     /**
      * Ziska nazev tridy z constant poolu
@@ -54,6 +55,10 @@ public class ClassFile {
     public String getClassName() {
         CPClass stringEntity = (CPClass) cpEntities[thisClassIndex];
         return ((CPUtf8) cpEntities[stringEntity.nameIndex]).value;
+    }
+    
+    public void setClassName(){
+        this.className = getClassName();
     }
     
     /**
@@ -170,6 +175,26 @@ public class ClassFile {
         }
         //FLEntity fieldInfo = fieldInfos[getFieldIndex(name, descriptor)];
         fieldInfosByCpIndex.put(cpIndex, fieldInfo);
+        return fieldInfo;
+    }
+    
+    /**
+     * Gets field info based on constant pool index; tries to search the entity
+     * inside selected classFile; this method is used when we are looking for
+     * an entity of a object member (object inside another object)
+     * @param cpIndex
+     * @param classFile
+     * @return 
+     */
+    public FLEntity getFieldInfoByCpIndex(int cpIndex, ClassFile classFile) throws LoadingException{
+        CPFieldRef fieldRef = (CPFieldRef) cpEntities[cpIndex];
+        CPNameAndType nameAndType = (CPNameAndType) cpEntities[fieldRef.nameAndTypeIndex];
+        String name = ((CPUtf8) cpEntities[nameAndType.nameIndex]).value;
+        String descriptor = ((CPUtf8) cpEntities[nameAndType.descriptorIndex]).value;
+        
+        FLEntity fieldInfo = classFile.getFieldInfo(name, descriptor);
+        
+        if(fieldInfo == null) throw new LoadingException("Field info couldn't be found; searching for "+name+" in "+classFile.className);
         return fieldInfo;
     }
 

@@ -11,4 +11,8 @@ package cz.cvut.fit.compactjvm.structures;
  */
 public abstract class SStruct {
     public abstract SStruct makeCopy();
+    
+    public boolean isReference(){
+        return false;
+    }
 }

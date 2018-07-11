@@ -84,6 +84,8 @@ public class ClassFileParser {
             return false;
         }
         
+        cls.setClassName();
+        
         JVMLogger.log(JVMLogger.TAG_PARSING, "Classfile successfully loaded");
 
         return true;
