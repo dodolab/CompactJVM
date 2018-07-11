@@ -27,13 +27,14 @@ public class InvokeVirtualInstruction {
     public static void run(JVMStack stack, MethodArea methodArea) throws LoadingException {
         byte[] bytes = stack.getCurrentFrame().loadInstructionParams(PARAM_COUNT);
         int methodRefIndex = Word.fromByteArray(bytes); //index v CP ve tride, ktera invokuje, nikoliv v te, na ktere je metoda volana
-        MethodDefinition method = stack.getCurrentFrame().associatedClass.getMethodDefinition(methodRefIndex);
+        MethodDefinition method = stack.getCurrentFrame().associatedClass.getMethodDefinition(methodRefIndex, 
+                stack.getCurrentFrame().associatedMethod, methodArea);
         
         ClassFile classFile = methodArea.getClassFile(method.getMethodClass());
         
         //Lookup metody v rodicovskych tridach, pokud neni nalezena v aktualni tride
         int methodIndex;
-        while((methodIndex = classFile.getMethodIndex(method.getMethodName(), method.getMethodDescriptor())) == -1) {
+        while((methodIndex = classFile.getMethodDefIndex(method.getMethodName(), method.getMethodDescriptor())) == -1) {
             if(classFile.getSuperclassName() == null) throw new LoadingException("Invoke virtual lookup failed - no method found");
             classFile = classFile.getSuperClass();
         }

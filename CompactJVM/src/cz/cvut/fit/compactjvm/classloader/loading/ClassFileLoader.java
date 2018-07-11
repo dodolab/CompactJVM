@@ -43,7 +43,7 @@ public class ClassFileLoader {
         try {
             classFile = parseFile(classPath);
         } catch (IOException | ParsingException ex) {
-            JVMLogger.log(JVMLogger.TAG_OTHER, "Cannot parse file. File may not exist.");
+            JVMLogger.log(JVMLogger.TAG_OTHER, "Cannot parse file "+classPath+". File may not exist.");
         }
         return classFile;
     }

@@ -17,7 +17,7 @@ import java.util.Iterator;
  */
 public class AnotherGarbageCollector {
 
-    private ArrayList<Integer> livingObjects = new ArrayList<Integer>();
+    private ArrayList<Integer> objectsToKeep = new ArrayList<Integer>();
     private ObjectHeap heap;
     private JVMStack stack;
     
@@ -27,11 +27,11 @@ public class AnotherGarbageCollector {
     }
 
     public void runGC() {
-        livingObjects.clear();
+        objectsToKeep.clear();
         JVMLogger.log(JVMLogger.TAG_GC, "############# Starting GC ############");
         searchInStack(stack);
         swapHeap();
-        livingObjects.clear();
+        objectsToKeep.clear();
         JVMLogger.log(JVMLogger.TAG_GC, "############# Ending GC ############");
     }
 
@@ -69,7 +69,9 @@ public class AnotherGarbageCollector {
         JVMLogger.log(JVMLogger.TAG_GC, "  --Searching in local variables");
         for(int i=0; i<localVars.length; i++){
             SStruct localVar = localVars[i];
-            searchInStructure(localVar);
+            if(localVar != null){
+                searchInStructure(localVar);    
+            }
         }
 
     }
@@ -79,7 +81,7 @@ public class AnotherGarbageCollector {
         if(struct.isReference()){
             SGenericRef reference = (SGenericRef) struct;
             if(!reference.isNull()){
-                livingObjects.add(reference.getReference());
+                markLivingObject(reference.getReference());
                 
                 // go deeper
                 if(reference instanceof SObjectRef){
@@ -110,21 +112,21 @@ public class AnotherGarbageCollector {
                 SObjectRef fld = heap.readFromHeap(reference.getReference(), i);
                 if(!fld.isNull()){
                     JVMLogger.log(JVMLogger.TAG_GC, "Found field "+field.name+" in "+classFile.className);
-                    livingObjects.add(fld.getReference());
+                    markLivingObject(fld.getReference());
                     searchInObjectReference(fld);
                 }
             }else if(field.isObjectArray()){
                 SArrayRef fld = heap.readFromHeap(reference.getReference(), i);
                 if(!fld.isNull()){
                     JVMLogger.log(JVMLogger.TAG_GC, "Found object array "+field.name+" in "+classFile.className);
-                    livingObjects.add(fld.getReference());
+                    markLivingObject(fld.getReference());
                     searchInArrayReference(fld);
                 }
             }else if(field.isPrimitiveArray()){
                 SArrayRef fld = heap.readFromHeap(reference.getReference(), i);
                 if(!fld.isNull()){
                     JVMLogger.log(JVMLogger.TAG_GC, "Found primitive array "+field.name+" in "+classFile.className);
-                    livingObjects.add(fld.getReference());
+                    markLivingObject(fld.getReference());
                 }
             }
         }
@@ -139,7 +141,7 @@ public class AnotherGarbageCollector {
             for(int i=0; i<arrayOfReferences.length; i++){
                 SObjectRef fldRef = arrayOfReferences[i];
                 if(!fldRef.isNull()){
-                    livingObjects.add(fldRef.getReference());
+                    markLivingObject(fldRef.getReference());
                     JVMLogger.log(JVMLogger.TAG_GC, "Found array item "+(fldRef.getClassFile() == null ? "xx" : fldRef.getClassFile().className));
                     searchInObjectReference(fldRef);
                 }
@@ -147,8 +149,18 @@ public class AnotherGarbageCollector {
         }
         JVMLogger.decreaseGlobalPadding(1);
     }
+    
+    private void markLivingObject(int reference){
+        if(!objectsToKeep.contains(reference)){
+            objectsToKeep.add(reference);
+        }
+    }
 
     private void swapHeap() {
-        // todo...
+        heap.swapHeap();
+        
+        for(Integer livingObj : objectsToKeep){
+            heap.moveObjectFromOldHeap(livingObj.intValue());
+        }
     }
 }

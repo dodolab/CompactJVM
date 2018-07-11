@@ -73,10 +73,10 @@ public class ObjectHeap {
      * @param oldReference
      * @param newReference
      */
-    public void setForwardingPointer(int oldReference, int newReference) {
+ /*   public void setForwardingPointer(int oldReference, int newReference) {
         writeToActiveHeap(oldReference, new SInt(FORWARDING_POINTER));
         writeToActiveHeap(oldReference + 1, new SInt(newReference));
-    }
+    }*/
 
     /**
      * Zjisti, zda na miste, kam ukazuje puvodni reference, je jiz forwarding
@@ -85,9 +85,9 @@ public class ObjectHeap {
      * @param oldReference
      * @return
      */
-    public boolean isForwardingPointer(int oldReference) {
+ /*   public boolean isForwardingPointer(int oldReference) {
         return ((SInt)readFromActiveHeap(oldReference)).getValue() == FORWARDING_POINTER;
-    }
+    }*/
 
     /**
      * Zapise do haldy (index je index v datove casti) Pr: Obsahuje-li zaznam 2
@@ -252,7 +252,7 @@ public class ObjectHeap {
      * @param value
      */
     private <T extends SStruct> void writeToSpareHeap(int index, T value) {
-        heap[index + activeHeapOffset] = value;
+        heap[index + inactiveHeapOffset] = value;
     }
 
     /**
@@ -263,7 +263,27 @@ public class ObjectHeap {
      * @return
      */
     public <T extends SStruct> T readFromSpareHeap(int index) {
-        return (T)heap[index + activeHeapOffset];
+        return (T)heap[index + inactiveHeapOffset];
+    }
+    
+    /**
+     * Swaps active and inactive heap
+     */
+    public void swapHeap(){
+        JVMLogger.log(JVMLogger.TAG_GC, "Swapping heap");
+        int temp = activeHeapOffset;
+        activeHeapOffset = inactiveHeapOffset;
+        inactiveHeapOffset = temp;
+        nextFreeSpace = 0;
+    }
+    
+    public void moveObjectFromOldHeap(int oldReference){    
+        SGenericRef ref = readFromSpareHeap(oldReference);
+        int newIndex = nextFreeSpace++;
+        ref.setReference(newIndex);
+        writeToActiveHeap(newIndex, ref);
+        
+        JVMLogger.log(JVMLogger.TAG_GC, "Object "+ref+" moved from "+oldReference+" to "+newIndex);
     }
 
     private void initializeSpace(int index, int length) {

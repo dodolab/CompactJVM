@@ -21,7 +21,7 @@ public class IAStoreInstruction {
 
         SInt valueToAdd = stackFrame.operandStack.pop();
         SInt index = stackFrame.operandStack.pop();
-        SArrayRef arrayRef = stackFrame.operandStack.pop();
+        SGenericRef arrayRef = stackFrame.operandStack.pop();
         
         heap.writeToHeap(arrayRef.getReference(), index.getValue(), valueToAdd);
         

@@ -27,6 +27,10 @@ public abstract class SGenericRef extends SStruct{
         return heapReference;
     }
     
+    public void setReference(int reference){
+        this.heapReference = reference;
+    }
+    
     public boolean isNull(){
         return heapReference == -1;
     }

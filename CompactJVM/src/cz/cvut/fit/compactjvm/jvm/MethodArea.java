@@ -86,6 +86,16 @@ public class MethodArea {
         return classFile;
     }
     
+    public boolean isSuperClass(ClassFile parent, ClassFile child){
+        if(parent.getClassName().equals(child.getClassName())) return true;
+        else if(child.getSuperclassName() != null){
+            ClassFile superChild = getClassFile(child.getClassName());
+            if(superChild != null) return isSuperClass(parent,superChild);
+            else return false;
+        }
+        return false;
+    }
+    
     public void initialLoad(String classPath) {
         //return "";
     }
@@ -116,5 +126,7 @@ public class MethodArea {
             classFile.fieldOffsetsRecalculated = true;
         }
     }
+    
+    
     
 };

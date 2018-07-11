@@ -35,20 +35,13 @@ public class StackFrame {
      * 
      */
     public StackFrame(ClassFile classFile, int invokedMethod, MethodDefinition methodDefinition, JVMThread jvmThread) throws LoadingException {
-        this(classFile, invokedMethod, jvmThread);
-        this.methodDefinition = methodDefinition;
-    }
-    
-    /**
-     * @param classFile
-     * @param invokedMethod
-     */
-    public StackFrame(ClassFile classFile, int invokedMethod, JVMThread jvmThread) throws LoadingException {
         this.jvmThread = jvmThread;
         associatedClass = classFile;
         associatedMethod = invokedMethod;
         initializeFrame();
+        this.methodDefinition = methodDefinition;
     }
+    
     
     /**
      * Inicializuje frame

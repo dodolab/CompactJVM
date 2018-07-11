@@ -8,6 +8,7 @@ package cz.cvut.fit.compactjvm.jvm;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.structures.*;
 import java.nio.ByteBuffer;
+import javafx.fxml.LoadException;
 
 /**
  * Velikost slova je v teto implementaci definovana jako int.
@@ -44,7 +45,9 @@ public class LocalVariableArray {
         return entity;
     }
     
-    public <T extends SStruct> void setVar(int index, T value){
+    public <T extends SStruct> void setVar(int index, T value) throws LoadException{
+        if(value == null) throw new LoadException("Variable can't be null!");
+        
         localVariables[index] = value;
     }
     /*

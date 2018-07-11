@@ -66,7 +66,9 @@ public class InstructionManager {
             case Instruction.IN_ICONST3: IConstIInstruction.run(jvmStack.getCurrentFrame(), 3); break;
             case Instruction.IN_ICONST4: IConstIInstruction.run(jvmStack.getCurrentFrame(), 4); break;
             case Instruction.IN_ICONST5: IConstIInstruction.run(jvmStack.getCurrentFrame(), 5); break;
-            
+            case Instruction.IN_ATHROW: AThrowInstruction.run(jvmStack,methodArea);break;
+                
+            case Instruction.IN_ACONST_NULL: AConstNullInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_INVOKESTATIC: InvokeStaticInstruction.run(jvmStack, methodArea); break;
             case Instruction.IN_RETURN: ReturnInstruction.run(jvmStack); break;
             case Instruction.IN_ARETURN: AReturnInstruction.run(jvmStack);break;
@@ -104,7 +106,7 @@ public class InstructionManager {
             case Instruction.IN_GETFIELD: GetfieldInstruction.run(jvmStack, heap); break;
             case Instruction.IN_INVOKEVIRTUAL: InvokeVirtualInstruction.run(jvmStack, methodArea); break;
             case Instruction.IN_PUTSTATIC: PutStaticInstruction.run(jvmStack.getCurrentFrame());break;
-            case Instruction.IN_GETSTATIC: GetStaticInstruction.run(jvmStack, methodArea);
+            case Instruction.IN_GETSTATIC: GetStaticInstruction.run(jvmStack, methodArea); 
             default:
                 JVMLogger.log(JVMLogger.TAG_OTHER, "Not implemented instruction: "+code+" (0x"+Integer.toHexString(code)+")");
         }

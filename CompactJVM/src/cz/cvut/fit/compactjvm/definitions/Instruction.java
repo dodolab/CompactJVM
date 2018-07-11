@@ -96,6 +96,8 @@ public class Instruction {
     public static final int IN_LCONST1 = 0xa; // 10
     // invoke a static method and puts the result on the stack (might be void); the method is identified by method reference index in constant pool (indexbyte1 << 8 + indexbyte2)
     public static final int IN_INVOKESTATIC = 0xb8; //184
+    // throw exception or error
+    public static final int IN_ATHROW = 0xbf;
     // return void from method
     public static final int IN_RETURN = 0xb1; //177
     // return an integer from a method

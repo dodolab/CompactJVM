@@ -21,7 +21,7 @@ public class IALoadInstruction {
     public static void run(StackFrame stackFrame, ObjectHeap heap) throws LoadingException{
         
         SInt index = stackFrame.operandStack.pop();
-        SArrayRef arrayRef = stackFrame.operandStack.pop();
+        SGenericRef arrayRef = stackFrame.operandStack.pop();
         
         SInt value = heap.readFromHeap(arrayRef.getReference(), index.getValue());
         stackFrame.operandStack.push(value);

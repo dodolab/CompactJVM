@@ -6,6 +6,7 @@
 package cz.cvut.fit.compactjvm.jvm;
 
 import cz.cvut.fit.compactjvm.core.ClassFile;
+import cz.cvut.fit.compactjvm.core.MethodDefinition;
 import cz.cvut.fit.compactjvm.entities.MTHEntity;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.exceptions.OutOfHeapMemException;
@@ -56,8 +57,9 @@ public class JVMThread {
         
         // get main method
         ClassFile classFile = methodArea.getClassFile(className);
-        int mainMethodIndex = classFile.getMethodIndex("main", "()V");
-        StackFrame currentFrame = new StackFrame(classFile, mainMethodIndex, this);
+        int mainMethodDefIndex = classFile.getMethodDefIndex("main", "()V");
+        MethodDefinition def = classFile.getMethodDefinition(mainMethodDefIndex, methodArea, className, "main", "()V");
+        StackFrame currentFrame = new StackFrame(classFile, mainMethodDefIndex, def, this);
         jvmStack.push(currentFrame);
         
         while(!jvmStack.isEmpty() && jvmStack.getCurrentFrame().hasMoreInstructions()) {

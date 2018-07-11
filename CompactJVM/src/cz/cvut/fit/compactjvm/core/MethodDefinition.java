@@ -5,6 +5,8 @@
  */
 package cz.cvut.fit.compactjvm.core;
 
+import cz.cvut.fit.compactjvm.entities.AttrExcTableItem;
+import cz.cvut.fit.compactjvm.entities.MethodExcTableItem;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +21,8 @@ public final class MethodDefinition {
     private String methodDescriptor;
     private List<String> methodParams;
     private String returnType;
-
+    private MethodExcTableItem[] exceptionTable;
+    
     public MethodDefinition(String methodClass, String methodName, String methodDescriptor) {
         this.methodClass = methodClass;
         this.methodName = methodName;
@@ -42,6 +45,14 @@ public final class MethodDefinition {
 
     public String getReturnType() {
         return returnType;
+    }
+    
+    public void setExceptionTable(MethodExcTableItem[] excTable){
+        this.exceptionTable = excTable;
+    }
+    
+    public MethodExcTableItem[] getExceptionTable(){
+        return exceptionTable;
     }
     
     /**
