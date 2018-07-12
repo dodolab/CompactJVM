@@ -20,13 +20,15 @@ public final class MethodDefinition {
     private String methodDescriptor;
     private List<String> methodParams;
     private String returnType;
+    private int accessFlags;
     private MethodExcTableItem[] exceptionTable;
     
-    public MethodDefinition(String methodClass, String methodName, String methodDescriptor) {
+    public MethodDefinition(String methodClass, String methodName, String methodDescriptor, int accessFlags) {
         this.methodClass = methodClass;
         this.methodName = methodName;
         this.methodDescriptor = methodDescriptor;
         methodParams = new ArrayList<>();
+        this.accessFlags = accessFlags;
         parseMethodDescriptor();
     }
     
@@ -52,6 +54,10 @@ public final class MethodDefinition {
     
     public MethodExcTableItem[] getExceptionTable(){
         return exceptionTable;
+    }
+    
+    public boolean isNativeMethod(){
+        return (this.accessFlags & 0x0100) == 0x0100;
     }
     
     /**

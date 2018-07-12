@@ -9,10 +9,12 @@ import cz.cvut.fit.compactjvm.classfile.ClassFile;
 import cz.cvut.fit.compactjvm.classfile.MethodDefinition;
 import cz.cvut.fit.compactjvm.classfile.Word;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
+import cz.cvut.fit.compactjvm.exceptions.OutOfHeapMemException;
 import cz.cvut.fit.compactjvm.jvm.JVMStack;
 import cz.cvut.fit.compactjvm.jvm.MethodArea;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.jvm.JVMLogger;
+import cz.cvut.fit.compactjvm.jvm.NativeArea;
 import java.nio.ByteBuffer;
 
 /**
@@ -20,43 +22,54 @@ import java.nio.ByteBuffer;
  * @author Nick Nemame
  */
 public class InvokeStaticInstruction {
-    
+
     public static final int PARAM_COUNT = 2;
 
-    public static void run(JVMStack stack, MethodArea methodArea) throws LoadingException {
+    public static void run(JVMStack stack, MethodArea methodArea) throws LoadingException, OutOfHeapMemException {
         byte[] bytes = stack.getCurrentFrame().loadInstructionParams(PARAM_COUNT);
         int methodRefIndex = Word.fromByteArray(bytes); //index v CP ve tride, ktera invokuje, nikoliv v te, na ktere je metoda volana
-        MethodDefinition method = stack.getCurrentFrame().associatedClass.getMethodDefinition(methodRefIndex, 
+        MethodDefinition method = stack.getCurrentFrame().associatedClass.getMethodDefinition(methodRefIndex,
                 stack.getCurrentFrame().associatedMethod, methodArea);
-        
-        
-        
+
         ClassFile classFile = methodArea.getClassFile(method.getMethodClass());
-        int methodIndex = classFile.getMethodDefIndex(method.getMethodName(), method.getMethodDescriptor());
-        StackFrame frame = new StackFrame(classFile, methodIndex, method, stack.jvmThread);
-        loadArgumentsToLocalVariables(stack.getCurrentFrame(), frame, method);
-        stack.push(frame);
         
-        JVMLogger.log(JVMLogger.TAG_INSTR, "InvokeStatic: "+method.getMethodName());
+        if (method.isNativeMethod()) {
+            JVMLogger.log(JVMLogger.TAG_INSTR, "Native - InvokeStatic: " + method.getMethodName());
+            // call native method
+            stack.jvmThread.getNativeArea().callMethod(classFile.getClassName(), method.getMethodName(), stack);
+        } else {
+
+            int methodIndex = classFile.getMethodDefIndex(method.getMethodName(), method.getMethodDescriptor());
+
+            // construct class
+            classFile.constructClass(stack, methodArea);
+
+            StackFrame frame = new StackFrame(classFile, methodIndex, method, stack.jvmThread);
+            loadArgumentsToLocalVariables(stack.getCurrentFrame(), frame, method);
+            stack.push(frame);
+
+            JVMLogger.log(JVMLogger.TAG_INSTR, "InvokeStatic: " + method.getMethodName());
+        }
     }
-    
+
     /**
      * Nactu ze zasobniku
+     *
      * @param currentFrame
      * @param newFrame
      * @param method
      */
     public static void loadArgumentsToLocalVariables(StackFrame currentFrame, StackFrame newFrame, MethodDefinition method) throws LoadingException {
-       
+
         JVMLogger.log(JVMLogger.TAG_INSTR, "LoadArgumentsToLocalVariables");
-        
+
         int locIndex = method.getMethodParamsWordsCount();
         //Kdyz od locIndex odectu pocet slov vkladaneho argumentu, pak dostanu index,
         //na ktery mam do lokalnich promennych argument vlozit
-        for(int i = method.getMethodParams().size() - 1; i >= 0; --i) {
-            switch(method.getMethodParams().get(i)) {
+        for (int i = method.getMethodParams().size() - 1; i >= 0; --i) {
+            switch (method.getMethodParams().get(i)) {
                 // local variable is set once below (powerful generics will distinct types)
-                
+
                 case "Z": //boolean
                     locIndex -= Word.BOOLEAN_WORDS;
                     //newFrame.localVariables.setBoolean(locIndex, currentFrame.operandStack.popBoolean());
@@ -94,7 +107,7 @@ public class InvokeStaticInstruction {
                     //newFrame.localVariables.setInt(locIndex, currentFrame.operandStack.popInt());
                     break;
             }
-            
+
             newFrame.localVariables.setVar(locIndex, currentFrame.operandStack.pop());
         }
     }

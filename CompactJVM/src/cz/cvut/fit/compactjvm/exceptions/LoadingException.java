@@ -10,6 +10,7 @@ package cz.cvut.fit.compactjvm.exceptions;
  *
  * @author Adam Vesecky
  */
+
 public class LoadingException  extends Exception{
     
     public LoadingException(String exc){

@@ -31,7 +31,8 @@ public class MethodArea {
     
     // simple class storage
     private final JVMClassStorage classStorage;
-
+    
+    
     public MethodArea(ClassFileLoader classLoader) {
         this.classLoader = classLoader;
         classStorage = new JVMClassStorage();
@@ -40,6 +41,7 @@ public class MethodArea {
     public JVMClassStorage getClassStorage(){
         return classStorage;
     }
+    
     
     /**
      * Vrati ClassFile, pokud jej JVM jeste nema naparsovany, musi jej nejprve

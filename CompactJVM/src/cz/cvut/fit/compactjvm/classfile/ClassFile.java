@@ -11,9 +11,13 @@ import cz.cvut.fit.compactjvm.cpentities.CPMethodref;
 import cz.cvut.fit.compactjvm.cpentities.CPNameAndType;
 import cz.cvut.fit.compactjvm.cpentities.CPUtf8;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
+import cz.cvut.fit.compactjvm.jvm.JVMLogger;
+import cz.cvut.fit.compactjvm.jvm.JVMStack;
 import cz.cvut.fit.compactjvm.jvm.MethodArea;
+import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 /**
  *
@@ -92,6 +96,13 @@ public class ClassFile {
         }
         return methodInfos[index];
     }
+    
+    public MTHEntity getMethod(String name) throws LoadingException{
+        for(int i=0; i<methodInfos.length; i++){
+            if(methodInfos[i].name.equals(name)) return methodInfos[i];
+        }
+        throw new LoadingException("Method not found");
+    }
 
     public FLEntity getField(int index) throws LoadingException {
         if (index >= fieldCount) {
@@ -118,7 +129,9 @@ public class ClassFile {
         String methodName = ((CPUtf8) cpEntities[nameAndType.nameIndex]).value;
         String methodDescriptor = ((CPUtf8) cpEntities[nameAndType.descriptorIndex]).value;
 
-        MethodDefinition method = new MethodDefinition(methodClass, methodName, methodDescriptor);
+        int accessFlags = getMethod(methodName).accessFlags;
+
+        MethodDefinition method = new MethodDefinition(methodClass, methodName, methodDescriptor,accessFlags);
         loadExceptionTable(method, methodDefIndex, methodArea);
         
         return method;
@@ -127,8 +140,10 @@ public class ClassFile {
     // used when we know descriptor and class name, there is no need to search constant pool
     public MethodDefinition getMethodDefinition(int methodDefIndex, MethodArea methodArea, 
             String methodClass, String methodName, String methodDescriptor) throws LoadingException{
-                
-        MethodDefinition method = new MethodDefinition(methodClass, methodName, methodDescriptor);
+ 
+        int accessFlags = getMethod(methodName).accessFlags;
+
+        MethodDefinition method = new MethodDefinition(methodClass, methodName, methodDescriptor, accessFlags);
         loadExceptionTable(method, methodDefIndex, methodArea);
         
         return method;
@@ -251,6 +266,20 @@ public class ClassFile {
         return fieldInfo;
     }
 
+    private boolean constructed = false;
+    
+    public void constructClass(JVMStack stack, MethodArea methodArea) throws LoadingException{
+        if(!constructed){
+            constructed = true;
+            JVMLogger.log(JVMLogger.TAG_OTHER, "Initializing class "+ className);
+            int methodDef = this.getMethodDefIndex("<clinit>", "()V");
+            
+            MethodDefinition method = this.getMethodDefinition(methodDef, methodArea, className, "<clinit>", "()V");
+            StackFrame initFrame = new StackFrame(this,methodDef,method,stack.jvmThread);
+            stack.push(initFrame);
+        }
+    }
+    
     /**
      * Gets field index by selected name and descriptor
      *

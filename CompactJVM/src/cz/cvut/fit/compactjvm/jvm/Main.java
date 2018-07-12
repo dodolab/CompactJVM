@@ -13,6 +13,16 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        if(args.length == 1 && args[0].equals("--help")) {
+            System.out.println("Usage:\n"
+                    + "parameter 1:\tPath to class root directory (including ending slash)\n"
+                    + "parameter 2:\tNamespace of main class"
+                    + "parameter 3:\tArguments (divided by spaces) of executing program"
+                    + "\n"
+                    + "Example: \n"
+                    + "java -jar CompactJVM.jar ../../CompactJVMLab/build/classes/ compactjvmlab/CompactJVMLab '../cnf1.txt ../cnf1-result.txt'");
+            return;
+        }
         
         // load testing class file
         args = new String[]{"../CompactJVMLab/build/classes/compactjvmlab/CompactJVMLab.class"};

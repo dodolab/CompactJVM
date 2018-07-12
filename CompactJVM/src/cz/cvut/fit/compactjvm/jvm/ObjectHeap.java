@@ -118,6 +118,16 @@ public class ObjectHeap {
         return output;
     }
     
+    public SStruct[] readPrimitiveArrayFromHeap(int reference){
+        SArrayRef arrayRef = readFromActiveHeap(reference);
+        SStruct[] arr = new SStruct[arrayRef.getSize()];
+        
+        for(int i=0; i<arrayRef.getSize(); i++){
+            arr[i] = readFromHeap(reference, i);
+        }
+        return arr;
+    }
+    
     /**
      * Reads object array from active heap
      * @param reference

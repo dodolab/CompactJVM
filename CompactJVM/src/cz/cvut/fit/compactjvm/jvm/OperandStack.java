@@ -41,49 +41,5 @@ public class OperandStack {
     public <T extends SStruct> void push(T value){
         operandStack.push(value);
     }
-    
-    /*
-    public SDouble popDouble() {
-        byte[] bytes = new byte[Double.BYTES];
-        ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
-        byteBuffer.putInt(Integer.BYTES, operandStack.pop());
-        byteBuffer.putInt(0, operandStack.pop());
-        return byteBuffer.getDouble();
-    }
-    
-    public void pushDouble(double value) {
-        byte[] bytes = new byte[Double.BYTES];
-        ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
-        byteBuffer.putDouble(value);
-        operandStack.push(byteBuffer.getInt(0));
-        operandStack.push(byteBuffer.getInt(Integer.BYTES));
-    }
-    
-    public long popLong() {
-        byte[] bytes = new byte[Long.BYTES];
-        ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
-        byteBuffer.putInt(Integer.BYTES, operandStack.pop());
-        byteBuffer.putInt(0, operandStack.pop());
-        return byteBuffer.getLong();
-    }
-    
-    public void pushLong(long value) {
-        byte[] bytes = new byte[Long.BYTES];
-        ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
-        byteBuffer.putLong(value);
-        operandStack.push(byteBuffer.getInt(0));
-        operandStack.push(byteBuffer.getInt(Integer.BYTES));
-    }
-    
-    public void pushReference(int objectReference) {
-        pushInt(objectReference);
-        references.addReference(objectReference);
-    }
-    
-    public int popReference() {
-        int objectReference = popInt();
-        references.removeReference(objectReference);
-        return objectReference;
-    }
-    */
+
 }

@@ -30,6 +30,8 @@ public class JVMThread {
     private final JVMStack jvmStack;
     private final MethodArea methodArea; //sdilena s ostatnimi JVM vlakny
     private final ObjectHeap heap; // shared with others threads
+
+    private NativeArea nativeArea;
     
     //private StackFrame currentFrame;
     //@todo pc register misto currentFrame?
@@ -41,6 +43,13 @@ public class JVMThread {
         instructionManager = new InstructionManager(jvmStack, methodArea, heap);
         this.heap = heap;
         heap.setJVMThread(this);
+
+        nativeArea = new NativeArea(methodArea,heap);
+        
+    }
+    
+    public NativeArea getNativeArea(){
+        return nativeArea;
     }
     
     public JVMStack getStack(){
