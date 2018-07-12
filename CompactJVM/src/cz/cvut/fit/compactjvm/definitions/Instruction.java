@@ -98,6 +98,9 @@ public class Instruction {
     public static final int IN_INVOKESTATIC = 0xb8; //184
     // throw exception or error
     public static final int IN_ATHROW = 0xbf;
+    // push item from run-time constant pool
+    public static final int IN_LDC = 0x12;
+    
     // return void from method
     public static final int IN_RETURN = 0xb1; //177
     // return an integer from a method

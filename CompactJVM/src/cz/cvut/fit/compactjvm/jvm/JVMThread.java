@@ -5,9 +5,9 @@
  */
 package cz.cvut.fit.compactjvm.jvm;
 
-import cz.cvut.fit.compactjvm.core.ClassFile;
-import cz.cvut.fit.compactjvm.core.MethodDefinition;
-import cz.cvut.fit.compactjvm.entities.MTHEntity;
+import cz.cvut.fit.compactjvm.classfile.ClassFile;
+import cz.cvut.fit.compactjvm.classfile.MethodDefinition;
+import cz.cvut.fit.compactjvm.classfile.MTHEntity;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.exceptions.OutOfHeapMemException;
 import cz.cvut.fit.compactjvm.jvm.instructions.InstructionManager;

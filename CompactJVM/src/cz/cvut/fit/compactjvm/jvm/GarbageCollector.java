@@ -1,6 +1,6 @@
 package cz.cvut.fit.compactjvm.jvm;
 
-import cz.cvut.fit.compactjvm.core.ClassFile;
+import cz.cvut.fit.compactjvm.classfile.ClassFile;
 
 /**
  * Tato trida implementuje kopirujici garbage collector.

@@ -5,9 +5,9 @@
  */
 package cz.cvut.fit.compactjvm.jvm;
 
-import cz.cvut.fit.compactjvm.core.ClassFile;
-import cz.cvut.fit.compactjvm.core.MethodDefinition;
-import cz.cvut.fit.compactjvm.entities.AttrCode;
+import cz.cvut.fit.compactjvm.classfile.ClassFile;
+import cz.cvut.fit.compactjvm.classfile.MethodDefinition;
+import cz.cvut.fit.compactjvm.attributes.AttrCode;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 
 /**

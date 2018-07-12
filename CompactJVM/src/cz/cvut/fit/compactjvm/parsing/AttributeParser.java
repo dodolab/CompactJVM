@@ -1,12 +1,17 @@
 package cz.cvut.fit.compactjvm.parsing;
 
-import cz.cvut.fit.compactjvm.core.ClassFile;
+import cz.cvut.fit.compactjvm.attributes.AttrCode;
+import cz.cvut.fit.compactjvm.attributes.Attribute;
+import cz.cvut.fit.compactjvm.attributes.AttrSourceFile;
+import cz.cvut.fit.compactjvm.attributes.AttrExcTableItem;
+import cz.cvut.fit.compactjvm.attributes.AttrConstantVal;
+import cz.cvut.fit.compactjvm.cpentities.CPUtf8;
+import cz.cvut.fit.compactjvm.classfile.ClassFile;
 import cz.cvut.fit.compactjvm.definitions.AttributeType;
-import cz.cvut.fit.compactjvm.entities.*;
 import cz.cvut.fit.compactjvm.exceptions.ParsingException;
 import java.io.DataInputStream;
 import java.io.IOException;
-
+import cz.cvut.fit.compactjvm.jvm.JVMLogger;
 /**
  *
  * @author Adam Vesecky
@@ -21,7 +26,7 @@ public class AttributeParser {
 
         Attribute attr = null;
 
-        System.out.println("          Parsing attribute "+name);
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing attribute "+name,10);
         
         switch (name) {
             case AttributeType.ATTR_ANNOTDEF:
@@ -89,12 +94,15 @@ public class AttributeParser {
         }
 
         // set name index at last
-        if(attr != null) attr.nameIndex = nameIndex;
+        if(attr != null){
+            attr.nameIndex = nameIndex;
+            attr.name = name;
+        }
         return attr;
     }
 
     private void skipAttribute(ClassFile cls, DataInputStream dis) throws IOException{
-        System.out.print("              Not supported ---> skipping");
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Not supported ---> skipping",14);
         int length = dis.readInt();
         byte[] arrToSkip = new byte[length];
         dis.read(arrToSkip);
@@ -112,8 +120,8 @@ public class AttributeParser {
         dis.read(attr.code);
         attr.exceptionTableLength = dis.readShort();
 
-        System.out.println("          MaxStack: "+attr.maxStack+"; MaxLocals: "+attr.maxLocals+
-                "; CodeLength: "+attr.codeLength);
+        JVMLogger.log(JVMLogger.TAG_PARSING, "MaxStack: "+attr.maxStack+"; MaxLocals: "+attr.maxLocals+
+                "; CodeLength: "+attr.codeLength,10);
         
         // parse exception table
         if (attr.exceptionTableLength != 0) {
@@ -134,7 +142,7 @@ public class AttributeParser {
         attr.attributesCount = dis.readShort();
 
         if (attr.attributesCount != 0) {
-            System.out.println("          Parsing inner attributes");
+            JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing inner attributes",10);
             attr.attrs = new Attribute[attr.attributesCount];
 
             for (int i = 0; i < attr.attributesCount; i++) {
@@ -152,8 +160,10 @@ public class AttributeParser {
         attr.length = dis.readInt();
         attr.constantValIndex = dis.readShort();
         
-        String constantVal = ((CPUtf8)cls.cpEntities[attr.constantValIndex]).value;
-        System.out.println("          Constant value: "+constantVal);
+        if(cls.cpEntities[attr.constantValIndex] instanceof CPUtf8) {
+            String constantVal = ((CPUtf8)cls.cpEntities[attr.constantValIndex]).value;
+            JVMLogger.log(JVMLogger.TAG_PARSING, "Constant value: "+constantVal,10);
+        }
         return attr;
     }
 
@@ -164,7 +174,7 @@ public class AttributeParser {
         attr.sourceFileIndex = dis.readShort();
         
         String sourceFile = ((CPUtf8)cls.cpEntities[attr.sourceFileIndex]).value;
-        System.out.println("          Source file: "+sourceFile);
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Source file: "+sourceFile,10);
         return attr;
     }
 

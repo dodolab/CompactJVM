@@ -6,10 +6,10 @@
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
+import cz.cvut.fit.compactjvm.jvm.JVMLogger;
 import cz.cvut.fit.compactjvm.jvm.ObjectHeap;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import static cz.cvut.fit.compactjvm.jvm.instructions.ALoadInstruction.run;
-import cz.cvut.fit.compactjvm.logging.JVMLogger;
 import cz.cvut.fit.compactjvm.structures.SArrayRef;
 import cz.cvut.fit.compactjvm.structures.SGenericRef;
 import cz.cvut.fit.compactjvm.structures.SInt;

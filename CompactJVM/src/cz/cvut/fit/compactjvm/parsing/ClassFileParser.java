@@ -1,16 +1,16 @@
 package cz.cvut.fit.compactjvm.parsing;
 
-import cz.cvut.fit.compactjvm.core.ClassFile;
-import cz.cvut.fit.compactjvm.entities.CPEntity;
-import cz.cvut.fit.compactjvm.entities.Attribute;
-import cz.cvut.fit.compactjvm.entities.FLEntity;
-import cz.cvut.fit.compactjvm.entities.MTHEntity;
+import cz.cvut.fit.compactjvm.classfile.ClassFile;
+import cz.cvut.fit.compactjvm.cpentities.CPEntity;
+import cz.cvut.fit.compactjvm.attributes.Attribute;
+import cz.cvut.fit.compactjvm.classfile.FLEntity;
+import cz.cvut.fit.compactjvm.classfile.MTHEntity;
 import cz.cvut.fit.compactjvm.exceptions.ParsingException;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-
+import cz.cvut.fit.compactjvm.jvm.JVMLogger;
 /**
  *
  * @author Adam Vesecky
@@ -83,7 +83,9 @@ public class ClassFileParser {
             return false;
         }
         
-        System.out.println("Classfile successfully loaded");
+        cls.setClassName();
+        
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Classfile successfully loaded");
 
         return true;
     }
@@ -92,10 +94,10 @@ public class ClassFileParser {
      * Checks whether first 4 bytes contain 0xCA, 0xFE, 0xBA, 0xBE
      */
     private boolean checkClassFile(DataInputStream dis) throws IOException {
-        System.out.println("Checking class file");
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Checking class file");
         int bt = dis.readInt();
         if (bt != 0xCAFEBABE) {
-            System.out.println("Error while reading class file -> it must begin with bytes 0xCAFEBABE");
+            JVMLogger.log(JVMLogger.TAG_PARSING, "Error while reading class file -> it must begin with bytes 0xCAFEBABE");
             return false;
         }
         return true;
@@ -105,13 +107,13 @@ public class ClassFileParser {
      * 5th and 6th bit: minor version 7th and 8th bit: major version
      */
     private boolean parseVersion(DataInputStream dis, ClassFile cls) throws IOException {
-        System.out.println("Parsing version");
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing version");
         short minor = dis.readShort();
         short major = dis.readShort();
 
-        System.out.println("Minor version: " + minor);
-        System.out.println("Major version: " + major);
-
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Minor version: " + minor);
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Major version: " + major);
+        
         cls.majorVersion = major;
         cls.minorVersion = minor;
 
@@ -123,9 +125,9 @@ public class ClassFileParser {
      * 9th and 10th bit: cst pool size, then constant pool[cpsize-1]
      */
     private boolean parseConstantPool(DataInputStream dis, ClassFile cls) throws IOException {
-        System.out.println("Parsing constant pool");
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing constant pool");
         int poolSize = dis.readUnsignedShort();
-        System.out.println("Pool size: " + poolSize);
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Pool size: " + poolSize);
 
         // according to the specification, size is poolSize-1 :-)
         cls.cpEntities = new CPEntity[poolSize];
@@ -154,11 +156,11 @@ public class ClassFileParser {
      * 1st and 2nd bit after CP: access flags
      */
     private boolean parseAccessFlags(DataInputStream dis, ClassFile cls) throws IOException {
-        System.out.println("Parsing access flags");
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing access flags");
         short accessFlags = dis.readShort();
         cls.accessFlags = accessFlags;
 
-        System.out.println("Access flags: " + Integer.toHexString(accessFlags));
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Access flags: " + Integer.toHexString(accessFlags));
 
         return true;
     }
@@ -168,11 +170,11 @@ public class ClassFileParser {
      * 3rd and 4th bit after CP: THIS class
      */
     private boolean parseThis(DataInputStream dis, ClassFile cls) throws IOException {
-        System.out.println("Parsing this");
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing this");
 
         short index = dis.readShort();
         cls.thisClassIndex = index;
-        System.out.println("This class index: " + index);
+        JVMLogger.log(JVMLogger.TAG_PARSING, "This class index: " + index);
         return true;
     }
 
@@ -181,11 +183,11 @@ public class ClassFileParser {
      * 5th and 6th bit after CP: SUPER class
      */
     private boolean parseSuper(DataInputStream dis, ClassFile cls) throws IOException {
-        System.out.println("Parsing super");
-
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing super");
+        
         short index = dis.readShort();
         cls.superClassIndex = index;
-        System.out.println("Super class index: " + index);
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Super class index: " + index);
         return true;
     }
 
@@ -194,10 +196,10 @@ public class ClassFileParser {
      * 7th and 8th bit: interfaces_count, then interfaces[interfaces_count]
      */
     private boolean parseInterfaces(DataInputStream dis, ClassFile cls) throws IOException {
-        System.out.println("Parsing interfaces");
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing interfaces");
         short intCount = dis.readShort();
         cls.interfaceCount = intCount;
-        System.out.println("Interface count: " + intCount);
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Interface count: " + intCount);
 
         cls.interfIndices = new int[cls.interfaceCount];
 
@@ -211,10 +213,10 @@ public class ClassFileParser {
     }
 
     private boolean parseFields(DataInputStream dis, ClassFile cls) throws IOException, ParsingException {
-        System.out.println("Parsing fields");
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing fields");
         short fldCount = dis.readShort();
         cls.fieldCount = fldCount;
-        System.out.println("Field count: " + fldCount);
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Field count: " + fldCount);
 
         FieldInfoParser fldParser = new FieldInfoParser();
         cls.fieldInfos = new FLEntity[fldCount];
@@ -228,16 +230,18 @@ public class ClassFileParser {
 
             cls.fieldInfos[i] = ent;
         }
-
+        //fldParser now contains count of bytes, fields requires for store on heap
+        cls.recursiveFieldCount = fldParser.getRecursiveFieldCount();
+        
         return true;
     }
 
     private boolean parseMethods(DataInputStream dis, ClassFile cls) throws IOException, ParsingException {
-        System.out.println("Parsing methods");
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing methods");
         short methodCnt = dis.readShort();
         cls.methodCount = methodCnt;
-        System.out.println("Method count: " + methodCnt);
-
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Method count: " + methodCnt);
+        
         MethodInfoParser mthParser = new MethodInfoParser();
         cls.methodInfos = new MTHEntity[methodCnt];
 
@@ -255,11 +259,11 @@ public class ClassFileParser {
     }
 
     private boolean parseAttributes(DataInputStream dis, ClassFile cls) throws IOException, ParsingException {
-        System.out.println("Parsing attributes");
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing attributes");
         short attrsCnt = dis.readShort();
         cls.attributeCount = attrsCnt;
-        System.out.println("Attributes count: " + attrsCnt);
-
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Attributes count: " + attrsCnt);
+        
         if (cls.attributeCount != 0) {
 
             cls.attributeInfos = new Attribute[cls.attributeCount];

@@ -5,8 +5,8 @@
  */
 package cz.cvut.fit.compactjvm.jvm;
 
-import cz.cvut.fit.compactjvm.core.ClassFile;
-import cz.cvut.fit.compactjvm.classloader.loading.ClassFileLoader;
+import cz.cvut.fit.compactjvm.classfile.ClassFile;
+import cz.cvut.fit.compactjvm.parsing.ClassFileLoader;
 import cz.cvut.fit.compactjvm.exceptions.ParsingException;
 import java.io.IOException;
 import java.util.HashMap;

@@ -5,7 +5,7 @@
  */
 package cz.cvut.fit.compactjvm.jvm;
 
-import cz.cvut.fit.compactjvm.logging.JVMLogger;
+
 import java.util.Stack;
 
 /**

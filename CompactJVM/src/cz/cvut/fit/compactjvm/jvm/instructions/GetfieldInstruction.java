@@ -5,14 +5,14 @@
  */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
-import cz.cvut.fit.compactjvm.core.Word;
-import cz.cvut.fit.compactjvm.entities.FLEntity;
-import cz.cvut.fit.compactjvm.entities.NameDesc;
+import cz.cvut.fit.compactjvm.classfile.Word;
+import cz.cvut.fit.compactjvm.classfile.FLEntity;
+import cz.cvut.fit.compactjvm.classfile.NameDesc;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.JVMStack;
 import cz.cvut.fit.compactjvm.jvm.ObjectHeap;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
-import cz.cvut.fit.compactjvm.logging.JVMLogger;
+import cz.cvut.fit.compactjvm.jvm.JVMLogger;
 import cz.cvut.fit.compactjvm.structures.*;
 
 /**

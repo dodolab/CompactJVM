@@ -13,7 +13,7 @@ import cz.cvut.fit.compactjvm.jvm.JVMThread;
 import cz.cvut.fit.compactjvm.jvm.MethodArea;
 import cz.cvut.fit.compactjvm.jvm.ObjectHeap;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
-import cz.cvut.fit.compactjvm.logging.JVMLogger;
+import cz.cvut.fit.compactjvm.jvm.JVMLogger;
 
 /**
  * Spusti instrukci prislusnou danemu kodu
@@ -67,6 +67,7 @@ public class InstructionManager {
             case Instruction.IN_ICONST4: IConstIInstruction.run(jvmStack.getCurrentFrame(), 4); break;
             case Instruction.IN_ICONST5: IConstIInstruction.run(jvmStack.getCurrentFrame(), 5); break;
             case Instruction.IN_ATHROW: AThrowInstruction.run(jvmStack,methodArea);break;
+            case Instruction.IN_LDC: LdcInstruction.run(jvmStack.getCurrentFrame(), heap); break;
                 
             case Instruction.IN_ACONST_NULL: AConstNullInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_INVOKESTATIC: InvokeStaticInstruction.run(jvmStack, methodArea); break;

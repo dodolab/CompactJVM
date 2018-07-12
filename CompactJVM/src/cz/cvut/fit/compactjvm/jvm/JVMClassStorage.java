@@ -5,7 +5,7 @@
  */
 package cz.cvut.fit.compactjvm.jvm;
 
-import cz.cvut.fit.compactjvm.core.ClassFile;
+import cz.cvut.fit.compactjvm.classfile.ClassFile;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

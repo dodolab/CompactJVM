@@ -9,7 +9,7 @@ import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.ObjectHeap;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import static cz.cvut.fit.compactjvm.jvm.instructions.ALoadInstruction.run;
-import cz.cvut.fit.compactjvm.logging.JVMLogger;
+import cz.cvut.fit.compactjvm.jvm.JVMLogger;
 import cz.cvut.fit.compactjvm.structures.*;
 
 /**
@@ -21,7 +21,7 @@ public class IALoadInstruction {
     public static void run(StackFrame stackFrame, ObjectHeap heap) throws LoadingException{
         
         SInt index = stackFrame.operandStack.pop();
-        SGenericRef arrayRef = stackFrame.operandStack.pop();
+        SArrayRef arrayRef = stackFrame.operandStack.pop();
         
         SInt value = heap.readFromHeap(arrayRef.getReference(), index.getValue());
         stackFrame.operandStack.push(value);

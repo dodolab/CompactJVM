@@ -1,13 +1,13 @@
 package cz.cvut.fit.compactjvm.parsing;
 
-import cz.cvut.fit.compactjvm.core.ClassFile;
-import cz.cvut.fit.compactjvm.entities.CPUtf8;
-import cz.cvut.fit.compactjvm.entities.Attribute;
-import cz.cvut.fit.compactjvm.entities.MTHEntity;
+import cz.cvut.fit.compactjvm.classfile.ClassFile;
+import cz.cvut.fit.compactjvm.cpentities.CPUtf8;
+import cz.cvut.fit.compactjvm.attributes.Attribute;
+import cz.cvut.fit.compactjvm.classfile.MTHEntity;
 import cz.cvut.fit.compactjvm.exceptions.ParsingException;
 import java.io.DataInputStream;
 import java.io.IOException;
-
+import cz.cvut.fit.compactjvm.jvm.JVMLogger;
 /**
  * Parser for methodinfo
  *
@@ -27,12 +27,16 @@ public class MethodInfoParser {
         String name = ((CPUtf8)cls.cpEntities[ent.nameIndex]).value;
         String descriptor = ((CPUtf8)cls.cpEntities[ent.descriptorIndex]).value;
         
-        System.out.println("    Parsed method entity; access flags: "+ent.accessFlags + 
+        ent.name = name;
+        ent.descriptor = descriptor;
+        
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Parsed method entity; access flags: "+ent.accessFlags + 
                 " ;name: "+name+" ;descriptor:"+descriptor+
-                " ;attributesCount: "+ent.attributesCount);
+                " ;attributesCount: "+ent.attributesCount,4);
         
         if (ent.attributesCount != 0) {
-            System.out.println("      Parsing attributes");
+            JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing attributes",4);
+            
             ent.attrs = new Attribute[ent.attributesCount];
 
             AttributeParser parser = new AttributeParser();

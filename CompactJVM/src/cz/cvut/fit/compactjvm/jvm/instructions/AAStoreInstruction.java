@@ -8,11 +8,11 @@ package cz.cvut.fit.compactjvm.jvm.instructions;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.ObjectHeap;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
-import cz.cvut.fit.compactjvm.logging.JVMLogger;
 import cz.cvut.fit.compactjvm.structures.SArrayRef;
 import cz.cvut.fit.compactjvm.structures.SGenericRef;
 import cz.cvut.fit.compactjvm.structures.SInt;
 import cz.cvut.fit.compactjvm.structures.SObjectRef;
+import cz.cvut.fit.compactjvm.jvm.JVMLogger;
 
 /**
  * 0x53 -> Store into reference array

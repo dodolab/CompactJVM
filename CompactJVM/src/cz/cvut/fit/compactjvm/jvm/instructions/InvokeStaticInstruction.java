@@ -5,14 +5,14 @@
  */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
-import cz.cvut.fit.compactjvm.core.ClassFile;
-import cz.cvut.fit.compactjvm.core.MethodDefinition;
-import cz.cvut.fit.compactjvm.core.Word;
+import cz.cvut.fit.compactjvm.classfile.ClassFile;
+import cz.cvut.fit.compactjvm.classfile.MethodDefinition;
+import cz.cvut.fit.compactjvm.classfile.Word;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.JVMStack;
 import cz.cvut.fit.compactjvm.jvm.MethodArea;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
-import cz.cvut.fit.compactjvm.logging.JVMLogger;
+import cz.cvut.fit.compactjvm.jvm.JVMLogger;
 import java.nio.ByteBuffer;
 
 /**

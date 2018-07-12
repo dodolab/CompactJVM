@@ -5,17 +5,18 @@
  */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
-import cz.cvut.fit.compactjvm.core.ClassFile;
-import cz.cvut.fit.compactjvm.core.FieldDefinition;
-import cz.cvut.fit.compactjvm.entities.CPEntity;
-import cz.cvut.fit.compactjvm.entities.CPFieldRef;
-import cz.cvut.fit.compactjvm.entities.FLEntity;
+import cz.cvut.fit.compactjvm.classfile.ClassFile;
+import cz.cvut.fit.compactjvm.classfile.FieldDefinition;
+import cz.cvut.fit.compactjvm.cpentities.CPEntity;
+import cz.cvut.fit.compactjvm.cpentities.CPFieldRef;
+import cz.cvut.fit.compactjvm.classfile.FLEntity;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.JVMStack;
 import cz.cvut.fit.compactjvm.jvm.MethodArea;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import static cz.cvut.fit.compactjvm.jvm.instructions.InvokeStaticInstruction.loadArgumentsToLocalVariables;
-import cz.cvut.fit.compactjvm.logging.JVMLogger;
+import cz.cvut.fit.compactjvm.jvm.JVMLogger;
+
 
 /**
  * @author Nick Nemame

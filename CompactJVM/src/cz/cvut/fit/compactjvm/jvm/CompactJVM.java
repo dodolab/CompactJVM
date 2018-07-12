@@ -1,10 +1,10 @@
 package cz.cvut.fit.compactjvm.jvm;
 
-import cz.cvut.fit.compactjvm.classloader.loading.ClassFileLoader;
-import cz.cvut.fit.compactjvm.core.ClassFile;
+import cz.cvut.fit.compactjvm.parsing.ClassFileLoader;
+import cz.cvut.fit.compactjvm.classfile.ClassFile;
 import cz.cvut.fit.compactjvm.exceptions.ParsingException;
-import cz.cvut.fit.compactjvm.classloader.parsing.ClassFileParser;
-import cz.cvut.fit.compactjvm.core.Word;
+import cz.cvut.fit.compactjvm.parsing.ClassFileParser;
+import cz.cvut.fit.compactjvm.classfile.Word;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.exceptions.OutOfHeapMemException;
 import java.io.IOException;

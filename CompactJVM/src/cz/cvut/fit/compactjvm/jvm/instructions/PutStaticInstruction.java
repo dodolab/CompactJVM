@@ -4,9 +4,9 @@
  * and open the template in the editor.
  */
 package cz.cvut.fit.compactjvm.jvm.instructions;
-
+import cz.cvut.fit.compactjvm.jvm.JVMLogger;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
-import cz.cvut.fit.compactjvm.logging.JVMLogger;
+
 
 /**
  * Set static field in class

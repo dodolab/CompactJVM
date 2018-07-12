@@ -5,7 +5,7 @@
  */
 package cz.cvut.fit.compactjvm.structures;
 
-import cz.cvut.fit.compactjvm.core.ClassFile;
+import cz.cvut.fit.compactjvm.classfile.ClassFile;
 
 /**
  * Array reference

@@ -1,11 +1,25 @@
 package cz.cvut.fit.compactjvm.parsing;
 
+import cz.cvut.fit.compactjvm.cpentities.CPString;
+import cz.cvut.fit.compactjvm.cpentities.CPFloat;
+import cz.cvut.fit.compactjvm.cpentities.CPInvokeDynamic;
+import cz.cvut.fit.compactjvm.cpentities.CPNameAndType;
+import cz.cvut.fit.compactjvm.cpentities.CPEntity;
+import cz.cvut.fit.compactjvm.cpentities.CPMethodref;
+import cz.cvut.fit.compactjvm.cpentities.CPInterfaceMethodRef;
+import cz.cvut.fit.compactjvm.cpentities.CPFieldRef;
+import cz.cvut.fit.compactjvm.cpentities.CPLong;
+import cz.cvut.fit.compactjvm.cpentities.CPMethodHandle;
+import cz.cvut.fit.compactjvm.cpentities.CPUtf8;
+import cz.cvut.fit.compactjvm.cpentities.CPMethodType;
+import cz.cvut.fit.compactjvm.cpentities.CPInteger;
+import cz.cvut.fit.compactjvm.cpentities.CPDouble;
+import cz.cvut.fit.compactjvm.cpentities.CPClass;
 import cz.cvut.fit.compactjvm.definitions.ConstantPoolType;
-import cz.cvut.fit.compactjvm.entities.*;
 import cz.cvut.fit.compactjvm.exceptions.ParsingException;
 import java.io.DataInputStream;
 import java.io.IOException;
-
+import cz.cvut.fit.compactjvm.jvm.JVMLogger;
 /**
  * Parser for constant pool
  * @author Adam Vesecky
@@ -61,28 +75,28 @@ public class ConstantPoolParser {
                     ent = this.parseCPUtf8(dis);
                     break;
                 default:
-                    System.out.println("Unknown constant pool type!");
+                    JVMLogger.log(JVMLogger.TAG_PARSING, "Unknown constant pool type!");
             }
         
         return ent;
     }
     
     public CPClass parseCPClass(DataInputStream dis) throws IOException{
-        System.out.println("    Parsing CPClass");
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing CPClass",4);
         CPClass ent = new CPClass();
         ent.nameIndex = dis.readUnsignedShort();
         return ent;
     }
     
     public CPDouble parseCPDouble(DataInputStream dis) throws IOException{
-        System.out.println("    Parsing CPDouble");
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing CPDouble",4);
         CPDouble ent = new CPDouble();
         ent.doubleVal = dis.readDouble();
         return ent;
     }
     
     public CPFieldRef parseCPFieldRef(DataInputStream dis) throws IOException{
-        System.out.println("    Parsing CPFieldRef");
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing CPFieldRef",4);
         CPFieldRef ent = new CPFieldRef();
         ent.classIndex = dis.readUnsignedShort();
         ent.nameAndTypeIndex = dis.readUnsignedShort();
@@ -90,21 +104,21 @@ public class ConstantPoolParser {
     }
     
     public CPFloat parseCPFloat(DataInputStream dis) throws IOException{
-        System.out.println("    Parsing CPFloat");
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing CPFloat",4);
         CPFloat ent = new CPFloat();
         ent.floatVal = dis.readFloat();
         return ent;
     }
     
     public CPInteger parseCPInteger(DataInputStream dis) throws IOException{
-        System.out.println("    Parsing CPInteger");
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing CPInteger",4);
         CPInteger ent = new CPInteger();
         ent.intVal = dis.readInt();
         return ent;
     }
     
     public CPInterfaceMethodRef parseCPInterfaceMethodRef(DataInputStream dis) throws IOException{
-        System.out.println("    Parsing CPInterfaceMethodRef");
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing CPInterfaceMethodRef",4);
         CPInterfaceMethodRef ent = new CPInterfaceMethodRef();
         ent.classIndex = dis.readUnsignedShort();
         ent.nameAndTypeIndex = dis.readUnsignedShort();
@@ -112,7 +126,7 @@ public class ConstantPoolParser {
     }
     
     public CPInvokeDynamic parseCPInvokeDynamic(DataInputStream dis) throws IOException{
-        System.out.println("    Parsing CPInvokeDynamic");
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing CPInvokeDynamic",4);
         CPInvokeDynamic ent = new CPInvokeDynamic();
         short c = dis.readShort();
 	ent.bootstrapMethodAttrIndex = dis.readShort();
@@ -121,14 +135,14 @@ public class ConstantPoolParser {
     }
     
     public CPLong parseCPLong(DataInputStream dis) throws IOException{
-        System.out.println("    Parsing CPLong");
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing CPLong",4);
         CPLong ent = new CPLong();
         ent.longVal = dis.readLong();
         return ent;
     }
     
     public CPMethodHandle parseCPMethodHandle(DataInputStream dis) throws IOException{
-        System.out.println("    Parsing CPMethodHandle");
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing CPMethodHandle",4);
         CPMethodHandle ent = new CPMethodHandle();
         ent.referenceKind = dis.readShort();
         ent.referenceIndex = dis.readShort();
@@ -137,14 +151,14 @@ public class ConstantPoolParser {
     }
     
     public CPMethodType parseCPMethodType(DataInputStream dis) throws IOException{
-        System.out.println("    Parsing CPMethodType");
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing CPMethodType",4);
         CPMethodType ent = new CPMethodType();
         ent.descriptorIndex = dis.readShort();
         return ent;
     }
     
     public CPMethodref parseCPMethodref(DataInputStream dis) throws IOException{
-        System.out.println("    Parsing CPMethodref");
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing CPMethodref",4);
         CPMethodref ent = new CPMethodref();
         ent.classIndex = dis.readShort();
         ent.nameAndTypeIndex = dis.readShort();
@@ -152,7 +166,7 @@ public class ConstantPoolParser {
     }
     
     public CPNameAndType parseCPNameAndType(DataInputStream dis) throws IOException{
-        System.out.println("    Parsing CPNameAndType");
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing CPNameAndType",4);
         CPNameAndType ent = new CPNameAndType();
         ent.nameIndex = dis.readUnsignedShort();
         ent.descriptorIndex = dis.readUnsignedShort();
@@ -160,14 +174,14 @@ public class ConstantPoolParser {
     }
     
     public CPString parseCPString(DataInputStream dis) throws IOException{
-        System.out.println("    Parsing CPString");
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing CPString",4);
         CPString ent = new CPString();
         ent.stringIndex = dis.readUnsignedShort();
         return ent;
     }
     
     public CPUtf8 parseCPUtf8(DataInputStream dis) throws IOException{
-        System.out.println("    Parsing CPUtf8");
+        JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing CPUtf8",4);
         CPUtf8 ent = new CPUtf8();
         // load byte arry
         ent.length = dis.readUnsignedShort();
@@ -175,7 +189,7 @@ public class ConstantPoolParser {
         dis.read(ent.bytes);
         // transform bytes to UTF8 string
         ent.value = new String(ent.bytes, "UTF-8");  
-        System.out.println("        UTF8 value: "+ent.value);
+        JVMLogger.log(JVMLogger.TAG_PARSING, "UTF8 value: "+ent.value,4);
         return ent;
     }
 }

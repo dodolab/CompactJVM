@@ -8,7 +8,7 @@ package cz.cvut.fit.compactjvm.jvm.instructions;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.ObjectHeap;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
-import cz.cvut.fit.compactjvm.logging.JVMLogger;
+import cz.cvut.fit.compactjvm.jvm.JVMLogger;
 import cz.cvut.fit.compactjvm.structures.*;
 
 /**
@@ -21,7 +21,7 @@ public class IAStoreInstruction {
 
         SInt valueToAdd = stackFrame.operandStack.pop();
         SInt index = stackFrame.operandStack.pop();
-        SGenericRef arrayRef = stackFrame.operandStack.pop();
+        SArrayRef arrayRef = stackFrame.operandStack.pop();;
         
         heap.writeToHeap(arrayRef.getReference(), index.getValue(), valueToAdd);
         
