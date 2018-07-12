@@ -5,7 +5,10 @@
  */
 package compactjvmlab;
 
+import compactjvmlab.satsolver.Clauses;
 import compactjvmlab.satsolver.FileLoader;
+import compactjvmlab.satsolver.SATSolver;
+import compactjvmlab.satsolver.VariableEvaluation;
 import java.io.IOException;
 
 /**
@@ -26,19 +29,29 @@ public class CompactJVMLab {
         staticPrivateProm3 = 13;
     }
 
-    public static void main(String[] args) {
-        if(args.length != 1) {
+    public static void main(/*String[] args*/) {
+        /*Test2 test2 = new Test2();
+        Test3 test3 = new Test3();
+        test2.test3 = test3;*/
+        /*if(args.length != 1) {
             System.out.println("Neplatny pocet argumentu");
             System.exit(1);
-        }
+        }*/
         
-        int[][] clauses = null;
-        try {
-            clauses = FileLoader.readFile(args[0]);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-            System.exit(1);
-        }
+        Clauses clauses;
+        int variablesCount;
+        //try {
+            FileLoader fileLoader = new FileLoader(/*args[0]*/);
+            clauses = fileLoader.getClauses();
+            variablesCount = fileLoader.getVariablesCount();
+            SATSolver solver = new SATSolver();
+            VariableEvaluation evaluation = solver.solve(clauses, variablesCount);
+            if(evaluation == null) System.out.println("Není splnitelná");
+            else System.out.println("Je splnitelná: " + evaluation.toString());
+        //} catch (IOException e) {
+        //    System.out.println(e.getMessage());
+        //    System.exit(1);
+        //}
         
         /** TEST 5 - volani metody v rodicovske tride **
         TestClass t = new TestClass();

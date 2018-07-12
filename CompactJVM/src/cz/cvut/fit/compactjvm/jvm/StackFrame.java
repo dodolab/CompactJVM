@@ -26,7 +26,6 @@ public class StackFrame {
     /** @todo tohle by melo byt spis v pcRegistru u JVM threadu, ale jak se pak dostanu
      k mistu, kde jsem byl v predchozim framu pred vyvolanim metody? */
     public JVMThread jvmThread;
-    public StackFrameReferences references; //Udrzuje seznam referenci, ktere jsou ulozeny v operand stacku a lokalnich promennych
     
     /**
      * @param classFile
@@ -51,9 +50,8 @@ public class StackFrame {
     private void initializeFrame() throws LoadingException {
         codeAttribute = associatedClass.getMethod(associatedMethod).getCodeAttribute();
         int localVariablesCount = codeAttribute.maxLocals;
-        references = new StackFrameReferences();
-        localVariables = new LocalVariableArray(localVariablesCount, references);
-        operandStack = new OperandStack(references);
+        localVariables = new LocalVariableArray(localVariablesCount);
+        operandStack = new OperandStack();
         /* @todo - budu muset nacitat kod metody podle dedicnosti, muze to byt kod metody ze superclass atd. */
         currentInstructionIndex = 0;
     }

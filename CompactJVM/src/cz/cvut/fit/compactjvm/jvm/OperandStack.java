@@ -22,11 +22,8 @@ public class OperandStack {
     
     Stack<SStruct> operandStack;
     
-    StackFrameReferences references;
-
-    public OperandStack(StackFrameReferences references) {
+    public OperandStack() {
         this.operandStack = new Stack<>();
-        this.references = references;
     }
         
     public boolean isEmpty(){

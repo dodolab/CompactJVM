@@ -30,7 +30,7 @@ public class Instruction {
     // return a reference from a method
     public static final int IN_ARETURN = 0xb0;
     // get the length of an array
-    public static final int IN_ARRAYLENGTH = 0xbe;
+    public static final int IN_ARRAYLENGTH = 0xbe; //190
     // store a reference into a local variable #index
     public static final int IN_ASTORE = 0x3a;
     // store a reference into a local variable 0

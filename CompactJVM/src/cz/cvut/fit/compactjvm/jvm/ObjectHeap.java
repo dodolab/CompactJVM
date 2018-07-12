@@ -186,7 +186,7 @@ public class ObjectHeap {
         
         // write default values into heap
         for(int i=0; i<arraySize; i++){
-            writeToHeap(reference, reference+i,arr[i]);
+            writeToHeap(reference, /*reference+*/i,arr[i]); //proc reference +? i rika na kterou pozici za hlavickou budu chtit ukladat
         }
         JVMLogger.decreaseGlobalPadding(4);
         nextFreeSpace+=wordsRequired;
@@ -212,7 +212,7 @@ public class ObjectHeap {
         JVMLogger.increaseGlobalPadding(4);
         // write references to the heap
         for(int i=0; i<arraySize; i++){
-            writeToHeap(reference, reference+i,new SObjectRef(reference+1+i,classFile));
+            writeToHeap(reference, /*reference+*/i,new SObjectRef(reference+1+i,classFile));
         }
         JVMLogger.decreaseGlobalPadding(4);
         

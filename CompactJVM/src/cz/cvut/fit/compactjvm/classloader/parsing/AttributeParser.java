@@ -156,8 +156,10 @@ public class AttributeParser {
         attr.length = dis.readInt();
         attr.constantValIndex = dis.readShort();
         
-        String constantVal = ((CPUtf8)cls.cpEntities[attr.constantValIndex]).value;
-        JVMLogger.log(JVMLogger.TAG_PARSING, "Constant value: "+constantVal,10);
+        if(cls.cpEntities[attr.constantValIndex] instanceof CPUtf8) {
+            String constantVal = ((CPUtf8)cls.cpEntities[attr.constantValIndex]).value;
+            JVMLogger.log(JVMLogger.TAG_PARSING, "Constant value: "+constantVal,10);
+        }
         return attr;
     }
 

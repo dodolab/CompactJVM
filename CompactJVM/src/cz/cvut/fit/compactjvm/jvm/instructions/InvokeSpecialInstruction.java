@@ -44,6 +44,7 @@ public class InvokeSpecialInstruction {
      * @param currentFrame
      * @param newFrame
      * @param method
+     * @throws cz.cvut.fit.compactjvm.exceptions.LoadingException
      */
     public static void loadArgumentsToLocalVariables(StackFrame currentFrame, StackFrame newFrame, MethodDefinition method) throws LoadingException {
        

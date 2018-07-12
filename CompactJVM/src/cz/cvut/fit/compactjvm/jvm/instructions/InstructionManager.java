@@ -75,6 +75,7 @@ public class InstructionManager {
             case Instruction.IN_IRETURN: IReturnInstruction.run(jvmStack); break;
             case Instruction.IN_NEWARRAY: NewArrayInstruction.run(jvmStack.getCurrentFrame(), heap); break;
             case Instruction.IN_ANEWARRAY: ANewArrayInstruction.run(jvmStack.getCurrentFrame(),methodArea, heap);break;
+            case Instruction.IN_ARRAYLENGTH: ArrayLengthInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_LCONST0: LConstNInstruction.run(jvmStack.getCurrentFrame(),0); break;
             case Instruction.IN_LCONST1: LConstNInstruction.run(jvmStack.getCurrentFrame(),1); break;
             case Instruction.IN_AASTORE: AAStoreInstruction.run(jvmStack.getCurrentFrame(), heap); break;
