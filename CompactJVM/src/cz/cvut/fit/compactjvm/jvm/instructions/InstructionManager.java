@@ -63,6 +63,7 @@ public class InstructionManager {
             case Instruction.IN_ALOAD2: ALoadInstruction.run(jvmStack.getCurrentFrame(),2); break;
             case Instruction.IN_ALOAD3: ALoadInstruction.run(jvmStack.getCurrentFrame(),3); break;
             case Instruction.IN_IADD: IAddInstruction.run(jvmStack.getCurrentFrame()); break;
+            case Instruction.IN_ISUB: ISubInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_IMUL: IMulInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_BIPUSH: BiPushInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_SIPUSH: SiPushInstruction.run(jvmStack.getCurrentFrame()); break;
@@ -104,6 +105,7 @@ public class InstructionManager {
             case Instruction.IN_FCONST1: FConstInstruction.run(jvmStack.getCurrentFrame(), 1.0f); break;
             case Instruction.IN_FCONST2: FConstInstruction.run(jvmStack.getCurrentFrame(), 2.0f); break;
             case Instruction.IN_IF_ICMPGE: IfIcmpgeInstruction.run(jvmStack.getCurrentFrame()); break;
+            case Instruction.IN_IF_ICMPGT: IfIcmpgtInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_IF_ICMPEQ: IfcmpeqInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_IF_ICMPNE: IfcmpneInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_IF_NULL: IfnullInstruction.run(jvmStack.getCurrentFrame());break;
@@ -118,6 +120,7 @@ public class InstructionManager {
             case Instruction.IN_PUTSTATIC: PutStaticInstruction.run(jvmStack.getCurrentFrame());break;
             case Instruction.IN_GETSTATIC: GetStaticInstruction.run(jvmStack, methodArea); break; 
             case Instruction.IN_CALOAD : CALoadInstruction.run(jvmStack.getCurrentFrame(), heap); break;
+            case Instruction.IN_CASTORE : CAStoreInstruction.run(jvmStack.getCurrentFrame(), heap); break;
             default:
                 JVMLogger.log(JVMLogger.TAG_OTHER, "Not implemented instruction: "+code+" (0x"+Integer.toHexString(code)+")");
         }

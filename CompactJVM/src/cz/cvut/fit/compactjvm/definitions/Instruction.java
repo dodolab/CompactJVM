@@ -84,6 +84,8 @@ public class Instruction {
     
     // add two ints
     public static final int IN_IADD = 0x60; //96
+    // substract two ints
+    public static final int IN_ISUB = 0x64; //100
     // multiply two integers
     public static final int IN_IMUL = 0x68; //104
     // push a byte onto the stack as an integer value
@@ -107,6 +109,8 @@ public class Instruction {
     
     // load an int from an array
     public static final int IN_CALOAD = 0x34; //52
+    // load an int from an array
+    public static final int IN_CASTORE = 0x55; //85
     
     // push the long 0 onto the stack
     public static final int IN_LCONST0 = 0x9;
@@ -142,6 +146,8 @@ public class Instruction {
     public static final int IN_FCONST2 = 0x0d;
     // if value1 is greater than or equal to value2, branch to instruction at branchoffset (signed short constructed from unsigned bytes branchbyte1 << 8 + branchbyte2)
     public static final int IN_IF_ICMPGE = 0xa2;
+    // if value1 is greater than to value2, branch to instruction at branchoffset (signed short constructed from unsigned bytes branchbyte1 << 8 + branchbyte2)
+    public static final int IN_IF_ICMPGT = 0xa3;
     // if value is null, branch to instruction at branchoffset
     public static final int IN_IF_NULL = 0xc6;
     // if value is not null, branch to instruction at branchoffset

@@ -133,9 +133,9 @@ public class ObjectHeap {
      * @param reference
      * @return 
      */
-    public SObjectRef[] readObjectArrayFromHeap(int reference){
+    public SGenericRef[] readObjectArrayFromHeap(int reference){
         SArrayRef arrayRef = readFromActiveHeap(reference);
-        SObjectRef[] arr = new SObjectRef[arrayRef.getSize()];
+        SGenericRef[] arr = new SGenericRef[arrayRef.getSize()];
         
         JVMLogger.log(JVMLogger.TAG_HEAP, "Read object array ["+reference+"]-->"+arrayRef);
         
@@ -144,7 +144,7 @@ public class ObjectHeap {
         JVMLogger.disableLogging(JVMLogger.TAG_HEAP);
         
         for(int i=0; i<arrayRef.getSize(); i++){
-            SObjectRef ref = readFromHeap(reference,i+1);
+            SGenericRef ref = readFromHeap(reference,i+1);
             arr[i] = ref;
         }
         

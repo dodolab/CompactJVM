@@ -30,7 +30,7 @@ public class AALoadInstruction {
         
         if(index.getValue() >= arrayRef.getSize()) throw new ArrayOutOfBoundsException("Maximum index is "+(arrayRef.getSize() - 1)+", "+index.getValue()+" given.");
         
-        SObjectRef[] arr = heap.readObjectArrayFromHeap(arrayRef.getReference());
+        SGenericRef[] arr = heap.readObjectArrayFromHeap(arrayRef.getReference());
         stackFrame.operandStack.push(arr[index.getValue()]);
         
         JVMLogger.log(JVMLogger.TAG_INSTR, "AALoad: object array: "+arrayRef.getArrayType().className+"["+index.getValue()+"] -> "+arr[index.getValue()]);
