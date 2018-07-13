@@ -37,6 +37,8 @@ public class AThrowInstruction {
             actualFrame = stack.getCurrentFrame();
             MethodDefinition method = actualFrame.methodDefinition;
 
+            JVMLogger.log(JVMLogger.TAG_INSTR, "AThrow:: " + exception.getClassFile().getClassName());
+            
             if (method == null) {
                 // probably main method
                 throw new RuntimeException("Method definition not found and exception has been thrown!! Leaving main method and exiting... ");
@@ -54,7 +56,7 @@ public class AThrowInstruction {
                             actualFrame.setCurrentInstructionIndex(excItem.handlerPc);
                             actualFrame.operandStack.push(exception);
 
-                            JVMLogger.log(JVMLogger.TAG_INSTR, "AThrow:: " + exception.getClassFile().getClassName() + " catched as a " + excItem.catchClass.getClassName());
+                            JVMLogger.log(JVMLogger.TAG_INSTR, "Catched as a " + excItem.catchClass.getClassName());
                             return;
                         }
                     }
@@ -63,6 +65,6 @@ public class AThrowInstruction {
             stack.removeCurrentFrame();
         }
 
-        throw new RuntimeException("No exception handler found!!!!! EXIT !!!!");
+        throw new RuntimeException("No exception handler found -> EXIT");
     }
 }

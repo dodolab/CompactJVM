@@ -5,7 +5,10 @@
  */
 package compactjvmlab.satsolver;
 
+import compactjvmlab.JVMFunctions;
+import compactjvmlab.TextReader;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Date;
@@ -19,8 +22,8 @@ public class FileLoader {
     Clauses clauses = null;
     int variablesCount;
     
-    public FileLoader(/*String filename*/) /*throws IOException*/ {
-        int[] i1 = new int[2];
+    public FileLoader(String filename) throws FileNotFoundException, IOException {
+        /*int[] i1 = new int[2];
         i1[0] = -1;
         i1[1] = 3;
         Clause c1 = new Clause(i1);
@@ -50,32 +53,32 @@ public class FileLoader {
         clauses.set(2, c3);
         clauses.set(3, c4);
         clauses.set(4, c5);
-        variablesCount = 3;
-        /*try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-            int clausesCount;
-            int clauseIndex = 0;
-            String instanceString;
-            while ((instanceString = br.readLine()) != null) {
-                String[] tokens = instanceString.split(" ");
-                if("c".equals(tokens[0])) {
-                    System.out.println(instanceString.substring(2));
-                } else if("p".equals(tokens[0])) {
-                    variablesCount = Integer.parseInt(tokens[2]);
-                    clausesCount = Integer.parseInt(tokens[3]);
-                    clauses = new Clauses(clausesCount);
-                } else {
-                    int[] clauseLiterals = new int[tokens.length - 1];
-                    for(int i = 0; i < tokens.length; ++i) {
-                        int value = Integer.parseInt(tokens[i]);
-                        if(value == 0) break;
-                        clauseLiterals[i] = value;
-                    }
-                    Clause clause = new Clause(clauseLiterals);
-                    clauses.set(clauseIndex, clause);
-                    ++clauseIndex;
+        variablesCount = 3;*/
+        //BufferedReader br = new BufferedReader(new FileReader(filename));
+        TextReader reader = new TextReader(filename);
+        int clausesCount;
+        int clauseIndex = 0;
+        String instanceString;
+        while ((instanceString = reader.nextLine()) != null) {
+            String[] tokens = instanceString.split(" ");
+            if(tokens[0].equals("c")) {
+                JVMFunctions.println(instanceString.substring(2));
+            } else if(tokens[0].equals("p")) {
+                variablesCount = IntegerX.parseInt(tokens[2]);
+                clausesCount = IntegerX.parseInt(tokens[3]);
+                clauses = new Clauses(clausesCount);
+            } else {
+                int[] clauseLiterals = new int[tokens.length - 1];
+                for(int i = 0; i < tokens.length; ++i) {
+                    int value = IntegerX.parseInt(tokens[i]);
+                    if(value == 0) break;
+                    clauseLiterals[i] = value;
                 }
+                Clause clause = new Clause(clauseLiterals);
+                clauses.set(clauseIndex, clause);
+                ++clauseIndex;
             }
-        }*/
+        }
     }
     
     public Clauses getClauses() {

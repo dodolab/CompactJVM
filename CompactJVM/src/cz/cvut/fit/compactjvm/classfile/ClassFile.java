@@ -104,6 +104,11 @@ public class ClassFile {
                 return methodInfos[i];
             }
         }
+        
+        if(this.getSuperclassName() != null){
+            return this.getSuperClass().getMethod(name);
+        }
+ 
         throw new LoadingException("Method " + name + " not found in class " + this.className);
     }
 
@@ -135,7 +140,7 @@ public class ClassFile {
         int accessFlags = 0;
 
         if (!this.className.equals(methodClass)) {
-            ClassFile methodCls = methodArea.getClassFile(methodClass);
+            ClassFile methodCls = methodArea.getClassFile(methodClass); 
             accessFlags = methodCls.getMethod(methodName).accessFlags;
         } else {
             accessFlags = getMethod(methodName).accessFlags;
@@ -284,7 +289,7 @@ public class ClassFile {
 
     private boolean constructed = false;
 
-    public void constructClass(JVMStack stack, MethodArea methodArea) throws LoadingException {
+    public void constructClass(JVMStack stack, MethodArea methodArea) throws LoadingException, Exception {
         if (!constructed) {
             constructed = true;
             JVMLogger.log(JVMLogger.TAG_OTHER, "Initializing class " + className);
@@ -293,6 +298,7 @@ public class ClassFile {
             MethodDefinition method = this.getMethodDefinition(methodDef, methodArea, className, "<clinit>", "()V");
             StackFrame initFrame = new StackFrame(this, methodDef, method, stack.jvmThread);
             stack.push(initFrame);
+            stack.jvmThread.getInstructionManager().runInstruction(initFrame.getNextInstruction());
         }
     }
     

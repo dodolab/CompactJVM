@@ -72,4 +72,14 @@ public class String {
     char charAt(int index) {
         return data[index];
     }
+
+    public String substring(int index) {
+        int newLength = data.length - index;
+        char[] newData = new char[newLength];
+        for(int i = 0; i < data.length - index; ++i) {
+            newData[i] = data[index + i];
+        }
+        String substring = new String(newData);
+        return substring;
+    }
 }

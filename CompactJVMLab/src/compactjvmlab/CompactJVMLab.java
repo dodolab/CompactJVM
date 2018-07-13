@@ -19,12 +19,11 @@ import java.io.IOException;
 public class CompactJVMLab {
 
 
-    public static native void jvm_println(String msg);
+    public static void main(/*String[] args*/) throws IOException {
 
-    public static void main(/*String[] args*/) {
-
-        String s = "a a d";
-        String[] split = s.split(" ");
+        //String s = "a a d";
+        //boolean b = s.equals("a a d");
+        //JVMFunctions.println(b ? "ano" : "ne");
         //Test3 test = new Test3();
         //test.getInt();
         //boolean equals = split[0].equals("a");
@@ -36,16 +35,16 @@ public class CompactJVMLab {
         System.out.println("Neplatny pocet argumentu");
         System.exit(1);
         }*/
-//        Clauses clauses;
-//        int variablesCount;
-//        //try {
-//            FileLoader fileLoader = new FileLoader(/*args[0]*/);
-//            clauses = fileLoader.getClauses();
-//            variablesCount = fileLoader.getVariablesCount();
-//            SATSolver solver = new SATSolver();
-//            VariableEvaluation evaluation = solver.solve(clauses, variablesCount);
-//            if(evaluation == null) System.out.println("Není splnitelná");
-//            else System.out.println("Je splnitelná: " + evaluation.toString());
+        Clauses clauses;
+        int variablesCount;
+        //try {
+            FileLoader fileLoader = new FileLoader("data/cnf.txt"/*args[0]*/);
+            clauses = fileLoader.getClauses();
+            variablesCount = fileLoader.getVariablesCount();
+            SATSolver solver = new SATSolver();
+            VariableEvaluation evaluation = solver.solve(clauses, variablesCount);
+            if(evaluation == null) System.out.println("Není splnitelná");
+            else System.out.println("Je splnitelná: " + evaluation.toString());
         //} catch (IOException e) {
         //    System.out.println(e.getMessage());
         //    System.exit(1);

@@ -57,6 +57,10 @@ public class JVMThread {
         return jvmStack;
     }
     
+    public InstructionManager getInstructionManager(){
+        return instructionManager;
+    }
+    
     /**
      * Spusti beh programu v tomto threadu
      * @todo nacitani trid je treba dodelat, mozna se parametry zmeni

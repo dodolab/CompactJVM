@@ -87,13 +87,13 @@ public class InstructionManager {
             case Instruction.IN_ARRAYLENGTH: ArrayLengthInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_LCONST0: LConstNInstruction.run(jvmStack.getCurrentFrame(),0); break;
             case Instruction.IN_LCONST1: LConstNInstruction.run(jvmStack.getCurrentFrame(),1); break;
-            case Instruction.IN_AASTORE: AAStoreInstruction.run(jvmStack.getCurrentFrame(), heap); break;
+            case Instruction.IN_AASTORE: AAStoreInstruction.run(jvmStack.getCurrentFrame(), heap, methodArea); break;
             case Instruction.IN_ASTORE: AStoreNInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_ASTORE0: AStoreNInstruction.run(jvmStack.getCurrentFrame(),0); break;
             case Instruction.IN_ASTORE1: AStoreNInstruction.run(jvmStack.getCurrentFrame(),1); break;
             case Instruction.IN_ASTORE2: AStoreNInstruction.run(jvmStack.getCurrentFrame(),2); break;
             case Instruction.IN_ASTORE3: AStoreNInstruction.run(jvmStack.getCurrentFrame(),3); break;
-            case Instruction.IN_IASTORE: IAStoreInstruction.run(jvmStack.getCurrentFrame(), heap);break;
+            case Instruction.IN_IASTORE: IAStoreInstruction.run(jvmStack.getCurrentFrame(), heap, methodArea);break;
             case Instruction.IN_BALOAD: BaLoadInstruction.run(jvmStack.getCurrentFrame(), heap);break;
             case Instruction.IN_IALOAD : IALoadInstruction.run(jvmStack.getCurrentFrame(), heap); break;
             case Instruction.IN_IFLE : IfleInstruction.run(jvmStack.getCurrentFrame()); break;
