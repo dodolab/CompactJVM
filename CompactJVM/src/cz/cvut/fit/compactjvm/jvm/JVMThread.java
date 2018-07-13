@@ -62,7 +62,7 @@ public class JVMThread {
      * @param className
      * @param methodName 
      */
-    public void run(String className) throws LoadingException, ClassNotFoundException, OutOfHeapMemException {
+    public void run(String className) throws LoadingException, ClassNotFoundException, OutOfHeapMemException, Exception {
         
         // get main method
         ClassFile classFile = methodArea.getClassFile(className);

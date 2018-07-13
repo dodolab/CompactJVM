@@ -230,6 +230,7 @@ public class ObjectHeap {
         return arrayRef;
 
     }
+   
     
     /**
      * Zapise do aktivni casti haldy (index je realny index od zacatku teto

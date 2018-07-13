@@ -18,9 +18,10 @@ public class GotoInstruction {
         // two bytes
         stackFrame.loadInstructionSingleParam();
         byte val = stackFrame.loadInstructionSingleParam();
-        stackFrame.setCurrentInstructionIndex(stackFrame.getCurrentInstructionIndex() + val -3);
+        int nextIns = stackFrame.getCurrentInstructionIndex() + val -3;
+        stackFrame.setCurrentInstructionIndex(nextIns);
         
-        JVMLogger.log(JVMLogger.TAG_INSTR, "Goto: "+val);
+        JVMLogger.log(JVMLogger.TAG_INSTR, "Goto: "+nextIns);
     }
     
 }

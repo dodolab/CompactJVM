@@ -21,7 +21,9 @@ public class Instruction {
     public static final int IN_ALOAD2 = 0x2c;
     // load a reference onto the stack from local variable 3
     public static final int IN_ALOAD3 = 0x2d;
-    // load an int from an array
+    // load an byte from an array
+    public static final int IN_BALOAD = 0x33;    
+     // load an int from an array
     public static final int IN_IALOAD = 0x2e;
     // create a new array of references of length count and component type identified by the class reference index (indexbyte1 << 8 + indexbyte2) in the constant pool
     public static final int IN_ANEWARRAY = 0xbd;
@@ -67,6 +69,19 @@ public class Instruction {
     public static final int IN_ILOAD2 = 0x1c; //28
     // load an int value from local variable 3
     public static final int IN_ILOAD3 = 0x1d; //29
+    
+     // load an long value from a local variable #index
+    public static final int IN_LLOAD = 0x16; 
+    // load an long value from local variable 0
+    public static final int IN_LLOAD0 = 0x1e;
+    // load an long value from local variable 1
+    public static final int IN_LLOAD1 = 0x1f;
+    // load an long value from local variable 2
+    public static final int IN_LLOAD2 = 0x20;
+    // load an long value from local variable 3
+    public static final int IN_LLOAD3 = 0x21;
+    
+    
     // add two ints
     public static final int IN_IADD = 0x60; //96
     // multiply two integers

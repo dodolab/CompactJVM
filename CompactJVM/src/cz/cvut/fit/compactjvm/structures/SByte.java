@@ -21,7 +21,7 @@ public class SByte extends SStruct {
     public byte getValue() {
         return value;
     }
-
+    
     @Override
     public SByte makeCopy() {
 	return new SByte(this.value);

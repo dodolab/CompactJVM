@@ -29,6 +29,8 @@ public class JVMLogger {
     // heap
     public static final String TAG_HEAP = "HEAP";
     
+    public static final String TAG_PRINT = "PRINT";
+    
     private static final ArrayList<String> tags = new ArrayList<String>();
     private static int globalPadding = 0;
     

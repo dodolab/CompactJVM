@@ -24,7 +24,13 @@ public class IStoreInstruction {
      */
     public static void run(StackFrame stackFrame) throws LoadingException{
         byte localVariableIndex = stackFrame.loadInstructionSingleParam();
-        SInt value = stackFrame.operandStack.pop();
+        SStruct value = stackFrame.operandStack.pop();
+        
+        if(value.isReference()){
+            throw new LoadingException("Value is reference! Primitive type expected");
+        }
+        
+        
         JVMLogger.log(JVMLogger.TAG_INSTR, "IStore: "+value);
         stackFrame.localVariables.setVar(localVariableIndex, value);
     }

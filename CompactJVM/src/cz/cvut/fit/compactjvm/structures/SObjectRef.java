@@ -6,6 +6,7 @@
 package cz.cvut.fit.compactjvm.structures;
 
 import cz.cvut.fit.compactjvm.classfile.ClassFile;
+import cz.cvut.fit.compactjvm.natives.NativeObject;
 
 /**
  * Object reference
@@ -14,6 +15,7 @@ import cz.cvut.fit.compactjvm.classfile.ClassFile;
  */
 public class SObjectRef extends SGenericRef{
     private ClassFile classFile;
+    private NativeObject nativeObject; // assigned native object (if there is one)
     
     public SObjectRef(){
         this.classFile = null;
@@ -28,6 +30,11 @@ public class SObjectRef extends SGenericRef{
         this.classFile = classFile;
     }
     
+    public SObjectRef(int heapReference, ClassFile classFile, NativeObject nativeObject){
+        this(heapReference, classFile);
+        this.nativeObject = nativeObject;
+    }
+    
     public ClassFile getClassFile(){
         return classFile;
     }
@@ -35,10 +42,22 @@ public class SObjectRef extends SGenericRef{
     public void setClassFile(ClassFile cls){
         this.classFile = cls;
     }
+    
+    public boolean hasNativeObject(){
+        return nativeObject != null;
+    }
+    
+    public NativeObject getNativeObject(){
+        return nativeObject;
+    }
+    
+    public void setNativeObject(NativeObject obj){
+        this.nativeObject = obj;
+    }
 
     @Override
     public SObjectRef makeCopy() {
-        return new SObjectRef(heapReference, classFile);
+        return new SObjectRef(heapReference, classFile, nativeObject);
     }
     
     @Override

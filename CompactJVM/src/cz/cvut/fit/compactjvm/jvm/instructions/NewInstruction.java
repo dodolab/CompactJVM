@@ -16,6 +16,7 @@ import cz.cvut.fit.compactjvm.jvm.MethodArea;
 import cz.cvut.fit.compactjvm.jvm.ObjectHeap;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.jvm.JVMLogger;
+import cz.cvut.fit.compactjvm.natives.NativeObject;
 import cz.cvut.fit.compactjvm.structures.*;
 
 /**
@@ -33,6 +34,12 @@ public class NewInstruction {
         
         ClassFile cls = methodArea.getClassFile(className);
         SObjectRef objectReference = heap.allocObject(cls);
+        
+        if(cls.hasNativeMethods()){
+            NativeObject obj = stack.jvmThread.getNativeArea().createNativeObject(cls.className);
+            objectReference.setNativeObject(obj);
+            JVMLogger.log(JVMLogger.TAG_OTHER, " created native object for "+className);
+        }
         
         stackFrame.operandStack.push(objectReference);
         

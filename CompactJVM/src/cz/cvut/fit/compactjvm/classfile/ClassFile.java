@@ -15,6 +15,7 @@ import cz.cvut.fit.compactjvm.jvm.JVMLogger;
 import cz.cvut.fit.compactjvm.jvm.JVMStack;
 import cz.cvut.fit.compactjvm.jvm.MethodArea;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
+import cz.cvut.fit.compactjvm.natives.NativeObject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -96,12 +97,14 @@ public class ClassFile {
         }
         return methodInfos[index];
     }
-    
-    public MTHEntity getMethod(String name) throws LoadingException{
-        for(int i=0; i<methodInfos.length; i++){
-            if(methodInfos[i].name.equals(name)) return methodInfos[i];
+
+    public MTHEntity getMethod(String name) throws LoadingException {
+        for (int i = 0; i < methodInfos.length; i++) {
+            if (methodInfos[i].name.equals(name)) {
+                return methodInfos[i];
+            }
         }
-        throw new LoadingException("Method not found");
+        throw new LoadingException("Method " + name + " not found in class " + this.className);
     }
 
     public FLEntity getField(int index) throws LoadingException {
@@ -129,28 +132,42 @@ public class ClassFile {
         String methodName = ((CPUtf8) cpEntities[nameAndType.nameIndex]).value;
         String methodDescriptor = ((CPUtf8) cpEntities[nameAndType.descriptorIndex]).value;
 
-        int accessFlags = getMethod(methodName).accessFlags;
+        int accessFlags = 0;
 
-        MethodDefinition method = new MethodDefinition(methodClass, methodName, methodDescriptor,accessFlags);
-        loadExceptionTable(method, methodDefIndex, methodArea);
-        
-        return method;
-    }
-    
-    // used when we know descriptor and class name, there is no need to search constant pool
-    public MethodDefinition getMethodDefinition(int methodDefIndex, MethodArea methodArea, 
-            String methodClass, String methodName, String methodDescriptor) throws LoadingException{
- 
-        int accessFlags = getMethod(methodName).accessFlags;
+        if (!this.className.equals(methodClass)) {
+            ClassFile methodCls = methodArea.getClassFile(methodClass);
+            accessFlags = methodCls.getMethod(methodName).accessFlags;
+        } else {
+            accessFlags = getMethod(methodName).accessFlags;
+        }
 
         MethodDefinition method = new MethodDefinition(methodClass, methodName, methodDescriptor, accessFlags);
         loadExceptionTable(method, methodDefIndex, methodArea);
-        
+
         return method;
     }
-    
-    private void loadExceptionTable(MethodDefinition method, int methodDefIndex, MethodArea methodArea) throws LoadingException{
-                // get exception table
+
+    // used when we know descriptor and class name, there is no need to search constant pool
+    public MethodDefinition getMethodDefinition(int methodDefIndex, MethodArea methodArea,
+            String methodClass, String methodName, String methodDescriptor) throws LoadingException {
+
+        int accessFlags = 0;
+
+        if (!this.className.equals(methodClass)) {
+            ClassFile methodCls = methodArea.getClassFile(methodClass);
+            accessFlags = methodCls.getMethod(methodName).accessFlags;
+        } else {
+            accessFlags = getMethod(methodName).accessFlags;
+        }
+
+        MethodDefinition method = new MethodDefinition(methodClass, methodName, methodDescriptor, accessFlags);
+        loadExceptionTable(method, methodDefIndex, methodArea);
+
+        return method;
+    }
+
+    private void loadExceptionTable(MethodDefinition method, int methodDefIndex, MethodArea methodArea) throws LoadingException {
+        // get exception table
         MTHEntity methodDef = getMethod(methodDefIndex);
         AttrCode codeAttribute = methodDef.getCodeAttribute();
         AttrExcTableItem[] attrExceptionTable = codeAttribute.exceptionTable;
@@ -169,7 +186,7 @@ public class ClassFile {
                 if (attrItem.catchType != 0) {
                     // not finally block
                     int catchClassIndex = ((CPClass) cpEntities[attrItem.catchType]).nameIndex;
-                     String catchClass = ((CPUtf8) cpEntities[catchClassIndex]).value;
+                    String catchClass = ((CPUtf8) cpEntities[catchClassIndex]).value;
                     ClassFile cls = methodArea.getClassFile(catchClass);
                     item.catchClass = cls;
                 }
@@ -220,7 +237,6 @@ public class ClassFile {
         //@todo throw exception
     }
 
-
     /**
      * Gets name and descriptor by cp index
      *
@@ -267,19 +283,27 @@ public class ClassFile {
     }
 
     private boolean constructed = false;
-    
-    public void constructClass(JVMStack stack, MethodArea methodArea) throws LoadingException{
-        if(!constructed){
+
+    public void constructClass(JVMStack stack, MethodArea methodArea) throws LoadingException {
+        if (!constructed) {
             constructed = true;
-            JVMLogger.log(JVMLogger.TAG_OTHER, "Initializing class "+ className);
+            JVMLogger.log(JVMLogger.TAG_OTHER, "Initializing class " + className);
             int methodDef = this.getMethodDefIndex("<clinit>", "()V");
-            
+
             MethodDefinition method = this.getMethodDefinition(methodDef, methodArea, className, "<clinit>", "()V");
-            StackFrame initFrame = new StackFrame(this,methodDef,method,stack.jvmThread);
+            StackFrame initFrame = new StackFrame(this, methodDef, method, stack.jvmThread);
             stack.push(initFrame);
         }
     }
     
+    public boolean hasNativeMethods(){
+        for(MTHEntity ent : this.methodInfos){
+            if(ent.isNativeMethod()) return true;
+        }
+        return false;
+    }
+    
+
     /**
      * Gets field index by selected name and descriptor
      *

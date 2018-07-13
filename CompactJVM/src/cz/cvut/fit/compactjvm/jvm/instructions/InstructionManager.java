@@ -35,7 +35,7 @@ public class InstructionManager {
         this.heap = heap;
     }
     
-    public void runInstruction(byte instructionCode) throws LoadingException, ClassNotFoundException, OutOfHeapMemException {
+    public void runInstruction(byte instructionCode) throws Exception {
         int code = instructionCode & 0xFF;
         switch(code) {
             //operand stack and local variables instructions
@@ -49,6 +49,12 @@ public class InstructionManager {
             case Instruction.IN_ILOAD1: ILoadNInstruction.run(jvmStack.getCurrentFrame(), 1); break;
             case Instruction.IN_ILOAD2: ILoadNInstruction.run(jvmStack.getCurrentFrame(), 2); break;
             case Instruction.IN_ILOAD3: ILoadNInstruction.run(jvmStack.getCurrentFrame(), 3); break;
+            case Instruction.IN_LLOAD: LLoadInstruction.run(jvmStack.getCurrentFrame()); break;
+            case Instruction.IN_LLOAD0: LLoadNInstruction.run(jvmStack.getCurrentFrame(), 0); break;
+            case Instruction.IN_LLOAD1: LLoadNInstruction.run(jvmStack.getCurrentFrame(), 1); break;
+            case Instruction.IN_LLOAD2: LLoadNInstruction.run(jvmStack.getCurrentFrame(), 2); break;
+            case Instruction.IN_LLOAD3: LLoadNInstruction.run(jvmStack.getCurrentFrame(), 3); break;
+                
             case Instruction.IN_AALOAD: AALoadInstruction.run(jvmStack.getCurrentFrame(), heap);break;
             case Instruction.IN_ALOAD: ALoadInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_ALOAD0: ALoadInstruction.run(jvmStack.getCurrentFrame(),0); break;
@@ -86,6 +92,7 @@ public class InstructionManager {
             case Instruction.IN_ASTORE2: AStoreNInstruction.run(jvmStack.getCurrentFrame(),2); break;
             case Instruction.IN_ASTORE3: AStoreNInstruction.run(jvmStack.getCurrentFrame(),3); break;
             case Instruction.IN_IASTORE: IAStoreInstruction.run(jvmStack.getCurrentFrame(), heap);break;
+            case Instruction.IN_BALOAD: BaLoadInstruction.run(jvmStack.getCurrentFrame(), heap);break;
             case Instruction.IN_IALOAD : IALoadInstruction.run(jvmStack.getCurrentFrame(), heap); break;
             case Instruction.IN_IFLE : IfleInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_NOP : NopInstruction.run(jvmStack.getCurrentFrame()); break;

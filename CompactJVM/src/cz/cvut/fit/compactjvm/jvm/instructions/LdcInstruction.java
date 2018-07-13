@@ -57,7 +57,7 @@ public class LdcInstruction {
                  // get utf8 value based on string index
                  CPUtf8 utf8 = (CPUtf8)stackFrame.associatedClass.cpEntities[itString.stringIndex];
                  String stringText = utf8.value;
-                 SObjectRef strRef = writeStringToHeap(methodArea, heap, stringText);
+                 SObjectRef strRef = stackFrame.jvmThread.getNativeArea().writeStringToHeap(stringText);
                  stackFrame.operandStack.push(strRef);
                  JVMLogger.log(JVMLogger.TAG_INSTR, "Ldc String: " + stringText);
                  break;
@@ -66,14 +66,4 @@ public class LdcInstruction {
          
      }
      
-     private static SObjectRef writeStringToHeap(MethodArea methodArea, ObjectHeap heap, String stringText) throws OutOfHeapMemException {
-        char[] stringData = stringText.toCharArray();
-        SChar[] charData = new SChar[stringData.length];
-        for(int i = 0; i < charData.length; ++i) charData[i] = new SChar(stringData[i]);
-        SArrayRef charDataRef = heap.allocPrimitiveArray(charData, charData.length);
-        ClassFile cls = methodArea.getClassFile("java/lang/String");
-        SObjectRef strDataRef = heap.allocObject(cls);
-        heap.writeToHeap(strDataRef.getReference(), 0, charDataRef);
-        return strDataRef;
-     }
 }

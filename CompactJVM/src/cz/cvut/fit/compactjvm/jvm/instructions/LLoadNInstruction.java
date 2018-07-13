@@ -11,21 +11,13 @@ import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.jvm.JVMLogger;
 import cz.cvut.fit.compactjvm.structures.*;
 
-/**
- *  store int value into variable #index
- * @author Nick Nemame
- */
-public class IStoreNInstruction {
+
+public class LLoadNInstruction {
     
-    /**
-     * 
-     * @param stackFrame 
-     * @param localVariableIndex 
-     */
     public static void run(StackFrame stackFrame, int localVariableIndex) throws LoadingException{
-        SStruct value = stackFrame.operandStack.pop();
-        JVMLogger.log(JVMLogger.TAG_INSTR, "IStoreN: "+value);
-        stackFrame.localVariables.setVar(localVariableIndex, value);
+        SLong value = stackFrame.localVariables.getVar(localVariableIndex);
+        JVMLogger.log(JVMLogger.TAG_INSTR, "LLoadN: "+value);
+        stackFrame.operandStack.push(value);
     }
 
 }

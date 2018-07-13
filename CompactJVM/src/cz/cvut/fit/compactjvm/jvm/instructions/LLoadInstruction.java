@@ -12,21 +12,16 @@ import cz.cvut.fit.compactjvm.jvm.JVMLogger;
 import cz.cvut.fit.compactjvm.structures.*;
 
 /**
- * Load int from local variable and push onto the operand stack
+ * Load long from local variable and push onto the operand stack
  * https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-6.html#jvms-6.5.iload
  * @author Nick Nemame
  */
-public class ILoadInstruction {
+public class LLoadInstruction {
     
     public static void run(StackFrame stackFrame) throws LoadingException{
         byte localVariableIndex = stackFrame.loadInstructionSingleParam();
-        SStruct value = stackFrame.localVariables.getVar(localVariableIndex);
-        
-        if(value.isReference()){
-            throw new LoadingException("Value is reference! Primitive type expected");
-        }
-        
-        JVMLogger.log(JVMLogger.TAG_INSTR, "ILoad: "+value);
+        SLong value = stackFrame.localVariables.getVar(localVariableIndex);
+        JVMLogger.log(JVMLogger.TAG_INSTR, "LLoad: "+value);
         stackFrame.operandStack.push(value);
     }
 
