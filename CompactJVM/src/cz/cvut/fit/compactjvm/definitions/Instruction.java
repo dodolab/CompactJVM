@@ -105,6 +105,9 @@ public class Instruction {
     // load the int value 5 onto the stack
     public static final int IN_ICONST5 = 0x8; //8
     
+    // load an int from an array
+    public static final int IN_CALOAD = 0x34; //52
+    
     // push the long 0 onto the stack
     public static final int IN_LCONST0 = 0x9;
     // push the long 1 onto the stack

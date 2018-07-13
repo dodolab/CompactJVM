@@ -6,6 +6,7 @@
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
 import cz.cvut.fit.compactjvm.definitions.Instruction;
+import cz.cvut.fit.compactjvm.exceptions.ArrayOutOfBoundsException;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.exceptions.OutOfHeapMemException;
 import cz.cvut.fit.compactjvm.jvm.JVMStack;
@@ -116,6 +117,7 @@ public class InstructionManager {
             case Instruction.IN_INVOKEVIRTUAL: InvokeVirtualInstruction.run(jvmStack, methodArea); break;
             case Instruction.IN_PUTSTATIC: PutStaticInstruction.run(jvmStack.getCurrentFrame());break;
             case Instruction.IN_GETSTATIC: GetStaticInstruction.run(jvmStack, methodArea); break; 
+            case Instruction.IN_CALOAD : CALoadInstruction.run(jvmStack.getCurrentFrame(), heap); break;
             default:
                 JVMLogger.log(JVMLogger.TAG_OTHER, "Not implemented instruction: "+code+" (0x"+Integer.toHexString(code)+")");
         }

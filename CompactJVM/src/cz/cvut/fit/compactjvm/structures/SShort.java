@@ -10,7 +10,7 @@ package cz.cvut.fit.compactjvm.structures;
  * 
  * @author Adam Vesecky
  */
-public class SShort extends SStruct{
+public class SShort extends SIntable{
     private final short value;
 
 
@@ -32,4 +32,8 @@ public class SShort extends SStruct{
         return "SShort["+value+"]";
     }
     
+    @Override
+    public SInt toInt() {
+        return new SInt(value);
+    }
 }

@@ -22,7 +22,7 @@ public class IReturnInstruction {
      * @param stack
      */
     public static void run(JVMStack stack) throws LoadingException{
-        SInt value = stack.getCurrentFrame().operandStack.pop();
+        SIntable value = stack.getCurrentFrame().operandStack.pop();
         JVMLogger.log(JVMLogger.TAG_INSTR, "IReturn: "+value);
         stack.removeCurrentFrame();
         stack.getCurrentFrame().operandStack.push(value);

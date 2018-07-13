@@ -22,10 +22,13 @@ public class IfIcmpgeInstruction {
         stackFrame.loadInstructionSingleParam();
         byte nextInstruction = stackFrame.loadInstructionSingleParam();
         
-        SInt value2 = stackFrame.operandStack.pop();
-        SInt value1 = stackFrame.operandStack.pop();
+        SIntable value2 = stackFrame.operandStack.pop();
+        SIntable value1 = stackFrame.operandStack.pop();
         
-        if(value1.getValue() >= value2.getValue()){
+        SInt val1 = value1.toInt();
+        SInt val2 = value2.toInt();
+        
+        if(val1.getValue() >= val2.getValue()){
             JVMLogger.log(JVMLogger.TAG_INSTR, "IfIcmpge: "+value1+" >= "+value2+"; goto "+nextInstruction);
             stackFrame.setCurrentInstructionIndex(stackFrame.getCurrentInstructionIndex() + nextInstruction - 3);
         }else{

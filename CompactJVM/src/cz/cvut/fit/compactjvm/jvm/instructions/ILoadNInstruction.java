@@ -19,7 +19,7 @@ import cz.cvut.fit.compactjvm.structures.*;
 public class ILoadNInstruction {
     
     public static void run(StackFrame stackFrame, int localVariableIndex) throws LoadingException{
-        SInt value = stackFrame.localVariables.getVar(localVariableIndex);
+        SIntable value = stackFrame.localVariables.getVar(localVariableIndex);
         JVMLogger.log(JVMLogger.TAG_INSTR, "ILoadN: "+value);
         stackFrame.operandStack.push(value);
     }

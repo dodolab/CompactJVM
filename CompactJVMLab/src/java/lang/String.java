@@ -36,4 +36,40 @@ public class String {
         return copy;
     }
     
+    public String[] split(String delimiter) {
+        //if(delimiter.length() > 1) throw new Exception("Large delimiters not implemented");
+        char delimiterChar = delimiter.charAt(0);
+        int matchesCount = getMatchesCount(delimiterChar);
+        String[] str = new String[matchesCount+1];
+        
+        int stringIndex = 0;
+        int oldIndex = 0;
+        for(int i = 0; i <= data.length; ++i) {
+            if(i == data.length || data[i] == delimiterChar) {
+                char[] piece = new char[i - oldIndex];
+                if(oldIndex == i) {
+                    str[stringIndex++] = "";
+                } else {
+                    for(int j = oldIndex; j < i; ++j) {
+                        piece[j - oldIndex] = data[j];
+                    }
+                    str[stringIndex++] = new String(piece);
+                }
+                oldIndex = i + 1;
+            }
+        }
+        return str;
+    }
+    
+    private int getMatchesCount(char delimiterChar) {
+        int count = 0;
+        for(int i = 0; i < data.length; ++i) {
+            if(data[i] == delimiterChar) ++count;
+        }
+        return count;
+    }
+    
+    char charAt(int index) {
+        return data[index];
+    }
 }

@@ -20,12 +20,8 @@ public class ILoadInstruction {
     
     public static void run(StackFrame stackFrame) throws LoadingException{
         byte localVariableIndex = stackFrame.loadInstructionSingleParam();
-        SStruct value = stackFrame.localVariables.getVar(localVariableIndex);
-        
-        if(value.isReference()){
-            throw new LoadingException("Value is reference! Primitive type expected");
-        }
-        
+        SIntable value = stackFrame.localVariables.getVar(localVariableIndex);
+
         JVMLogger.log(JVMLogger.TAG_INSTR, "ILoad: "+value);
         stackFrame.operandStack.push(value);
     }

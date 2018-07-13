@@ -10,7 +10,7 @@ package cz.cvut.fit.compactjvm.structures;
  * 
  * @author Adam Vesecky
  */
-public class SBoolean extends SStruct {
+public class SBoolean extends SIntable {
     private final boolean value;
 
 
@@ -31,4 +31,10 @@ public class SBoolean extends SStruct {
     public String toString() {
         return "SBoolean["+value+"]";
     }
+
+    @Override
+    public SInt toInt() {
+        return new SInt(value ? 1 : 0);
+    }
+    
 }

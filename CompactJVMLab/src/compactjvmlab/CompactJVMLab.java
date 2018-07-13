@@ -22,22 +22,12 @@ public class CompactJVMLab {
     public static native void jvm_println(String msg);
 
     public static void main(/*String[] args*/) {
-        FileReader fileR = new FileReader("F:\\test.txt");
         
-        byte[] arr = new byte[fileR.available()];
-        
-        fileR.read(arr);
-        
-        int length = arr.length;
-        
-        for(int i=0; i<length; i++){
-            byte prvek = arr[i];
-            
-            JVMFunctions.println("Prvek: ",prvek);    
-        }
-        
-        
-        
+        TextWriter fileR = new TextWriter("F:\\test2.txt");
+        fileR.append("Hello ");
+        fileR.append("world!");
+        fileR.appendLine("");
+        fileR.append(12345);
         
         fileR.close();
     }

@@ -10,7 +10,7 @@ package cz.cvut.fit.compactjvm.structures;
  * 
  * @author Adam Vesecky
  */
-public class SInt extends SStruct{
+public class SInt extends SIntable{
     private final int value;
 
 
@@ -30,5 +30,10 @@ public class SInt extends SStruct{
     @Override
     public String toString() {
         return "SInt["+value+"]";
+    }
+
+    @Override
+    public SInt toInt() {
+        return this;
     }
 }

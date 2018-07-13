@@ -8,6 +8,7 @@ package cz.cvut.fit.compactjvm.jvm;
 import cz.cvut.fit.compactjvm.classfile.ClassFile;
 import cz.cvut.fit.compactjvm.classfile.MethodDefinition;
 import cz.cvut.fit.compactjvm.classfile.MTHEntity;
+import cz.cvut.fit.compactjvm.exceptions.ArrayOutOfBoundsException;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.exceptions.OutOfHeapMemException;
 import cz.cvut.fit.compactjvm.jvm.instructions.InstructionManager;
@@ -62,7 +63,7 @@ public class JVMThread {
      * @param className
      * @param methodName 
      */
-    public void run(String className) throws LoadingException, ClassNotFoundException, OutOfHeapMemException, Exception {
+    public void run(String className) throws LoadingException, ClassNotFoundException, OutOfHeapMemException, ArrayOutOfBoundsException, Exception {
         
         // get main method
         ClassFile classFile = methodArea.getClassFile(className);

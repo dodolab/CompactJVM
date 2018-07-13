@@ -42,7 +42,7 @@ public class CompactJVM {
         methodArea.initialLoad(path);
     }
     
-    public void start() throws LoadingException, ClassNotFoundException, OutOfHeapMemException{
+    public void start() throws Exception{
         JVMThread thread = new JVMThread(methodArea, heap);
         threads.add(thread);
         thread.run("compactjvmlab/CompactJVMLab"); //@todo zatim nacitam fixne porad ten puvodni soubor

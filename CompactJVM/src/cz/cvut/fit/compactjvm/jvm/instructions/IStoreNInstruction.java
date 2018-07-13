@@ -23,7 +23,8 @@ public class IStoreNInstruction {
      * @param localVariableIndex 
      */
     public static void run(StackFrame stackFrame, int localVariableIndex) throws LoadingException{
-        SStruct value = stackFrame.operandStack.pop();
+        SIntable value = stackFrame.operandStack.pop(); //Int nebo char
+
         JVMLogger.log(JVMLogger.TAG_INSTR, "IStoreN: "+value);
         stackFrame.localVariables.setVar(localVariableIndex, value);
     }

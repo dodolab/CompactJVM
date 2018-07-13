@@ -10,7 +10,7 @@ package cz.cvut.fit.compactjvm.structures;
  * 
  * @author Adam Vesecky
  */
-public class SChar extends SStruct{
+public class SChar extends SIntable{
     private final char value;
 
 
@@ -30,5 +30,10 @@ public class SChar extends SStruct{
     @Override
     public String toString() {
         return "SChar["+value+"]";
+    }
+    
+    @Override
+    public SInt toInt() {
+        return new SInt(value);
     }
 }

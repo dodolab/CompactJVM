@@ -11,6 +11,8 @@ import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.exceptions.OutOfHeapMemException;
 import cz.cvut.fit.compactjvm.natives.FileReader;
 import cz.cvut.fit.compactjvm.natives.NativeObject;
+import cz.cvut.fit.compactjvm.natives.TextReader;
+import cz.cvut.fit.compactjvm.natives.TextWriter;
 import cz.cvut.fit.compactjvm.structures.SArrayRef;
 import cz.cvut.fit.compactjvm.structures.SBoolean;
 import cz.cvut.fit.compactjvm.structures.SByte;
@@ -59,7 +61,7 @@ public class NativeArea {
                 default:
                     throw new LoadingException("No such native method: " + methodName);
             }
-        }else{
+        } else {
             throw new LoadingException("No such native class: " + className);
         }
     }
@@ -70,22 +72,31 @@ public class NativeArea {
         switch (rawClassName) {
             case "FileReader":
                 return new FileReader();
+            case "TextReader":
+                return new TextReader();
+            case "TextWriter":
+                return new TextWriter();
             default:
                 throw new LoadingException("Native object for " + className + " not implemented yet!");
         }
     }
 
     public SObjectRef writeStringToHeap(String stringText) throws OutOfHeapMemException {
-        char[] stringData = stringText.toCharArray();
-        SChar[] charData = new SChar[stringData.length];
-        for (int i = 0; i < charData.length; ++i) {
-            charData[i] = new SChar(stringData[i]);
+        if (stringText != null) {
+            char[] stringData = stringText.toCharArray();
+            SChar[] charData = new SChar[stringData.length];
+            for (int i = 0; i < charData.length; ++i) {
+                charData[i] = new SChar(stringData[i]);
+            }
+            SArrayRef charDataRef = heap.allocPrimitiveArray(charData, charData.length);
+            ClassFile cls = methodArea.getClassFile("java/lang/String");
+            SObjectRef strDataRef = heap.allocObject(cls);
+            heap.writeToHeap(strDataRef.getReference(), 0, charDataRef);
+            return strDataRef;
+        } else {
+            // return null;
+            return new SObjectRef();
         }
-        SArrayRef charDataRef = heap.allocPrimitiveArray(charData, charData.length);
-        ClassFile cls = methodArea.getClassFile("java/lang/String");
-        SObjectRef strDataRef = heap.allocObject(cls);
-        heap.writeToHeap(strDataRef.getReference(), 0, charDataRef);
-        return strDataRef;
     }
 
     public String readStringFromHeap(SObjectRef objectRef) {
@@ -107,32 +118,32 @@ public class NativeArea {
         ArrayList<String> messages = new ArrayList<String>();
 
         // append all parameters
-        for(int i=0; i<numParams; i++) {
+        for (int i = 0; i < numParams; i++) {
             SStruct struct = stack.getCurrentFrame().operandStack.pop();
             String str;
 
             if (struct.isReference()) {
                 // is string
                 str = readStringFromHeap((SObjectRef) struct);
-            } else if(struct instanceof SInt){
+            } else if (struct instanceof SInt) {
                 // must be integer
                 int val = ((SInt) struct).getValue();
                 str = val + "";
-            }else{
+            } else {
                 byte val = ((SByte) struct).getValue();
                 str = val + "";
             }
-            
+
             messages.add(str);
         }
         // reverse list of messages 
         Collections.reverse(messages);
         StringBuilder output = new StringBuilder();
-        
-        for(String s : messages){
+
+        for (String s : messages) {
             output.append(s + " ");
         }
-        
+
         // parameters are inverted !
         JVMLogger.log(JVMLogger.TAG_PRINT, output.toString());
     }
