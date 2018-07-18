@@ -31,19 +31,18 @@ public class AAAException {
 
         StackFrame current = stack.getCurrentFrame();
 
-        // simulate new 
+        // create exception 
         ClassFile cls = methodArea.getClassFile("java/lang/Exception");
         SObjectRef objectReference = heap.allocObject(cls);
 
-        // simulate ldc
+        // create message
         String stringText = exc.getMessage();
         SObjectRef strRef = stack.jvmThread.getNativeArea().writeStringToHeap(stringText);
         
-        // set message
+        // set message to exception
         heap.writeToHeap(objectReference.getReference(), 0, strRef);
         
-        
-        
+        // invoke AThrow
         current.operandStack.push(objectReference);
         stack.jvmThread.getInstructionManager().runInstruction((byte)Instruction.IN_ATHROW);
         

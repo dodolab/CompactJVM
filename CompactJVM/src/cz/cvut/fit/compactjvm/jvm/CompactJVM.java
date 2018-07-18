@@ -30,8 +30,7 @@ public class CompactJVM {
         instance = this; // this is only for logging (logger sometimes needs to access the JVM)
         ClassFileLoader classLoader = new ClassFileLoader();
         methodArea = new MethodArea(classLoader);
-        GarbageCollector garbageCollector = new GarbageCollector(this);
-        heap = new ObjectHeap(methodArea, garbageCollector, 10000); //heap je pouze jedna pro jednu instanci JVM, tzn. thready ji sdili
+        heap = new ObjectHeap(methodArea, 10000); //heap je pouze jedna pro jednu instanci JVM, tzn. thready ji sdili
     }
     
     public List<JVMThread> getThreads() {

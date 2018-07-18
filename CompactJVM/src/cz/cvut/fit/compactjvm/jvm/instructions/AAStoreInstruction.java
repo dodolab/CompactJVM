@@ -24,7 +24,7 @@ import cz.cvut.fit.compactjvm.jvm.MethodArea;
  */
 public class AAStoreInstruction {
     
-    public static void run(StackFrame stackFrame, ObjectHeap heap, MethodArea methodArea) throws LoadingException, ArrayOutOfBoundsException, OutOfHeapMemException{
+    public static void run(StackFrame stackFrame, ObjectHeap heap, MethodArea methodArea) throws LoadingException, ArrayOutOfBoundsException, OutOfHeapMemException, Exception{
         
         SObjectRef value = stackFrame.operandStack.pop();
         SInt index = stackFrame.operandStack.pop();
@@ -37,8 +37,8 @@ public class AAStoreInstruction {
             return;
         }
         
-        SGenericRef[] ref = heap.readObjectArrayFromHeap(arrayRef.getReference());
-        ref[index.getValue()] = value;
+        heap.writeToHeap(arrayRef.getReference(), index.getValue()+1, value);
+        //ref[index.getValue()] = value;
         
         JVMLogger.log(JVMLogger.TAG_INSTR, "AAStoreN: object array: "+arrayRef.getArrayType().className+"["+index.getValue()+"] = "+value);
     }

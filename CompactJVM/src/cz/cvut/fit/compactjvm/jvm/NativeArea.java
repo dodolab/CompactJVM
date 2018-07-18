@@ -58,6 +58,9 @@ public class NativeArea {
                 case "println":
                     jvm_println(stack, numParams);
                     break;
+                case "parseInt":
+                    jvm_parseInt(stack, numParams);
+                    break;
                 default:
                     throw new LoadingException("No such native method: " + methodName);
             }
@@ -146,5 +149,13 @@ public class NativeArea {
 
         // parameters are inverted !
         JVMLogger.log(JVMLogger.TAG_PRINT, output.toString());
+    }
+    
+    private void jvm_parseInt(JVMStack stack, int numParams) throws LoadingException {
+        SObjectRef struct = stack.getCurrentFrame().operandStack.pop();
+        String str = readStringFromHeap((SObjectRef) struct);
+        int parsedValue = Integer.parseInt(str);
+        SInt intVal = new SInt(parsedValue);
+        stack.getCurrentFrame().operandStack.push(intVal);
     }
 }

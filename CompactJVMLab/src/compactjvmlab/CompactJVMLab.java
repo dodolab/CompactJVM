@@ -38,13 +38,13 @@ public class CompactJVMLab {
         Clauses clauses;
         int variablesCount;
         //try {
-            FileLoader fileLoader = new FileLoader("data/cnf.txt"/*args[0]*/);
-            clauses = fileLoader.getClauses();
-            variablesCount = fileLoader.getVariablesCount();
-            SATSolver solver = new SATSolver();
-            VariableEvaluation evaluation = solver.solve(clauses, variablesCount);
-            if(evaluation == null) System.out.println("Není splnitelná");
-            else System.out.println("Je splnitelná: " + evaluation.toString());
+            FileLoader fileLoader = new FileLoader("c:\\Data\\Skola\\FIT\\3. semestr\\MI-RUN\\MiRunProject\\CompactJVMLab\\data\\cnf.txt"/*args[0]*/);
+            //clauses = fileLoader.getClauses();
+            //variablesCount = fileLoader.getVariablesCount();
+            //SATSolver solver = new SATSolver();
+            //VariableEvaluation evaluation = solver.solve(clauses, variablesCount);
+            //if(evaluation == null) System.out.println("Není splnitelná");
+            //else System.out.println("Je splnitelná: " + evaluation.toString());
         //} catch (IOException e) {
         //    System.out.println(e.getMessage());
         //    System.exit(1);

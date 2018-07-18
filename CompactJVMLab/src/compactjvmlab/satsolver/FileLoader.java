@@ -62,22 +62,22 @@ public class FileLoader {
         while ((instanceString = reader.nextLine()) != null) {
             String[] tokens = instanceString.split(" ");
             if(tokens[0].equals("c")) {
-                JVMFunctions.println(instanceString.substring(2));
-            } else if(tokens[0].equals("p")) {
-                variablesCount = IntegerX.parseInt(tokens[2]);
-                clausesCount = IntegerX.parseInt(tokens[3]);
-                clauses = new Clauses(clausesCount);
+//                JVMFunctions.println(instanceString.substring(2));
+            }/* else if(tokens[0].equals("p")) {
+//                variablesCount = Integer.parseInt(tokens[2]);
+//                clausesCount = Integer.parseInt(tokens[3]);
+//                clauses = new Clauses(clausesCount);
             } else {
-                int[] clauseLiterals = new int[tokens.length - 1];
-                for(int i = 0; i < tokens.length; ++i) {
-                    int value = IntegerX.parseInt(tokens[i]);
-                    if(value == 0) break;
-                    clauseLiterals[i] = value;
-                }
-                Clause clause = new Clause(clauseLiterals);
-                clauses.set(clauseIndex, clause);
-                ++clauseIndex;
-            }
+//                int[] clauseLiterals = new int[tokens.length - 1];
+//                for(int i = 0; i < tokens.length; ++i) {
+//                    int value = Integer.parseInt(tokens[i]);
+//                    if(value == 0) break;
+//                    clauseLiterals[i] = value;
+//                }
+//                Clause clause = new Clause(clauseLiterals);
+//                clauses.set(clauseIndex, clause);
+//                ++clauseIndex;
+            }*/
         }
     }
     

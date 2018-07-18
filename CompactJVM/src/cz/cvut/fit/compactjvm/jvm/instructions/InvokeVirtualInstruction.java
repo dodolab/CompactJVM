@@ -8,6 +8,7 @@ package cz.cvut.fit.compactjvm.jvm.instructions;
 import cz.cvut.fit.compactjvm.classfile.ClassFile;
 import cz.cvut.fit.compactjvm.classfile.MethodDefinition;
 import cz.cvut.fit.compactjvm.classfile.Word;
+import cz.cvut.fit.compactjvm.exceptions.ArrayOutOfBoundsException;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.JVMStack;
 import cz.cvut.fit.compactjvm.jvm.MethodArea;
@@ -28,7 +29,7 @@ public class InvokeVirtualInstruction {
 
     public static final int PARAM_COUNT = 2;
 
-    public static void run(JVMStack stack, MethodArea methodArea) throws LoadingException, NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public static void run(JVMStack stack, MethodArea methodArea) throws LoadingException, NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, Exception {
         byte[] bytes = stack.getCurrentFrame().loadInstructionParams(PARAM_COUNT);
         int methodRefIndex = Word.fromByteArray(bytes); //index v CP ve tride, ktera invokuje, nikoliv v te, na ktere je metoda volana
         MethodDefinition method = stack.getCurrentFrame().associatedClass.getMethodDefinition(methodRefIndex,
@@ -50,15 +51,22 @@ public class InvokeVirtualInstruction {
             
             // use reflection to call native object method
             Method methodToInvoke = nativeObj.getClass().getMethod(method.getMethodName(), JVMStack.class, ObjectHeap.class);
-            methodToInvoke.invoke(nativeObj, stack, stack.jvmThread.getHeap());
             
+            try{
+            methodToInvoke.invoke(nativeObj, stack, stack.jvmThread.getHeap());
+            }catch(Exception e){
+                
+                // propagate exception inside
+                AAAException.throwException(e, stack, stack.jvmThread.getHeap(), methodArea);
+                
+            }
             JVMLogger.log(JVMLogger.TAG_INSTR, "InvokeVirtual native: " + method.getMethodName());
         } else {
             //Lookup metody v rodicovskych tridach, pokud neni nalezena v aktualni tride
             int methodIndex;
             while ((methodIndex = classFile.getMethodDefIndex(method.getMethodName(), method.getMethodDescriptor())) == -1) {
                 if (classFile.getSuperclassName() == null) {
-                    throw new LoadingException("Invoke virtual lookup failed - no method found");
+                    throw new LoadingException("Invoke virtual lookup failed - method "+method.getMethodName()+" not found");
                 }
                 classFile = classFile.getSuperClass();
             }

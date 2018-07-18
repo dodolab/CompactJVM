@@ -20,7 +20,7 @@ import cz.cvut.fit.compactjvm.structures.*;
  */
 public class IAStoreInstruction {
     
-    public static void run(StackFrame stackFrame, ObjectHeap heap, MethodArea methodArea) throws LoadingException, ArrayOutOfBoundsException, OutOfHeapMemException{
+    public static void run(StackFrame stackFrame, ObjectHeap heap, MethodArea methodArea) throws LoadingException, ArrayOutOfBoundsException, OutOfHeapMemException, Exception{
 
         SInt valueToAdd = stackFrame.operandStack.pop();
         SInt index = stackFrame.operandStack.pop();

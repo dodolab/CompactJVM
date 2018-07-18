@@ -45,14 +45,14 @@ public class ObjectHeap {
 
     private JVMThread jvmThread;
 
-    public ObjectHeap(MethodArea methodArea, GarbageCollector garbageCollector, int size) {
+    public ObjectHeap(MethodArea methodArea, int size) {
         this.methodArea = methodArea;
         heap = new SStruct[size];
         heapSize = size / 2;
         activeHeapOffset = 0;
         inactiveHeapOffset = heapSize;
         nextFreeSpace = 0;
-        this.garbageCollector = garbageCollector;
+        this.garbageCollector = new GarbageCollector(this);
         JVMLogger.log(JVMLogger.TAG_HEAP, "Creating heap");
     }
 
@@ -99,7 +99,7 @@ public class ObjectHeap {
      * @param value
      */
     public <T extends SStruct> void writeToHeap(int reference, int index, T value) {
-        JVMLogger.log(JVMLogger.TAG_HEAP, "Write ["+reference+"]["+index+"]-->"+value);
+        JVMLogger.log(JVMLogger.TAG_HEAP, "Write #"+reference+"#["+index+"]-->"+value);
         int headerSize = 1; //(getClassIndex(reference) == ARRAY_INDEX) ? getArrayHeaderSize() : getObjectHeaderSize();
         writeToActiveHeap(reference + headerSize + index, value);
     }
@@ -114,7 +114,7 @@ public class ObjectHeap {
     public <T extends SStruct> T readFromHeap(int reference, int index) {
         int headerSize = 1; //(getClassIndex(reference) == ARRAY_INDEX) ? getArrayHeaderSize() : getObjectHeaderSize();
         T output = readFromActiveHeap(reference + headerSize + index);
-        JVMLogger.log(JVMLogger.TAG_HEAP, "Read ["+reference+"]["+index+"]-->"+output);
+        JVMLogger.log(JVMLogger.TAG_HEAP, "Read #"+reference+"#["+index+"]-->"+output);
         return output;
     }
     
@@ -137,7 +137,7 @@ public class ObjectHeap {
         SArrayRef arrayRef = readFromActiveHeap(reference);
         SGenericRef[] arr = new SGenericRef[arrayRef.getSize()];
         
-        JVMLogger.log(JVMLogger.TAG_HEAP, "Read object array ["+reference+"]-->"+arrayRef);
+        JVMLogger.log(JVMLogger.TAG_HEAP, "Read object array #"+reference+"#-->"+arrayRef);
         
         // disable logging for that moment
         boolean loggingEnabled = JVMLogger.loggingEnabled(JVMLogger.TAG_HEAP);
@@ -164,11 +164,10 @@ public class ObjectHeap {
         int wordsRequired = /*getObjectHeaderSize() +*/ 1+ classFile.recursiveFieldCount;
         checkHeapSpace(wordsRequired);
         
-        JVMLogger.log(JVMLogger.TAG_HEAP, "Allocating object ["+reference+"][sz="+wordsRequired+"]-->"+classFile.className);
+        JVMLogger.log(JVMLogger.TAG_HEAP, "Allocating object #"+reference+"#[sz="+wordsRequired+"]-->"+classFile.className);
         
         SObjectRef ref = new SObjectRef(reference,classFile);
         writeToActiveHeap(reference, ref);
-        garbageCollector.initializeDataHeader();
         nextFreeSpace += wordsRequired;
         initializeSpace(reference + 1/*getObjectHeaderSize()*/, classFile.recursiveFieldCount);
         return ref;
@@ -199,11 +198,7 @@ public class ObjectHeap {
         }
         JVMLogger.decreaseGlobalPadding(4);
         nextFreeSpace+=wordsRequired;
-        
-        //writeToActiveHeap(reference + 1, arraySize);
-        garbageCollector.initializeDataHeader();
-        //nextFreeSpace += wordsRequired;
-        //initializeSpace(reference + 1/*getArrayHeaderSize()*/, itemSize * arraySize);
+
         return ref;
     }
 
@@ -213,7 +208,7 @@ public class ObjectHeap {
         int wordsRequired = 1 + arraySize;
         checkHeapSpace(wordsRequired);
         
-        JVMLogger.log(JVMLogger.TAG_HEAP, "Allocating object array ["+reference+"][sz="+arraySize+"]-->"+classFile.className);
+        JVMLogger.log(JVMLogger.TAG_HEAP, "Allocating object array #"+reference+"#[sz="+arraySize+"]-->"+classFile.className);
         
         SArrayRef arrayRef = new SArrayRef(reference,classFile, arraySize);
         writeToActiveHeap(reference, arrayRef);
@@ -221,7 +216,7 @@ public class ObjectHeap {
         JVMLogger.increaseGlobalPadding(4);
         // write references to the heap
         for(int i=0; i<arraySize; i++){
-            writeToHeap(reference, /*reference+*/i,new SObjectRef(reference+1+i,classFile));
+            writeToHeap(reference, i,new SObjectRef(reference+1+i,classFile));
         }
         JVMLogger.decreaseGlobalPadding(4);
         
@@ -311,7 +306,7 @@ public class ObjectHeap {
      */
     private void checkHeapSpace(int wordsRequired) throws OutOfHeapMemException {
         if (isFull(wordsRequired)) {
-            garbageCollector.collect();
+            garbageCollector.runGC();
         }
         if (isFull(wordsRequired)) {
             throw new OutOfHeapMemException();

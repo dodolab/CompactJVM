@@ -6,7 +6,7 @@
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
-import cz.cvut.fit.compactjvm.jvm.AnotherGarbageCollector;
+import cz.cvut.fit.compactjvm.jvm.GarbageCollector;
 import cz.cvut.fit.compactjvm.jvm.MethodArea;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.jvm.JVMLogger;
