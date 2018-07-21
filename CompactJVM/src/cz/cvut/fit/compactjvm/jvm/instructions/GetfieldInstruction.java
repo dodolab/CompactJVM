@@ -39,7 +39,7 @@ public class GetfieldInstruction {
         SStruct value = heap.readFromHeap(reference.getReference(), fieldInfo.dataFieldOffset);
         stackFrame.operandStack.push(value);
         
-        JVMLogger.log(JVMLogger.TAG_INSTR, "Get field from heap (reference: "+reference+", value: "+value+")");
+        JVMLogger.log(JVMLogger.TAG_INSTR_LOAD, "Get field from heap (reference: "+reference+", value: "+value+")");
     }
 
 }

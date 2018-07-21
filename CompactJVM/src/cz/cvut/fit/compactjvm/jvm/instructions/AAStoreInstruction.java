@@ -32,8 +32,8 @@ public class AAStoreInstruction {
             return;
         }
         
-        heap.writeToHeap(arrayRef.getReference(), index.getValue()+1, value);
+        heap.writeToHeap(arrayRef.getReference(), index.getValue(), value);
         
-        JVMLogger.log(JVMLogger.TAG_INSTR, "AAStoreN: object array: "+arrayRef.getArrayType().className+"["+index.getValue()+"] = "+value);
+        JVMLogger.log(JVMLogger.TAG_INSTR_STORE, "AAStoreN: object array: "+arrayRef.getArrayType().className+"["+index.getValue()+"] = "+value);
     }
 }

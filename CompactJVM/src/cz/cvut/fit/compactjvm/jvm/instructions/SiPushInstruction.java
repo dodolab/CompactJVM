@@ -16,7 +16,7 @@ public class SiPushInstruction {
     public static void run(StackFrame stackFrame) throws LoadingException{
         byte[] bytes = stackFrame.loadInstructionParams(2);
         int value = WordParser.fromByteArray(bytes);
-        JVMLogger.log(JVMLogger.TAG_INSTR, "SiPush: "+value);
+        JVMLogger.log(JVMLogger.TAG_INSTR_PUSH, "SiPush: "+value);
         stackFrame.operandStack.push(new SInt(value));
     }
 }

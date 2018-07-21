@@ -154,6 +154,8 @@ public class Instruction {
     public static final int IN_IF_NON_NULL = 0xc7;
     // if value is equal to zero, branch to instruction at branchoffset
     public static final int IN_IF_EQ = 0x99;
+    // if value is not equal to zero, branch to instruction at branchoffset
+    public static final int IN_IF_NE = 0x9a;
     // if value1 == value2
     public static final int IN_IF_ICMPEQ = 0x9f;
     // if value1 != value2

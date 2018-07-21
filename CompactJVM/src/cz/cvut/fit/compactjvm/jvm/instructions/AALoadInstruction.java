@@ -26,6 +26,6 @@ public class AALoadInstruction {
         SGenericRef[] arr = heap.readObjectArrayFromHeap(arrayRef.getReference());
         stackFrame.operandStack.push(arr[index.getValue()]);
         
-        JVMLogger.log(JVMLogger.TAG_INSTR, "AALoad: object array: "+arrayRef.getArrayType().className+"["+index.getValue()+"] -> "+arr[index.getValue()]);
+        JVMLogger.log(JVMLogger.TAG_INSTR_LOAD, "AALoad: object array: "+arrayRef.getArrayType().className+"["+index.getValue()+"] -> "+arr[index.getValue()]);
     }
 }

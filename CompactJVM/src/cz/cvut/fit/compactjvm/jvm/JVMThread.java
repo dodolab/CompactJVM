@@ -6,6 +6,9 @@ import cz.cvut.fit.compactjvm.exceptions.ArrayOutOfBoundsException;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.exceptions.OutOfHeapMemException;
 import cz.cvut.fit.compactjvm.jvm.instructions.InstructionManager;
+import cz.cvut.fit.compactjvm.structures.SArrayRef;
+import cz.cvut.fit.compactjvm.structures.SObjectRef;
+import java.io.IOException;
 
 /**
  *
@@ -36,7 +39,6 @@ public class JVMThread {
         heap.setJVMThread(this);
 
         nativeArea = new NativeArea(methodArea,heap);
-        
     }
     
     public NativeArea getNativeArea(){
@@ -59,9 +61,10 @@ public class JVMThread {
         String className = methodArea.getMainClass();
         // get main method
         ClassFile classFile = methodArea.getClassFile(className);
-        int mainMethodDefIndex = classFile.getMethodDefIndex("main", "()V");
+        int mainMethodDefIndex = classFile.getMethodDefIndex("main", "([Ljava/lang/String;)V");
         MethodDefinition def = classFile.getMethodDefinition(mainMethodDefIndex, methodArea, className, "main", "()V");
         StackFrame currentFrame = new StackFrame(classFile, mainMethodDefIndex, def, this);
+        initializeArguments(currentFrame);
         jvmStack.push(currentFrame);
         
         while(!jvmStack.isEmpty() && jvmStack.getCurrentFrame().hasMoreInstructions()) {
@@ -70,6 +73,29 @@ public class JVMThread {
        
     }
 
+    /**
+     * Zapise do haldy vsechny stringy a pole techto stringu.
+     * Referenci na toto pole ulozi do prvniho StackFrame do prvni lokalni promenne
+     * @param frame
+     * @throws OutOfHeapMemException
+     * @throws IOException 
+     */
+    public void initializeArguments(StackFrame frame) throws OutOfHeapMemException, IOException, LoadingException {
+        //vlozim stringy do heapy
+        String[] args = methodArea.getArgs();
+        SObjectRef[] argsRef = new SObjectRef[args.length];
+        for(int i = 0; i < args.length; ++i) {
+            argsRef[i] = nativeArea.writeStringToHeap(args[i]);
+        }
+        //vlozim pole referenci na stringy do heapy
+        SArrayRef argArrayRef = heap.allocObjectArray(methodArea.getClassFile("java/lang/String"), argsRef.length);
+        for(int i = 0; i < args.length; ++i) {
+            heap.writeToHeap(argArrayRef.getReference(), i, argsRef[i]);
+        }
+        //ulozim referenci na pole stringu do prvni lokalni promenne
+        frame.localVariables.setVar(0, argArrayRef);
+    }
+    
     public ObjectHeap getHeap(){
         return this.heap;
     }

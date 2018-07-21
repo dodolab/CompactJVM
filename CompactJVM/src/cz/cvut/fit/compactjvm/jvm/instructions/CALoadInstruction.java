@@ -23,6 +23,6 @@ public class CALoadInstruction {
         SChar value = heap.readFromHeap(arrayRef.getReference(), index.getValue());
         stackFrame.operandStack.push(value);
         
-        JVMLogger.log(JVMLogger.TAG_INSTR, "CALoad: array["+index+"] : "+value);
+        JVMLogger.log(JVMLogger.TAG_INSTR_LOAD, "CALoad: array["+index+"] : "+value);
     }
 }

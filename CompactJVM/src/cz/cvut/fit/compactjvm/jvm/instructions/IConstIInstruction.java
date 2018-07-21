@@ -13,7 +13,7 @@ import cz.cvut.fit.compactjvm.structures.*;
 public class IConstIInstruction {
     
     public static void run(StackFrame stackFrame, int value) throws LoadingException{
-        JVMLogger.log(JVMLogger.TAG_INSTR, "IConst: "+value);
+        JVMLogger.log(JVMLogger.TAG_INSTR_PUSH, "IConst: "+value);
         stackFrame.operandStack.push(new SInt(value));
     }
 }

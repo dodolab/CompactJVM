@@ -31,6 +31,6 @@ public class IAStoreInstruction {
         }
         
         heap.writeToHeap(arrayRef.getReference(), index.getValue(), valueToAdd);
-        JVMLogger.log(JVMLogger.TAG_INSTR,"IAStore: array["+index+"] = "+valueToAdd);
+        JVMLogger.log(JVMLogger.TAG_INSTR_STORE,"IAStore: array["+index+"] = "+valueToAdd);
     }
 }

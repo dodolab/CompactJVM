@@ -53,7 +53,7 @@ public class InvokeVirtualInstruction {
                 AAAException.throwException(e, stack, stack.jvmThread.getHeap(), methodArea);
                 
             }
-            JVMLogger.log(JVMLogger.TAG_INSTR, "InvokeVirtual native: " + method.getMethodName());
+            JVMLogger.log(JVMLogger.TAG_INSTR_INVOKE, "InvokeVirtual native: " + method.getMethodName());
         } else {
             //Lookup metody v rodicovskych tridach, pokud neni nalezena v aktualni tride
             int methodIndex;
@@ -68,7 +68,7 @@ public class InvokeVirtualInstruction {
             loadArgumentsToLocalVariables(stack.getCurrentFrame(), frame, method);
             stack.push(frame);
 
-            JVMLogger.log(JVMLogger.TAG_INSTR, "InvokeVirtual: " + method.getMethodName());
+            JVMLogger.log(JVMLogger.TAG_INSTR_INVOKE, "InvokeVirtual: " + method.getMethodName());
         }
     }
 

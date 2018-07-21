@@ -12,7 +12,7 @@ import cz.cvut.fit.compactjvm.structures.*;
 public class FConstInstruction {
     
     public static void run(StackFrame stackFrame, float value) throws LoadingException{
-        JVMLogger.log(JVMLogger.TAG_INSTR, "FConst: "+value);
+        JVMLogger.log(JVMLogger.TAG_INSTR_PUSH, "FConst: "+value);
         stackFrame.operandStack.push(new SFloat(value));
     }
 }

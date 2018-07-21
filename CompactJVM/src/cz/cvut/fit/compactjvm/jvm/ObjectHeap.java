@@ -111,7 +111,7 @@ public class ObjectHeap {
         JVMLogger.disableLogging(JVMLogger.TAG_HEAP);
         
         for(int i=0; i<arrayRef.getSize(); i++){
-            SGenericRef ref = readFromHeap(reference,i+1);
+            SGenericRef ref = readFromHeap(reference,i);
             arr[i] = ref;
         }
         
@@ -161,7 +161,7 @@ public class ObjectHeap {
         
         // write default values into heap
         for(int i=0; i<arraySize; i++){
-            writeToHeap(reference, /*reference+*/i,arr[i]); //proc reference +? i rika na kterou pozici za hlavickou budu chtit ukladat
+            writeToHeap(reference, i,arr[i]);
         }
         JVMLogger.decreaseGlobalPadding(4);
         nextFreeSpace+=wordsRequired;

@@ -24,7 +24,6 @@ public class SATSolver {
     Clauses clauses;
     int variablesCount;
     /**
-     * http://ktiml.mff.cuni.cz/~bartak/ui_seminar/talks/2014LS/BioInspiredSAT_Intro.pdf
      * @param clauses
      * @param variablesCount
      * @return 

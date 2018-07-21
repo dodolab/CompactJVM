@@ -10,7 +10,7 @@ public class LLoadNInstruction {
     
     public static void run(StackFrame stackFrame, int localVariableIndex) throws LoadingException{
         SLong value = stackFrame.localVariables.getVar(localVariableIndex);
-        JVMLogger.log(JVMLogger.TAG_INSTR, "LLoadN: "+value);
+        JVMLogger.log(JVMLogger.TAG_INSTR_LOAD, "LLoadN: "+value);
         stackFrame.operandStack.push(value);
     }
 }

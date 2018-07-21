@@ -15,7 +15,7 @@ public class AConstNullInstruction {
         
         // just push null object
         stackFrame.operandStack.push(new SObjectRef());
-        JVMLogger.log(JVMLogger.TAG_INSTR, "AConstNull");
+        JVMLogger.log(JVMLogger.TAG_INSTR_PUSH, "AConstNull");
     }
     
 }

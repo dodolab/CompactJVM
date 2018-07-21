@@ -23,6 +23,6 @@ public class IALoadInstruction {
         SInt value = heap.readFromHeap(arrayRef.getReference(), index.getValue());
         stackFrame.operandStack.push(value);
         
-        JVMLogger.log(JVMLogger.TAG_INSTR, "IALoad: array["+index+"] : "+value);
+        JVMLogger.log(JVMLogger.TAG_INSTR_LOAD, "IALoad: array["+index+"] : "+value);
     }
 }

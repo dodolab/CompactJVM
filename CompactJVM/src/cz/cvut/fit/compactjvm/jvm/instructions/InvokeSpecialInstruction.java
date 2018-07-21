@@ -30,7 +30,7 @@ public class InvokeSpecialInstruction {
         loadArgumentsToLocalVariables(stack.getCurrentFrame(), frame, method);
         stack.push(frame);
         
-        JVMLogger.log(JVMLogger.TAG_INSTR, "InvokeStatic: "+method.getMethodName());
+        JVMLogger.log(JVMLogger.TAG_INSTR_INVOKE, "InvokeStatic: "+method.getMethodName());
     }
     
     /**

@@ -18,7 +18,7 @@ public class AStoreNInstruction {
     
     public static void run(StackFrame stackFrame, int index) throws LoadingException{
         SGenericRef value = stackFrame.operandStack.pop();
-        JVMLogger.log(JVMLogger.TAG_INSTR, "AStoreN: index: "+index+"; value:"+value);
+        JVMLogger.log(JVMLogger.TAG_INSTR_STORE, "AStoreN: index: "+index+"; value:"+value);
         stackFrame.localVariables.setVar(index, value);
     }
 }

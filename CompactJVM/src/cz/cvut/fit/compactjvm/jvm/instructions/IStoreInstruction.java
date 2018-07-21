@@ -17,7 +17,7 @@ public class IStoreInstruction {
         byte localVariableIndex = stackFrame.loadInstructionSingleParam();
         SIntable value = stackFrame.operandStack.pop();
 
-        JVMLogger.log(JVMLogger.TAG_INSTR, "IStore: "+value);
+        JVMLogger.log(JVMLogger.TAG_INSTR_STORE, "IStore: "+value);
         stackFrame.localVariables.setVar(localVariableIndex, value);
     }
 }

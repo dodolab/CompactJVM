@@ -20,7 +20,7 @@ public class BaLoadInstruction {
         SByte value = heap.readFromHeap(arrayRef.getReference(), index.getValue());
         stackFrame.operandStack.push(value);
         
-        JVMLogger.log(JVMLogger.TAG_INSTR, "BaLoad: array["+index+"] : "+value);
+        JVMLogger.log(JVMLogger.TAG_INSTR_LOAD, "BaLoad: array["+index+"] : "+value);
     }
 }
 

@@ -15,9 +15,7 @@ public class IfcmpeqInstruction {
     
     public static void run(StackFrame stackFrame) throws LoadingException{
 
-        // two bytes
-        stackFrame.loadInstructionSingleParam();
-        byte nextInstruction = stackFrame.loadInstructionSingleParam();
+        int nextInstruction = stackFrame.loadInstructionJumpAddr();
         
         SIntable value2 = stackFrame.operandStack.pop();
         SIntable value1 = stackFrame.operandStack.pop();
@@ -26,10 +24,10 @@ public class IfcmpeqInstruction {
         SInt val2 = value2.toInt();
         
         if(val1.getValue() == val2.getValue()){
-            JVMLogger.log(JVMLogger.TAG_INSTR, "IfIcmpeq: "+value1+" == "+value2+"; goto "+nextInstruction);
-            stackFrame.setCurrentInstructionIndex(stackFrame.getCurrentInstructionIndex() + nextInstruction - 3);
+            stackFrame.setCurrentInstructionIndex(nextInstruction);
+            JVMLogger.log(JVMLogger.TAG_INSTR_JUMP, "IfIcmpeq: "+value1+" == "+value2+"; goto "+nextInstruction);
         }else{
-             JVMLogger.log(JVMLogger.TAG_INSTR, "IfIcmpeq: "+value1+" != "+value2);
+             JVMLogger.log(JVMLogger.TAG_INSTR_JUMP, "IfIcmpeq: "+value1+" != "+value2);
         }
     }
 }

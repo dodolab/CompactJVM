@@ -9,6 +9,7 @@ import compactjvmlab.satsolver.Clauses;
 import compactjvmlab.satsolver.FileLoader;
 import compactjvmlab.satsolver.SATSolver;
 import compactjvmlab.satsolver.VariableEvaluation;
+import cz.cvut.fit.compactjvm.proxies.JVMFunctions;
 import java.io.IOException;
 
 /**
@@ -19,7 +20,7 @@ import java.io.IOException;
 public class CompactJVMLab {
 
 
-    public static void main(/*String[] args*/) throws IOException {
+    public static void main(String[] args) throws IOException {
 
         //String s = "a a d";
         //boolean b = s.equals("a a d");
@@ -35,10 +36,11 @@ public class CompactJVMLab {
         System.out.println("Neplatny pocet argumentu");
         System.exit(1);
         }*/
-        Clauses clauses;
-        int variablesCount;
+        //Clauses clauses;
+        //int variablesCount;
         //try {
-            FileLoader fileLoader = new FileLoader("c:\\Data\\Skola\\FIT\\3. semestr\\MI-RUN\\MiRunProject\\CompactJVMLab\\data\\cnf.txt"/*args[0]*/);
+            //FileLoader fileLoader = new FileLoader("c:\\Data\\Skola\\FIT\\3. semestr\\MI-RUN\\MiRunProject\\CompactJVMLab\\data\\cnf.txt"/*args[0]*/);
+            FileLoader fileLoader = new FileLoader(args[0]);
             //clauses = fileLoader.getClauses();
             //variablesCount = fileLoader.getVariablesCount();
             //SATSolver solver = new SATSolver();

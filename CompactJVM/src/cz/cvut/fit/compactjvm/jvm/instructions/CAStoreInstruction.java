@@ -23,6 +23,6 @@ public class CAStoreInstruction {
         
         heap.writeToHeap(arrayRef.getReference(), index.getValue(), valueToAdd);
         
-        JVMLogger.log(JVMLogger.TAG_INSTR,"CAStore: array["+index+"] = "+valueToAdd);  
+        JVMLogger.log(JVMLogger.TAG_INSTR_STORE,"CAStore: array["+index+"] = "+valueToAdd);  
     }
 }

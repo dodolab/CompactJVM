@@ -28,6 +28,7 @@ public class InstructionManager {
     
     public void runInstruction(byte instructionCode) throws Exception {
         int code = instructionCode & 0xFF;
+
         switch(code) {
             //operand stack and local variables instructions
             case Instruction.IN_ISTORE: IStoreInstruction.run(jvmStack.getCurrentFrame()); break;
@@ -101,6 +102,7 @@ public class InstructionManager {
             case Instruction.IN_IF_NULL: IfnullInstruction.run(jvmStack.getCurrentFrame());break;
             case Instruction.IN_IF_NON_NULL: IfnonnullInstruction.run(jvmStack.getCurrentFrame());break;
             case Instruction.IN_IF_EQ: IfeqInstruction.run(jvmStack.getCurrentFrame());break;
+            case Instruction.IN_IF_NE: IfneInstruction.run(jvmStack.getCurrentFrame());break;
             case Instruction.IN_NEW: NewInstruction.run(jvmStack, methodArea, heap); break;
             case Instruction.IN_DUP: DupInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_INVOKESPECIAL: InvokeSpecialInstruction.run(jvmStack, methodArea); break;

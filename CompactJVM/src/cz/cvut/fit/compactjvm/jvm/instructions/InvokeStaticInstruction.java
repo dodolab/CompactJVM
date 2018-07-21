@@ -28,7 +28,7 @@ public class InvokeStaticInstruction {
         ClassFile classFile = methodArea.getClassFile(method.getMethodClass());
         
         if (method.isNativeMethod()) {
-            JVMLogger.log(JVMLogger.TAG_INSTR, "Native - InvokeStatic: " + method.getMethodName());
+            JVMLogger.log(JVMLogger.TAG_INSTR_INVOKE, "Native - InvokeStatic: " + method.getMethodName());
             // call native method
             stack.jvmThread.getNativeArea().callStaticMethod(classFile.getClassName(), method.getMethodName(), stack, method.getMethodParams().size());
         } else {
@@ -42,7 +42,7 @@ public class InvokeStaticInstruction {
             loadArgumentsToLocalVariables(stack.getCurrentFrame(), frame, method);
             stack.push(frame);
 
-            JVMLogger.log(JVMLogger.TAG_INSTR, "InvokeStatic: " + method.getMethodName());
+            JVMLogger.log(JVMLogger.TAG_INSTR_INVOKE, "InvokeStatic: " + method.getMethodName());
         }
     }
 

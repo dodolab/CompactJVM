@@ -15,7 +15,7 @@ public class LLoadInstruction {
     public static void run(StackFrame stackFrame) throws LoadingException{
         byte localVariableIndex = stackFrame.loadInstructionSingleParam();
         SLong value = stackFrame.localVariables.getVar(localVariableIndex);
-        JVMLogger.log(JVMLogger.TAG_INSTR, "LLoad: "+value);
+        JVMLogger.log(JVMLogger.TAG_INSTR_LOAD, "LLoad: "+value);
         stackFrame.operandStack.push(value);
     }
 }

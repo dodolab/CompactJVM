@@ -12,6 +12,18 @@ public class JVMLogger {
     public static final String TAG_PARSING = "PARSING";
     // instruction executing logger
     public static final String TAG_INSTR = "INSTR";
+    
+    // loading instruction (that loads anything from heap, constant pool etc.)
+    public static final String TAG_INSTR_LOAD = "INSTR_LOAD";
+    // storing instruction
+    public static final String TAG_INSTR_STORE = "INSTR_STORE";
+    // jumps (goto, throw, if)
+    public static final String TAG_INSTR_JUMP = "INSTR_JUMP";
+    // invoking instructions
+    public static final String TAG_INSTR_INVOKE = "INSTR_INVOKE";
+    // push instructions
+    public static final String TAG_INSTR_PUSH = "INSTR_PUSH";
+    
     // other
     public static final String TAG_OTHER = "OTHER";
     // garbage collector
@@ -63,10 +75,10 @@ public class JVMLogger {
     }
     
     public static void log(String tag, String msg, int padding){
-        if(tags.contains(tag)){
+        if(tags.contains(tag) || (tag.startsWith(TAG_INSTR) && tags.contains(TAG_INSTR))){
             System.out.print("["+tag+"]:: ");
             
-            if(tag.equals(TAG_INSTR)){
+            if(tag.startsWith(TAG_INSTR)){
                 // toto je naprosta prasarna, ale nechtelo se mi lezt do kazde instrukce a menit log
                 int instruct = CompactJVM.getInstance().getThreads().get(0).getStack().getCurrentInstructionIndex();
                 System.out.print("["+instruct+"]");

@@ -13,17 +13,15 @@ public class IfleInstruction {
     
     public static void run(StackFrame stackFrame) throws LoadingException{
 
-        // two bytes
-        stackFrame.loadInstructionSingleParam();
-        byte nextInstruction = stackFrame.loadInstructionSingleParam();
+        int nextInstruction = stackFrame.loadInstructionJumpAddr();
         
         SInt value = stackFrame.operandStack.pop();
         
         if(value.getValue() <= 0){
-            JVMLogger.log(JVMLogger.TAG_INSTR, "Ifle: "+value+" <= 0; goto "+nextInstruction);
-            stackFrame.setCurrentInstructionIndex(stackFrame.getCurrentInstructionIndex() + nextInstruction - 3);
+            stackFrame.setCurrentInstructionIndex(nextInstruction);
+            JVMLogger.log(JVMLogger.TAG_INSTR_JUMP, "Ifle: "+value+" <= 0; goto "+nextInstruction);
         }else{
-            JVMLogger.log(JVMLogger.TAG_INSTR, "Ifle: "+value+" > 0");
+            JVMLogger.log(JVMLogger.TAG_INSTR_JUMP, "Ifle: "+value+" > 0");
         }
     }
     

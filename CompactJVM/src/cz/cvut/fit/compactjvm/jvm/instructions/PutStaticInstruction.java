@@ -14,7 +14,7 @@ public class PutStaticInstruction {
         //byte[] fieldRefIndexBytes = stackFrame.loadInstructionParams(PARAM_COUNT);
         //int fieldRefIndex = 
         //int value = stackFrame.operandStack.popInt();
-        JVMLogger.log(JVMLogger.TAG_OTHER, "!!!!!!!!!!!!!!!!!! PutStatic: TODO");
+        JVMLogger.log(JVMLogger.TAG_INSTR_STORE, "!!!!!!!!!!!!!!!!!! PutStatic: TODO");
         //stackFrame.operandStack.pushInt(value);
     }
     

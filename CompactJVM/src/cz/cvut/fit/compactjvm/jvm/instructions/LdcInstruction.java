@@ -35,17 +35,17 @@ public class LdcInstruction {
              case ConstantPoolType.CPT_Integer:
                  CPInteger integer = (CPInteger)entity;
                  stackFrame.operandStack.push(new SInt(integer.intVal));
-                 JVMLogger.log(JVMLogger.TAG_INSTR, "Ldc Integer: " + integer.intVal);
+                 JVMLogger.log(JVMLogger.TAG_INSTR_LOAD, "Ldc Integer: " + integer.intVal);
                  break;
              case ConstantPoolType.CPT_Float:
                  CPFloat itFloat = (CPFloat)entity;
                  stackFrame.operandStack.push(new SFloat(itFloat.floatVal));
-                 JVMLogger.log(JVMLogger.TAG_INSTR, "Ldc Float: " + itFloat.floatVal);
+                 JVMLogger.log(JVMLogger.TAG_INSTR_LOAD, "Ldc Float: " + itFloat.floatVal);
                  break;
              case ConstantPoolType.CPT_Double:
                  CPDouble itDouble = (CPDouble)entity;
                  stackFrame.operandStack.push(new SDouble(itDouble.doubleVal));
-                 JVMLogger.log(JVMLogger.TAG_INSTR, "Ldc Double: " + itDouble.doubleVal);
+                 JVMLogger.log(JVMLogger.TAG_INSTR_LOAD, "Ldc Double: " + itDouble.doubleVal);
                  break;
              case ConstantPoolType.CPT_String:
                  CPString itString = (CPString)entity;
@@ -54,7 +54,7 @@ public class LdcInstruction {
                  String stringText = utf8.value;
                  SObjectRef strRef = stackFrame.jvmThread.getNativeArea().writeStringToHeap(stringText);
                  stackFrame.operandStack.push(strRef);
-                 JVMLogger.log(JVMLogger.TAG_INSTR, "Ldc String: " + stringText);
+                 JVMLogger.log(JVMLogger.TAG_INSTR_LOAD, "Ldc String: " + stringText);
                  break;
          } 
      }

@@ -13,17 +13,15 @@ public class IfnullInstruction {
     
     public static void run(StackFrame stackFrame) throws LoadingException{
 
-        // two bytes
-        stackFrame.loadInstructionSingleParam();
-        byte nextInstruction = stackFrame.loadInstructionSingleParam();
+        int nextInstruction = stackFrame.loadInstructionJumpAddr();
         
         SGenericRef value = stackFrame.operandStack.pop();
         
         if(value.isNull()){
-            JVMLogger.log(JVMLogger.TAG_INSTR, "Ifnull: "+value+" is null; goto "+nextInstruction);
-            stackFrame.setCurrentInstructionIndex(stackFrame.getCurrentInstructionIndex() + nextInstruction - 3);
+            stackFrame.setCurrentInstructionIndex(nextInstruction);
+            JVMLogger.log(JVMLogger.TAG_INSTR_JUMP, "Ifnull: "+value+" is null; goto "+nextInstruction);
         }else{
-            JVMLogger.log(JVMLogger.TAG_INSTR, "Inull: "+value+" is not null");
+            JVMLogger.log(JVMLogger.TAG_INSTR_JUMP, "Inull: "+value+" is not null");
         }
     }
 }

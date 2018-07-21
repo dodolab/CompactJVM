@@ -17,6 +17,6 @@ public class DupInstruction {
         stackFrame.operandStack.push(value);
         stackFrame.operandStack.push(value.makeCopy());
         
-        JVMLogger.log(JVMLogger.TAG_INSTR, "Dup: "+value);
+        JVMLogger.log(JVMLogger.TAG_INSTR_PUSH, "Dup: "+value);
     }
 }

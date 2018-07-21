@@ -28,7 +28,8 @@ public class Main {
         "../SatSolver/build/classes/",
         "../CompactJvmLib/build/classes/",
         "compactjvmlab/CompactJVMLab", 
-        "../cnf1.txt" // argument
+        //"../cnf1.txt" // argument
+        "F:\\cnf.txt"
         };
         
         
@@ -42,7 +43,14 @@ public class Main {
             
             // here you can enable or disable logging
             
-            JVMLogger.enableLogging(JVMLogger.TAG_INSTR);
+            // if TAG_INSTR is enabled, every instruction is logged !!
+            //JVMLogger.enableLogging(JVMLogger.TAG_INSTR);
+            JVMLogger.enableLogging(JVMLogger.TAG_INSTR_INVOKE);
+            JVMLogger.enableLogging(JVMLogger.TAG_INSTR_JUMP);
+            //JVMLogger.enableLogging(JVMLogger.TAG_INSTR_LOAD);
+            //JVMLogger.enableLogging(JVMLogger.TAG_INSTR_PUSH);
+            //JVMLogger.enableLogging(JVMLogger.TAG_INSTR_STORE);
+
             JVMLogger.enableLogging(JVMLogger.TAG_OTHER);
             //JVMLogger.enableLogging(JVMLogger.TAG_HEAP);
             JVMLogger.enableLogging(JVMLogger.TAG_GC);

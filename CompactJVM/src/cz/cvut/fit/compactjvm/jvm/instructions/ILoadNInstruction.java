@@ -14,7 +14,7 @@ public class ILoadNInstruction {
     
     public static void run(StackFrame stackFrame, int localVariableIndex) throws LoadingException{
         SIntable value = stackFrame.localVariables.getVar(localVariableIndex);
-        JVMLogger.log(JVMLogger.TAG_INSTR, "ILoadN: "+value);
+        JVMLogger.log(JVMLogger.TAG_INSTR_LOAD, "ILoadN: "+value);
         stackFrame.operandStack.push(value);
     }
 }

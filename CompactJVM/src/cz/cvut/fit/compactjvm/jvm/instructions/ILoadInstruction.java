@@ -16,7 +16,7 @@ public class ILoadInstruction {
         byte localVariableIndex = stackFrame.loadInstructionSingleParam();
         SIntable value = stackFrame.localVariables.getVar(localVariableIndex);
 
-        JVMLogger.log(JVMLogger.TAG_INSTR, "ILoad: "+value);
+        JVMLogger.log(JVMLogger.TAG_INSTR_LOAD, "ILoad: "+value);
         stackFrame.operandStack.push(value);
     }
 }

@@ -32,6 +32,6 @@ public class PutfieldInstruction {
         FLEntity fieldInfo = reference.getClassFile().getFieldInfo(nd.name, nd.descriptor, cpIndex);
         
         heap.writeToHeap(reference.getReference(), fieldInfo.dataFieldOffset, value);
-        JVMLogger.log(JVMLogger.TAG_INSTR, "Put field to heap: (reference: "+reference+", value: "+value+")");
+        JVMLogger.log(JVMLogger.TAG_INSTR_STORE, "Put field to heap: (reference: "+reference+", value: "+value+")");
     }
 }

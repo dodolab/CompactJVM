@@ -19,5 +19,7 @@
 /SatSolver/dist/
 /CompactJVMLib/dist/
 /CompactJVMLib/build/
-SatSolver/nbproject/
-CompactJVMLib/nbproject/
+/SatSolver/nbproject/
+/SatSolver/nbbuild.xml
+/CompactJVMLib/nbproject/
+/CompactJVMLib/nbbuild.xml

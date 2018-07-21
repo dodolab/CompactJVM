@@ -33,7 +33,7 @@ public class GetStaticInstruction {
         
         
         current.operandStack.push(field.getValue());
-        JVMLogger.log(JVMLogger.TAG_INSTR, "GetStatic :" +field.getValue());
+        JVMLogger.log(JVMLogger.TAG_INSTR_LOAD, "GetStatic :" +field.getValue());
         
     }
 

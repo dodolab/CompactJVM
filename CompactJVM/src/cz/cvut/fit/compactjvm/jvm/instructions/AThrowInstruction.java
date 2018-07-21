@@ -32,7 +32,7 @@ public class AThrowInstruction {
             actualFrame = stack.getCurrentFrame();
             MethodDefinition method = actualFrame.methodDefinition;
 
-            JVMLogger.log(JVMLogger.TAG_INSTR, "AThrow:: " + exception.getClassFile().getClassName());
+            JVMLogger.log(JVMLogger.TAG_INSTR_JUMP, "AThrow:: " + exception.getClassFile().getClassName());
             
             if (method == null) {
                 // propably main method
@@ -52,7 +52,7 @@ public class AThrowInstruction {
                             actualFrame.setCurrentInstructionIndex(excItem.handlerPc);
                             actualFrame.operandStack.push(exception);
 
-                            JVMLogger.log(JVMLogger.TAG_INSTR, "Catched as a " + excItem.catchClass.getClassName());
+                            JVMLogger.log(JVMLogger.TAG_INSTR_JUMP, "Catched as a " + excItem.catchClass.getClassName());
                             return;
                         }
                     }

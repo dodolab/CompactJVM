@@ -21,7 +21,7 @@ public class ALoadInstruction {
         SGenericRef value = stackFrame.localVariables.getVar(index);
         stackFrame.operandStack.push(value);
         
-        JVMLogger.log(JVMLogger.TAG_INSTR, "ALoad; index: "+index+"; value: "+value);
+        JVMLogger.log(JVMLogger.TAG_INSTR_LOAD, "ALoad; index: "+index+"; value: "+value);
     }
 
 }
