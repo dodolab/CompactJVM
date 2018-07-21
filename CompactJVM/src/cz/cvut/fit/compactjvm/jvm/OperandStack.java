@@ -1,13 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fit.compactjvm.jvm;
 
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.structures.*;
-import java.nio.ByteBuffer;
 import java.util.Stack;
 
 /**
@@ -31,6 +25,14 @@ public class OperandStack {
         return operandStack.isEmpty();
     }
 
+    /**
+     * Gets an item on the selected level of the stack
+     * Note that level = 0 is the stack peek !
+     * @param <T>
+     * @param level
+     * @return
+     * @throws LoadingException 
+     */
     public <T extends SStruct> T get(int level) throws LoadingException{
         // don't touch it!
         SStruct ent = operandStack.get(operandStack.size() - level - 1);

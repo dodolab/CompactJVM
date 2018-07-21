@@ -16,10 +16,10 @@ import cz.cvut.fit.compactjvm.cpentities.CPInteger;
 import cz.cvut.fit.compactjvm.cpentities.CPDouble;
 import cz.cvut.fit.compactjvm.cpentities.CPClass;
 import cz.cvut.fit.compactjvm.definitions.ConstantPoolType;
-import cz.cvut.fit.compactjvm.exceptions.ParsingException;
 import java.io.DataInputStream;
 import java.io.IOException;
 import cz.cvut.fit.compactjvm.jvm.JVMLogger;
+
 /**
  * Parser for constant pool
  * @author Adam Vesecky
@@ -80,6 +80,7 @@ public class ConstantPoolParser {
         
         return ent;
     }
+    
     
     public CPClass parseCPClass(DataInputStream dis) throws IOException{
         JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing CPClass",4);

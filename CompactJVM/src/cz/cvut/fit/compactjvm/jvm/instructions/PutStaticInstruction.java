@@ -1,12 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 import cz.cvut.fit.compactjvm.jvm.JVMLogger;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
-
 
 /**
  * Set static field in class
@@ -20,7 +14,7 @@ public class PutStaticInstruction {
         //byte[] fieldRefIndexBytes = stackFrame.loadInstructionParams(PARAM_COUNT);
         //int fieldRefIndex = 
         //int value = stackFrame.operandStack.popInt();
-        JVMLogger.log(JVMLogger.TAG_INSTR, "PutStatic: TODO");
+        JVMLogger.log(JVMLogger.TAG_OTHER, "!!!!!!!!!!!!!!!!!! PutStatic: TODO");
         //stackFrame.operandStack.pushInt(value);
     }
     

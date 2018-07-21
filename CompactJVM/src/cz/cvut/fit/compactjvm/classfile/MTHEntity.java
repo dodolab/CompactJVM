@@ -2,9 +2,11 @@ package cz.cvut.fit.compactjvm.classfile;
 
 import cz.cvut.fit.compactjvm.attributes.AttrCode;
 import cz.cvut.fit.compactjvm.attributes.Attribute;
+import cz.cvut.fit.compactjvm.definitions.MethodAccessFlag;
 
 /**
- *
+ * Method info entity
+ * 
  * @author Adam Vesecky
  */
 public class MTHEntity {
@@ -24,12 +26,10 @@ public class MTHEntity {
                 return (AttrCode) attrs[i];
             }
         }
-        //throw new Exception("No Code attribute in method >>"+nameIndex+"<<"); 
         return null;
-        //@todo nejaka exception poradna
     }
 
     public boolean isNativeMethod() {
-        return (this.accessFlags & 0x0100) == 0x0100;
+         return (this.accessFlags & MethodAccessFlag.ACC_NATIVE) == MethodAccessFlag.ACC_NATIVE;
     }
 }

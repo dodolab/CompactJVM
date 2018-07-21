@@ -1,13 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fit.compactjvm.jvm;
 
 import cz.cvut.fit.compactjvm.classfile.ClassFile;
 import cz.cvut.fit.compactjvm.classfile.MethodDefinition;
-import cz.cvut.fit.compactjvm.classfile.MTHEntity;
 import cz.cvut.fit.compactjvm.exceptions.ArrayOutOfBoundsException;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.exceptions.OutOfHeapMemException;
@@ -34,12 +28,8 @@ public class JVMThread {
 
     private NativeArea nativeArea;
     
-    //private StackFrame currentFrame;
-    //@todo pc register misto currentFrame?
-    
     public JVMThread(MethodArea methodArea, ObjectHeap heap) {
         jvmStack = new JVMStack(this);
-        //heap.setJVMThread(this);
         this.methodArea = methodArea;
         instructionManager = new InstructionManager(jvmStack, methodArea, heap);
         this.heap = heap;
@@ -63,12 +53,10 @@ public class JVMThread {
     
     /**
      * Spusti beh programu v tomto threadu
-     * @todo nacitani trid je treba dodelat, mozna se parametry zmeni
-     * @param className
-     * @param methodName 
      */
-    public void run(String className) throws LoadingException, ClassNotFoundException, OutOfHeapMemException, ArrayOutOfBoundsException, Exception {
+    public void run() throws LoadingException, ClassNotFoundException, OutOfHeapMemException, ArrayOutOfBoundsException, Exception {
         
+        String className = methodArea.getMainClass();
         // get main method
         ClassFile classFile = methodArea.getClassFile(className);
         int mainMethodDefIndex = classFile.getMethodDefIndex("main", "()V");

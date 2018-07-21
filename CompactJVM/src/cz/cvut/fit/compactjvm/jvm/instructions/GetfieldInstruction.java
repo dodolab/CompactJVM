@@ -1,11 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
-import cz.cvut.fit.compactjvm.classfile.Word;
+import cz.cvut.fit.compactjvm.parsing.WordParser;
 import cz.cvut.fit.compactjvm.classfile.FLEntity;
 import cz.cvut.fit.compactjvm.classfile.NameDesc;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
@@ -27,7 +22,7 @@ public class GetfieldInstruction {
     public static void run(JVMStack stack, ObjectHeap heap) throws LoadingException {
         StackFrame stackFrame = stack.getCurrentFrame();
         byte[] bytes = stackFrame.loadInstructionParams(PARAM_COUNT);
-        int cpIndex = Word.fromByteArray(bytes);
+        int cpIndex = WordParser.fromByteArray(bytes);
         
         FLEntity fieldInfo;
         

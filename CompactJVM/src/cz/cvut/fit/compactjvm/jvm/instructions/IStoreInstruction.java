@@ -1,12 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
-import cz.cvut.fit.compactjvm.jvm.MethodArea;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.jvm.JVMLogger;
 import cz.cvut.fit.compactjvm.structures.*;
@@ -18,10 +12,7 @@ import cz.cvut.fit.compactjvm.structures.*;
  */
 public class IStoreInstruction {
     
-    /**
-     * 
-     * @param stackFrame 
-     */
+
     public static void run(StackFrame stackFrame) throws LoadingException{
         byte localVariableIndex = stackFrame.loadInstructionSingleParam();
         SIntable value = stackFrame.operandStack.pop();
@@ -29,5 +20,4 @@ public class IStoreInstruction {
         JVMLogger.log(JVMLogger.TAG_INSTR, "IStore: "+value);
         stackFrame.localVariables.setVar(localVariableIndex, value);
     }
-
 }

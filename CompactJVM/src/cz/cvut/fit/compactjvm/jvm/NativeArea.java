@@ -1,12 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fit.compactjvm.jvm;
 
 import cz.cvut.fit.compactjvm.classfile.ClassFile;
-import cz.cvut.fit.compactjvm.classfile.FLEntity;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.exceptions.OutOfHeapMemException;
 import cz.cvut.fit.compactjvm.natives.FileReader;
@@ -14,29 +8,17 @@ import cz.cvut.fit.compactjvm.natives.NativeObject;
 import cz.cvut.fit.compactjvm.natives.TextReader;
 import cz.cvut.fit.compactjvm.natives.TextWriter;
 import cz.cvut.fit.compactjvm.structures.SArrayRef;
-import cz.cvut.fit.compactjvm.structures.SBoolean;
 import cz.cvut.fit.compactjvm.structures.SByte;
 import cz.cvut.fit.compactjvm.structures.SChar;
 import cz.cvut.fit.compactjvm.structures.SInt;
 import cz.cvut.fit.compactjvm.structures.SObjectRef;
 import cz.cvut.fit.compactjvm.structures.SStruct;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-import java.util.Stack;
 
 /**
- * Nativky
+ * Class used for invoking native methods and creating native objects
  *
  * @author Adam Vesecky
  */
@@ -50,8 +32,18 @@ public class NativeArea {
         this.heap = heap;
     }
 
-    public void callMethod(String className, String methodName, JVMStack stack, int numParams) throws LoadingException {
+    /**
+     * Calls the static native method
+     * Method must be from class JVMFunctions, located in CompactJVMLib project
+     * @param className name of class
+     * @param methodName name of method
+     * @param stack
+     * @param numParams
+     * @throws LoadingException 
+     */
+    public void callStaticMethod(String className, String methodName, JVMStack stack, int numParams) throws LoadingException {
 
+        // parse static method
         String rawClassName = className.substring(className.lastIndexOf("/") + 1);
         if (rawClassName.equals("JVMFunctions")) {
             switch (methodName) {
@@ -69,9 +61,18 @@ public class NativeArea {
         }
     }
 
+    /**
+     * Creates a new native object
+     * Native objects are connected with SObjectRef references and can be used
+     * to invoke native methods
+     * @param className
+     * @return
+     * @throws LoadingException 
+     */
     public NativeObject createNativeObject(String className) throws LoadingException {
         String rawClassName = className.substring(className.lastIndexOf("/") + 1);
 
+        // create object based on class name
         switch (rawClassName) {
             case "FileReader":
                 return new FileReader();
@@ -84,7 +85,12 @@ public class NativeArea {
         }
     }
 
-    public SObjectRef writeStringToHeap(String stringText) throws OutOfHeapMemException {
+    /**
+     * Writes string to the heap as a char array
+     * @param stringText
+     * @return
+     */
+    public SObjectRef writeStringToHeap(String stringText) throws OutOfHeapMemException, IOException {
         if (stringText != null) {
             char[] stringData = stringText.toCharArray();
             SChar[] charData = new SChar[stringData.length];
@@ -97,11 +103,16 @@ public class NativeArea {
             heap.writeToHeap(strDataRef.getReference(), 0, charDataRef);
             return strDataRef;
         } else {
-            // return null;
+            // null;
             return new SObjectRef();
         }
     }
 
+    /**
+     * Reads a string from the heap; each string is stored as a char array
+     * @param objectRef
+     * @return 
+     */
     public String readStringFromHeap(SObjectRef objectRef) {
         SArrayRef charDataRef = heap.readFromHeap(objectRef.getReference(), 0);
         SStruct[] charData = (SStruct[]) heap.readPrimitiveArrayFromHeap(charDataRef.getReference());
@@ -116,6 +127,7 @@ public class NativeArea {
         return new String(charArr);
     }
 
+    // println native function
     private void jvm_println(JVMStack stack, int numParams) throws LoadingException {
 
         ArrayList<String> messages = new ArrayList<String>();
@@ -151,6 +163,7 @@ public class NativeArea {
         JVMLogger.log(JVMLogger.TAG_PRINT, output.toString());
     }
     
+    // parseInt native function
     private void jvm_parseInt(JVMStack stack, int numParams) throws LoadingException {
         SObjectRef struct = stack.getCurrentFrame().operandStack.pop();
         String str = readStringFromHeap((SObjectRef) struct);

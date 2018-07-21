@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fit.compactjvm.jvm;
 
 import cz.cvut.fit.compactjvm.classfile.ClassFile;
@@ -11,7 +6,7 @@ import cz.cvut.fit.compactjvm.attributes.AttrCode;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 
 /**
- *
+ * Stack frame
  * @author Nick Nemame
  */
 public class StackFrame {
@@ -23,11 +18,11 @@ public class StackFrame {
     private AttrCode codeAttribute; //obsahuje instrukce pro vykonani metody
     private int currentInstructionIndex; //index v poli instrukci
     public MethodDefinition methodDefinition = null; //Definice metody - nazev tridy, nazev metody, rozparsovany descriptor
-    /** @todo tohle by melo byt spis v pcRegistru u JVM threadu, ale jak se pak dostanu
-     k mistu, kde jsem byl v predchozim framu pred vyvolanim metody? */
+
     public JVMThread jvmThread;
     
     /**
+     * Creates a new stack frame 
      * @param classFile
      * @param invokedMethod
      * @param methodDefinition

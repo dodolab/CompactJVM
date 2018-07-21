@@ -1,10 +1,9 @@
 package cz.cvut.fit.compactjvm.cpentities;
 
 import cz.cvut.fit.compactjvm.definitions.ConstantPoolType;
-import java.io.DataInputStream;
 
 /**
- *
+ * Constant pool class entity
  * @author Adam Vesecky
  */
 public class CPClass extends CPEntity{

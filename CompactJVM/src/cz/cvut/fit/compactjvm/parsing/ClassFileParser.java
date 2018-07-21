@@ -11,8 +11,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import cz.cvut.fit.compactjvm.jvm.JVMLogger;
+
 /**
- *
+ * Class file parser
  * @author Adam Vesecky
  */
 public class ClassFileParser {

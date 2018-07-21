@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fit.compactjvm.structures;
 
 import cz.cvut.fit.compactjvm.classfile.ClassFile;
@@ -63,9 +58,9 @@ public class SObjectRef extends SGenericRef{
     @Override
     public String toString() {
         if(this.isNull()){
-            return "SObjectRef[null]";
+            return "object(null)";
         }else{
-            return "SObjectRef["+(this.classFile == null ? "???" : this.classFile.getClassName())+"]["+this.heapReference+"]";
+            return "object#"+this.heapReference+"#("+(this.classFile == null ? "???" : this.classFile.getClassName())+")";
         }
     }
 

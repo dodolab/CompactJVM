@@ -1,20 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
-import cz.cvut.fit.compactjvm.jvm.JVMLogger;
 import cz.cvut.fit.compactjvm.structures.SInt;
 import cz.cvut.fit.compactjvm.jvm.JVMLogger;
-import cz.cvut.fit.compactjvm.structures.SBoolean;
-import cz.cvut.fit.compactjvm.structures.SByte;
-import cz.cvut.fit.compactjvm.structures.SChar;
 import cz.cvut.fit.compactjvm.structures.SIntable;
-import cz.cvut.fit.compactjvm.structures.SShort;
 
 /**
  *  if value1 is not equal to value2, branch to instruction at branchoffset (signed short constructed from unsigned bytes branchbyte1 << 8 + branchbyte2)
@@ -41,5 +31,4 @@ public class IfcmpneInstruction {
              JVMLogger.log(JVMLogger.TAG_INSTR, "IfIcmpne: "+value1+" == "+value2);
         }
     }
-    
 }

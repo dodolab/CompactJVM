@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
@@ -19,9 +14,7 @@ import cz.cvut.fit.compactjvm.structures.*;
  */
 public class ReturnInstruction {
 
-    /**
-     * @param stack
-     */
+
     public static void run(JVMStack stack) throws LoadingException{
         
         while(!stack.getCurrentFrame().operandStack.isEmpty()){
@@ -29,7 +22,5 @@ public class ReturnInstruction {
         }
         stack.removeCurrentFrame();
         JVMLogger.log(JVMLogger.TAG_INSTR, "Executed return instruction");
-        
     }
-
 }

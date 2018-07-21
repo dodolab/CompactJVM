@@ -1,19 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fit.compactjvm.jvm;
 
 import cz.cvut.fit.compactjvm.classfile.ClassFile;
 import cz.cvut.fit.compactjvm.parsing.ClassFileLoader;
-import cz.cvut.fit.compactjvm.exceptions.ParsingException;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Tato trida uchovava parsovane definice trid.
@@ -28,6 +18,8 @@ import java.util.logging.Logger;
 public class MethodArea {
     
     private final ClassFileLoader classLoader;
+    private String mainClass;
+    private String[] arguments;
     
     // simple class storage
     private final JVMClassStorage classStorage;
@@ -43,6 +35,13 @@ public class MethodArea {
     }
     
     
+    public void initialize(String classPath, String libraryPath, String mainClass, String[] arguments){
+        classLoader.setClassPath(classPath);
+        classLoader.setLibraryPath(libraryPath);
+        this.mainClass = mainClass;
+        this.arguments = arguments;
+    }
+    
     /**
      * Vrati ClassFile, pokud jej JVM jeste nema naparsovany, musi jej nejprve
      * nacist a pak naparsovat - momentalne takto lazy-load.
@@ -52,7 +51,7 @@ public class MethodArea {
      * @param className
      * @return 
      */
-    public ClassFile getClassFile(String className) {
+    public ClassFile getClassFile(String className) throws IOException {
         if(classStorage.containsClass(className)) {
             try {
                 return classStorage.getClass(className);
@@ -60,6 +59,8 @@ public class MethodArea {
                // never thrown :-)
             }
         }
+      
+        
         ClassFile classFile = classLoader.load(className);
         classStorage.addClass(classFile);
         
@@ -88,7 +89,7 @@ public class MethodArea {
         return classFile;
     }
     
-    public boolean isSuperClass(ClassFile parent, ClassFile child){
+    public boolean isSuperClass(ClassFile parent, ClassFile child) throws IOException{
         if(parent.getClassName().equals(child.getClassName())) return true;
         else if(child.getSuperclassName() != null){
             ClassFile superChild = getClassFile(child.getClassName());
@@ -98,23 +99,25 @@ public class MethodArea {
         return false;
     }
     
-    public void initialLoad(String classPath) {
-        //return "";
-    }
-    
-    public ClassFile getClassFileByIndex(int index) {
-        return null;
-    }
     
     public List<ClassFile> getLoadedClassFiles() {
         return classStorage.getClassFiles();
+    }
+    
+    
+    public String getMainClass(){
+        return mainClass;
+    }
+    
+    public String[] getArgs(){
+        return arguments;
     }
     
     /**
      * Bez informace o predcich tridy nejsme schopni presne spocitat offset vlastnosti
      * v halde. Proto prepocitame
      */
-    private void recalculateFieldOffsets(ClassFile classFile) {
+    private void recalculateFieldOffsets(ClassFile classFile) throws IOException {
         if(!classFile.fieldOffsetsRecalculated) {
             if(classFile.getSuperclassName() != null) {
                 ClassFile superClassFile = getClassFile(classFile.getSuperclassName());
@@ -128,7 +131,4 @@ public class MethodArea {
             classFile.fieldOffsetsRecalculated = true;
         }
     }
-    
-    
-    
-};
+}

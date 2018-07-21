@@ -1,7 +1,7 @@
 package cz.cvut.fit.compactjvm.exceptions;
 
 /**
- *
+ * Exceptions that is thrown during classfile parsing
  * @author Adam Vesecky
  */
 

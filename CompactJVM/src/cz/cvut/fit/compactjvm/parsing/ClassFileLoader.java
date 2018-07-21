@@ -1,55 +1,89 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fit.compactjvm.parsing;
 
-import cz.cvut.fit.compactjvm.parsing.ClassFileParser;
 import cz.cvut.fit.compactjvm.classfile.ClassFile;
 import cz.cvut.fit.compactjvm.exceptions.ParsingException;
-import cz.cvut.fit.compactjvm.jvm.CompactJVM;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import cz.cvut.fit.compactjvm.jvm.JVMLogger;
+import java.io.File;
+
 /**
- *
+ * Class file loader
  * @author Nick Nemame
  */
 public class ClassFileLoader {
-    
-    ClassFileParser parser;
+
+    private String classPath;
+    private String libraryPath;
+    private ClassFileParser parser;
 
     public ClassFileLoader() {
         this.parser = new ClassFileParser();
     }
-    
-    
-    
+
     /**
-     * Nacte class file a zparsuje jej. Zde bude implementovana metoda vyhledavani
-     * souboru - bud striktne podle namespace nebo prohledavanim celeho CLASSPATH
-     * @param className Fully quantified name
+     * Sets path to the class files of the running application
+     * @param classPath 
+     */
+    public void setClassPath(String classPath) {
+        this.classPath = classPath;
+    }
+
+    /**
+     * Sets path to the library class files (project CompactJVMLib)
+     * @param libraryPath 
+     */
+    public void setLibraryPath(String libraryPath) {
+        this.libraryPath = libraryPath;
+    }
+
+    /**
+     * Gets path to the class files of the running application
      * @return 
      */
-    public ClassFile load(String className) {
-        
+    public String getClassPath() {
+        return classPath;
+    }
+
+    /**
+     * Gets path to the library class files (project CompactJVMLib)
+     * @return 
+     */
+    public String getLibraryPath() {
+        return libraryPath;
+    }
+
+    /**
+     * Nacte class file a zparsuje jej. Zde bude implementovana metoda
+     * vyhledavani souboru - bud striktne podle namespace nebo prohledavanim
+     * celeho CLASSPATH
+     *
+     * @param className Fully quantified name
+     * @return
+     */
+    public ClassFile load(String className) throws IOException {
+
         // load testing class file
-        String classPath = "../CompactJVMLab/build/classes/"+className+".class";
-        
+        String fullPath = classPath + className + ".class";
+
+        // try program path and library path
+        if (!new File(fullPath).exists()) {
+            fullPath = libraryPath + className + ".class";
+            if (!new File(fullPath).exists()) {
+                throw new IOException("Cannot parse file " + fullPath + ". File may not exist.");
+            }
+        }
+
         ClassFile classFile = null;
         try {
-            classFile = parseFile(classPath);
+            classFile = parseFile(fullPath);
         } catch (IOException | ParsingException ex) {
-            JVMLogger.log(JVMLogger.TAG_OTHER, "Cannot parse file "+classPath+". File may not exist.");
+            JVMLogger.log(JVMLogger.TAG_OTHER, "Cannot parse file " + fullPath + ". File may not exist.");
         }
         return classFile;
     }
-    
+
     public ClassFile parseFile(String path) throws IOException, ParsingException {
         ClassFile cls = parser.parseClassFile(path);
         return cls;
     }
-    
 }

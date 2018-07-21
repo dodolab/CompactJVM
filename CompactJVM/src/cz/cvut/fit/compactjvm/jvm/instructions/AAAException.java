@@ -1,12 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
 import cz.cvut.fit.compactjvm.classfile.ClassFile;
-import cz.cvut.fit.compactjvm.classfile.FLEntity;
 import cz.cvut.fit.compactjvm.definitions.Instruction;
 import cz.cvut.fit.compactjvm.exceptions.OutOfHeapMemException;
 import cz.cvut.fit.compactjvm.jvm.JVMLogger;

@@ -8,6 +8,7 @@ import cz.cvut.fit.compactjvm.exceptions.ParsingException;
 import java.io.DataInputStream;
 import java.io.IOException;
 import cz.cvut.fit.compactjvm.jvm.JVMLogger;
+
 /**
  * Parser for fieldinfo
  *

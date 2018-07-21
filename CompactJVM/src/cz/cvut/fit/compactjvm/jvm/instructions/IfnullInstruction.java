@@ -1,18 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.jvm.JVMLogger;
 import cz.cvut.fit.compactjvm.structures.SGenericRef;
-import cz.cvut.fit.compactjvm.structures.SInt;
 
 /**
- * If null.... 
+ * If null, goto ...
  * @author Adam Vesecky
  */
 public class IfnullInstruction {
@@ -32,5 +26,4 @@ public class IfnullInstruction {
             JVMLogger.log(JVMLogger.TAG_INSTR, "Inull: "+value+" is not null");
         }
     }
-    
 }

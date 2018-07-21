@@ -1,13 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
-import cz.cvut.fit.compactjvm.jvm.GarbageCollector;
-import cz.cvut.fit.compactjvm.jvm.MethodArea;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.jvm.JVMLogger;
 import cz.cvut.fit.compactjvm.structures.*;
@@ -29,10 +22,5 @@ public class ISubInstruction {
         
         SStruct value = new SInt(operand1.getValue() - operand2.getValue());
         stackFrame.operandStack.push(value);
-        
-      
-        // run garbage collector
-        //new AnotherGarbageCollector(stackFrame.jvmThread.getHeap(),stackFrame.jvmThread.getStack()).runGC();
     }
-
 }

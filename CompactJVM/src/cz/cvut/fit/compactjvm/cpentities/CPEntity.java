@@ -1,9 +1,8 @@
 package cz.cvut.fit.compactjvm.cpentities;
 
-import java.io.DataInputStream;
 
 /**
- * Constant pool entity
+ * Common class for Constant pool entities
  * 
  * @author Adam Vesecky
  */

@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
-import cz.cvut.fit.compactjvm.classfile.ClassFile;
 import cz.cvut.fit.compactjvm.cpentities.CPString;
 import cz.cvut.fit.compactjvm.cpentities.CPFloat;
 import cz.cvut.fit.compactjvm.cpentities.CPUtf8;
@@ -20,6 +14,7 @@ import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.jvm.JVMLogger;
 import cz.cvut.fit.compactjvm.jvm.MethodArea;
 import cz.cvut.fit.compactjvm.structures.*;
+import java.io.IOException;
 
 /**
  * Push item form run-time constant pool
@@ -29,7 +24,7 @@ import cz.cvut.fit.compactjvm.structures.*;
 public class LdcInstruction {
  
     
-     public static void run(StackFrame stackFrame, MethodArea methodArea, ObjectHeap heap) throws LoadingException, OutOfHeapMemException
+     public static void run(StackFrame stackFrame, MethodArea methodArea, ObjectHeap heap) throws LoadingException, OutOfHeapMemException, IOException
      {
          // get constant pool index
          byte cstPoolIndex = stackFrame.loadInstructionSingleParam();
@@ -61,9 +56,6 @@ public class LdcInstruction {
                  stackFrame.operandStack.push(strRef);
                  JVMLogger.log(JVMLogger.TAG_INSTR, "Ldc String: " + stringText);
                  break;
-         }
-
-         
+         } 
      }
-     
 }

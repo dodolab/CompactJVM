@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
 import cz.cvut.fit.compactjvm.exceptions.ArrayOutOfBoundsException;
@@ -31,14 +26,13 @@ public class AAStoreInstruction {
         SArrayRef arrayRef = stackFrame.operandStack.pop();
         
         if(index.getValue() >= arrayRef.getSize()){
+            // throw exception inside
             AAAException.throwException(new ArrayOutOfBoundsException("Maximum index is "+(arrayRef.getSize() - 1)+", "+index.getValue()+" given.")
                     , stackFrame.jvmThread.getStack(), heap, methodArea);
-            //throw new ArrayOutOfBoundsException("Maximum index is "+(arrayRef.getSize() - 1)+", "+index.getValue()+" given.");
             return;
         }
         
         heap.writeToHeap(arrayRef.getReference(), index.getValue()+1, value);
-        //ref[index.getValue()] = value;
         
         JVMLogger.log(JVMLogger.TAG_INSTR, "AAStoreN: object array: "+arrayRef.getArrayType().className+"["+index.getValue()+"] = "+value);
     }

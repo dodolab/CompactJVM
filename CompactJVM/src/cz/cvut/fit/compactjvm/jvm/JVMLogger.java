@@ -1,19 +1,9 @@
 package cz.cvut.fit.compactjvm.jvm;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
-import cz.cvut.fit.compactjvm.jvm.CompactJVM;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
- * Very simple logger
+ * Very simple logger that uses tags that can be either enabled or disabled
  * @author Adam Vesecky
  */
 public class JVMLogger {
@@ -22,30 +12,44 @@ public class JVMLogger {
     public static final String TAG_PARSING = "PARSING";
     // instruction executing logger
     public static final String TAG_INSTR = "INSTR";
-    // other - will be replaced continuously
+    // other
     public static final String TAG_OTHER = "OTHER";
     // garbage collector
     public static final String TAG_GC = "GC";
     // heap
     public static final String TAG_HEAP = "HEAP";
-    
+    // console output from running program
     public static final String TAG_PRINT = "PRINT";
     
     private static final ArrayList<String> tags = new ArrayList<String>();
     private static int globalPadding = 0;
     
+    /**
+     *  increases padding so that next logs will be padded
+     */
     public static void increaseGlobalPadding(int padding){
         if(globalPadding + padding > 0) globalPadding += padding;
     }
     
+    /**
+     *  decreases padding
+     */
     public static void decreaseGlobalPadding(int padding){
         if(globalPadding - padding > 0) globalPadding-=padding;
     }
     
+    /**
+     * enables logging
+     * @param tag 
+     */
     public static void enableLogging(String tag){
         if(!tags.contains(tag)) tags.add(tag);
     }
-    
+
+    /**
+     * disables logging
+     * @param tag 
+     */
     public static void disableLogging(String tag){
         if(tags.contains(tag)) tags.remove(tag);
     }

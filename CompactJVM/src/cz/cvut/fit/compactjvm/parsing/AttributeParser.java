@@ -12,12 +12,18 @@ import cz.cvut.fit.compactjvm.exceptions.ParsingException;
 import java.io.DataInputStream;
 import java.io.IOException;
 import cz.cvut.fit.compactjvm.jvm.JVMLogger;
+
+
 /**
- *
+ * Attribute parser
  * @author Adam Vesecky
  */
 public class AttributeParser {
 
+    /**
+     * Parses attribute from classfile
+     * @throws ParsingException 
+     */
     public Attribute parseAttributeEntity(ClassFile cls, DataInputStream dis) throws IOException, ParsingException {
 
         int nameIndex = dis.readShort();
@@ -28,6 +34,8 @@ public class AttributeParser {
 
         JVMLogger.log(JVMLogger.TAG_PARSING, "Parsing attribute "+name,10);
         
+        // parse only attribute that we may need ...
+        
         switch (name) {
             case AttributeType.ATTR_ANNOTDEF:
                 skipAttribute(cls, dis);
@@ -35,7 +43,7 @@ public class AttributeParser {
             case AttributeType.ATTR_BOOTSTRAP:
                 skipAttribute(cls, dis);
                 break;
-            case AttributeType.ATTR_CODE://
+            case AttributeType.ATTR_CODE:
                 attr = parseCodeAttribute(cls, dis);
                 break;
             case AttributeType.ATTR_CONSTANTVALUE:
@@ -177,5 +185,4 @@ public class AttributeParser {
         JVMLogger.log(JVMLogger.TAG_PARSING, "Source file: "+sourceFile,10);
         return attr;
     }
-
 }

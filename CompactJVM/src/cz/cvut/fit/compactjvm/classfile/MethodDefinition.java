@@ -1,11 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fit.compactjvm.classfile;
 
 import cz.cvut.fit.compactjvm.attributes.AttrExcTableItem;
+import cz.cvut.fit.compactjvm.definitions.MethodAccessFlag;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +53,7 @@ public final class MethodDefinition {
     }
     
     public boolean isNativeMethod(){
-        return (this.accessFlags & 0x0100) == 0x0100;
+        return (this.accessFlags & MethodAccessFlag.ACC_NATIVE) == MethodAccessFlag.ACC_NATIVE;
     }
     
     /**

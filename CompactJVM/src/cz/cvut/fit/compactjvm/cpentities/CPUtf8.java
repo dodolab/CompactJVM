@@ -1,10 +1,8 @@
 package cz.cvut.fit.compactjvm.cpentities;
 
 import cz.cvut.fit.compactjvm.definitions.ConstantPoolType;
-import java.io.DataInputStream;
-
 /**
- *
+ * Constant pool utf8 entity
  * @author Adam Vesecky
  */
 public class CPUtf8 extends CPEntity{

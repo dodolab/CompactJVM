@@ -1,29 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fit.compactjvm.jvm;
 
 import cz.cvut.fit.compactjvm.classfile.ClassFile;
-import cz.cvut.fit.compactjvm.classfile.FLEntity;
 import cz.cvut.fit.compactjvm.exceptions.OutOfHeapMemException;
 import cz.cvut.fit.compactjvm.structures.SGenericRef;
 import cz.cvut.fit.compactjvm.structures.*;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
 
 /**
- * @todp Tady bude prostor pro alokovane objekty, pole atd.
+ * Heap of the virtual machine
  * @author Nick Nemame
  */
 public class ObjectHeap {
-
-    public static final int FORWARDING_POINTER = -1;
-
-    private final int ARRAY_INDEX = -1000;
 
     // Halda - puleni haldy je definovano pomoci activeHeapOffset a inactiveHeapOffset
     // Pri stridani se budou tyto dve hodnoty stridat
@@ -42,7 +28,6 @@ public class ObjectHeap {
     private int nextFreeSpace;
 
     private MethodArea methodArea;
-
     private JVMThread jvmThread;
 
     public ObjectHeap(MethodArea methodArea, int size) {
@@ -64,30 +49,7 @@ public class ObjectHeap {
         this.jvmThread = thread;
     }
 
-    /**
-     * Nastavi forwarding pointer na misto v nove halde. Prvni slovo znaci
-     * informaci, ze jde o forwarding pointer, druhe slovo obsahuje tento
-     * pointer.
-     *
-     * @param oldReference
-     * @param newReference
-     */
- /*   public void setForwardingPointer(int oldReference, int newReference) {
-        writeToActiveHeap(oldReference, new SInt(FORWARDING_POINTER));
-        writeToActiveHeap(oldReference + 1, new SInt(newReference));
-    }*/
-
-    /**
-     * Zjisti, zda na miste, kam ukazuje puvodni reference, je jiz forwarding
-     * pointer
-     *
-     * @param oldReference
-     * @return
-     */
- /*   public boolean isForwardingPointer(int oldReference) {
-        return ((SInt)readFromActiveHeap(oldReference)).getValue() == FORWARDING_POINTER;
-    }*/
-
+  
     /**
      * Zapise do haldy (index je index v datove casti) Pr: Obsahuje-li zaznam 2
      * slova v hlavicce (1. slovo index tridy, 2. slovo napriklad pro GC), pak
@@ -100,7 +62,7 @@ public class ObjectHeap {
      */
     public <T extends SStruct> void writeToHeap(int reference, int index, T value) {
         JVMLogger.log(JVMLogger.TAG_HEAP, "Write #"+reference+"#["+index+"]-->"+value);
-        int headerSize = 1; //(getClassIndex(reference) == ARRAY_INDEX) ? getArrayHeaderSize() : getObjectHeaderSize();
+        int headerSize = 1; 
         writeToActiveHeap(reference + headerSize + index, value);
     }
 
@@ -118,6 +80,11 @@ public class ObjectHeap {
         return output;
     }
     
+    /**
+     * Reads a primitive array from heap, based on reference
+     * @param reference
+     * @return 
+     */
     public SStruct[] readPrimitiveArrayFromHeap(int reference){
         SArrayRef arrayRef = readFromActiveHeap(reference);
         SStruct[] arr = new SStruct[arrayRef.getSize()];
@@ -139,7 +106,7 @@ public class ObjectHeap {
         
         JVMLogger.log(JVMLogger.TAG_HEAP, "Read object array #"+reference+"#-->"+arrayRef);
         
-        // disable logging for that moment
+        // disable logging for that moment (we don't need to have each read in the log)
         boolean loggingEnabled = JVMLogger.loggingEnabled(JVMLogger.TAG_HEAP);
         JVMLogger.disableLogging(JVMLogger.TAG_HEAP);
         
@@ -202,6 +169,11 @@ public class ObjectHeap {
         return ref;
     }
 
+    /**
+     * Allocates an object array
+     * @return
+     * @throws OutOfHeapMemException 
+     */
     public SArrayRef allocObjectArray(ClassFile classFile, int arraySize) throws OutOfHeapMemException{
         
         int reference = nextFreeSpace;
@@ -282,6 +254,12 @@ public class ObjectHeap {
         nextFreeSpace = 0;
     }
     
+    /**
+     * Moves object from old heap based on reference
+     * Note that this method must be called IMMEDIATELY after swapHeap and
+     * before any writing or reading
+     * @param oldReference 
+     */
     public void moveObjectFromOldHeap(int oldReference){    
         SGenericRef ref = readFromSpareHeap(oldReference);
         int newIndex = nextFreeSpace++;
@@ -313,18 +291,6 @@ public class ObjectHeap {
         }
     }
 
-
-    /**
-     * Vrati class index (tzn. prvni slovo, kam ukazuje reference, pokud jde o
-     * pole)
-     *
-     * @param reference
-     * @return
-     */
-   /* public int getClassIndex(int reference) {
-        return readFromActiveHeap(reference);
-    }*/
-
     /**
      * Zjisti, zda se vejde potrebny pocet slov do haldy
      *
@@ -336,34 +302,4 @@ public class ObjectHeap {
     private boolean isFull(int wordsRequired) {
         return (heapSize - nextFreeSpace) < wordsRequired;
     }
-
-    /**
-     * Ziska reference objektu, ktery je umisten na halde. Pokud jde o tridu,
-     * pak nacte pole fields a z nej podle deskriptoru najde reference na pole a
-     * objekty. Pokud jde o pole, pak musim rozlisit, zda jde o pole
-     * jednoduchych typu (ty neobsahuji dalsi reference), nebo zda jde o pole
-     * objektu
-     *
-     * @todo vyresit
-     *
-     * @param objectReference
-     * @return
-     */
-  /*  private List<Integer> getObjectReferences(int objectReference) {
-        List<Integer> references = new ArrayList<>();
-        int classIndex = getClassIndex(objectReference);
-        if (classIndex == ARRAY_INDEX) {
-          
-        } else {
-            ClassFile classFile = methodArea.getClassFileByIndex(classIndex);
-            for (FLEntity field : classFile.fieldInfos) {
-                if (field.descriptor.startsWith("L") || field.descriptor.startsWith("[")) {
-                    references.add(field.dataFieldOffset);
-                }
-            }
-
-        }
-        return references;
-    }*/
-
 }

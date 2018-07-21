@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
@@ -22,7 +17,6 @@ public class AStoreNInstruction {
     }
     
     public static void run(StackFrame stackFrame, int index) throws LoadingException{
-        
         SGenericRef value = stackFrame.operandStack.pop();
         JVMLogger.log(JVMLogger.TAG_INSTR, "AStoreN: index: "+index+"; value:"+value);
         stackFrame.localVariables.setVar(index, value);

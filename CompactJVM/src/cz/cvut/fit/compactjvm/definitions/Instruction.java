@@ -1,7 +1,7 @@
 package cz.cvut.fit.compactjvm.definitions;
 
 /**
- *
+ * Codes of implemented instructions
  * @author Adam Vesecky
  */
 public class Instruction {

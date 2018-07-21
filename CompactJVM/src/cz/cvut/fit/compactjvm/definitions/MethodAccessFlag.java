@@ -6,7 +6,7 @@
 package cz.cvut.fit.compactjvm.definitions;
 
 /**
- *
+ * Method access flags
  * @author Nick Nemame
  */
 public class MethodAccessFlag {

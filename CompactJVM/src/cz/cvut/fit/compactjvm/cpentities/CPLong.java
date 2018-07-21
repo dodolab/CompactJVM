@@ -1,10 +1,10 @@
 package cz.cvut.fit.compactjvm.cpentities;
 
 import cz.cvut.fit.compactjvm.definitions.ConstantPoolType;
-import java.io.DataInputStream;
+
 
 /**
- *
+ * Constant pool long entity
  * @author Adam Vesecky
  */
 public class CPLong extends CPEntity{

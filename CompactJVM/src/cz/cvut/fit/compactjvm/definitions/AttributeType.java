@@ -1,11 +1,11 @@
 package cz.cvut.fit.compactjvm.definitions;
 
 /**
- *
+ * Attribute names
  * @author Adam Vesecky
  */
 public class AttributeType {
-    // attribute names (there is no better way to detect attribute type, i think...)
+    // attribute names
     public static final String ATTR_CONSTANTVALUE = "ConstantValue";
     public static final String ATTR_CODE = "Code";
     public static final String ATTR_STACKMAPTAB = "StackMapTable";

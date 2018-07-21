@@ -3,7 +3,6 @@ package cz.cvut.fit.compactjvm.classfile;
 import cz.cvut.fit.compactjvm.attributes.Attribute;
 
 /**
- *
  * Field info entity
  *
  * @author Adam Vesecky

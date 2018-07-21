@@ -1,12 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fit.compactjvm.jvm.instructions;
 
 import cz.cvut.fit.compactjvm.classfile.MethodDefinition;
-import cz.cvut.fit.compactjvm.classfile.MTHEntity;
 import cz.cvut.fit.compactjvm.classfile.MethodExcTableItem;
 import cz.cvut.fit.compactjvm.exceptions.LoadingException;
 import cz.cvut.fit.compactjvm.jvm.JVMStack;
@@ -14,6 +8,7 @@ import cz.cvut.fit.compactjvm.jvm.MethodArea;
 import cz.cvut.fit.compactjvm.jvm.StackFrame;
 import cz.cvut.fit.compactjvm.jvm.JVMLogger;
 import cz.cvut.fit.compactjvm.structures.SObjectRef;
+import java.io.IOException;
 
 /**
  * Throws exception of error
@@ -22,7 +17,7 @@ import cz.cvut.fit.compactjvm.structures.SObjectRef;
  */
 public class AThrowInstruction {
 
-    public static void run(JVMStack stack, MethodArea methodArea) throws LoadingException {
+    public static void run(JVMStack stack, MethodArea methodArea) throws LoadingException, IOException {
 
         // first of all, get exception reference
         SObjectRef exception = stack.getCurrentFrame().operandStack.pop();
@@ -40,12 +35,13 @@ public class AThrowInstruction {
             JVMLogger.log(JVMLogger.TAG_INSTR, "AThrow:: " + exception.getClassFile().getClassName());
             
             if (method == null) {
-                // probably main method
+                // propably main method
                 throw new RuntimeException("Method definition not found and exception has been thrown!! Leaving main method and exiting... ");
             }
 
             MethodExcTableItem[] excTable = method.getExceptionTable();
 
+            // search exception handler in exception table
             if (excTable != null) {
                 for (int i = 0; i < excTable.length; i++) {
                     MethodExcTableItem excItem = excTable[i];

@@ -1,25 +1,23 @@
-# Compiled class file
-*.class
-
-# Log file
-*.log
-
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-CompactJVM/nbproject/
-CompactJVMLab/nbproject/
+/CompactJVM/nbproject/
+/CompactJVM/build/
+/CompactJVM/dist/
+/CompactJVM/build.xml
+/CompactJVM/manifest.mf
+/CompactJVM/.classpath
+/CompactJVM/.project
+/CompactJVMLab/nbproject/
+/CompactJVMLab/build/
+/CompactJVMLab/dist/
+/CompactJVMLab/build.xml
+/CompactJVMLab/manifest.mf
+/CompactJVMLab/.classpath
+/CompactJVMLab/.project
+/CompactJVMLab/data/cnf.txt
+/CompactJVMLib/nbproject/private/
+/SatSolver/nbproject/private/
+/SatSolver/build/
+/SatSolver/dist/
+/CompactJVMLib/dist/
+/CompactJVMLib/build/
+SatSolver/nbproject/
+CompactJVMLib/nbproject/
