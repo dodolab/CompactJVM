@@ -285,6 +285,11 @@ public class ClassFile {
             JVMLogger.log(JVMLogger.TAG_OTHER, "Initializing class " + className);
             int methodDef = this.getMethodDefIndex("<clinit>", "()V");
 
+            // no <clinit> method available
+            if(methodDef == -1){
+                return;
+            }
+            
             MethodDefinition method = this.getMethodDefinition(methodDef, methodArea, className, "<clinit>", "()V");
             StackFrame initFrame = new StackFrame(this, methodDef, method, stack.jvmThread);
             stack.push(initFrame);

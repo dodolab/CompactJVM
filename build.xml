@@ -1,0 +1,17 @@
+<project name="SatRunner">
+
+	<property name="compactjvm.file" value="CompactJVM/build/jar/CompactJVM.jar" />
+	<property name="main-class" value="cz.cvut.fit.compactjvm.jvm.Main" />
+
+    <target name="runsat">
+        <java classname="${main-class}" fork="true" >
+        <classpath>
+            <path location="${compactjvm.file}" />
+        </classpath>
+		<arg value="-arg1"/>
+        <arg value="-arg2"/>
+        <arg value="-arg3"/>
+    </java>
+    </target>
+	
+</project>

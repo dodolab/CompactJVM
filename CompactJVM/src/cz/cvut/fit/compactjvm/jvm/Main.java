@@ -29,7 +29,8 @@ public class Main {
         "../CompactJvmLib/build/classes/",
         "compactjvmlab/CompactJVMLab", 
         //"../cnf1.txt" // argument
-        "F:\\cnf.txt"
+        "c:\\Data\\Skola\\FIT\\3. semestr\\MI-RUN\\MiRunProject\\CompactJVMLab\\data\\cnf.txt",
+        "c:\\Data\\Skola\\FIT\\3. semestr\\MI-RUN\\MiRunProject\\CompactJVMLab\\data\\cnf_result.txt"
         };
         
         
