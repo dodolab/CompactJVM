@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 
 /**
  * Invokes virtual instruction
+ *
  * @author Nick Nemame
  */
 public class InvokeVirtualInstruction {
@@ -30,28 +31,37 @@ public class InvokeVirtualInstruction {
 
         ClassFile classFile = methodArea.getClassFile(method.getMethodClass());
 
+        // following specification, the object we are looking for is BEFORE all parameters
+        int params = method.getMethodParams().size();
+
+        // on the peek there should be a object whose method is called
+        SObjectRef objectRef = stack.getCurrentFrame().operandStack.get(params);
+        
+        if(objectRef.isNull()){
+            // nullpointer exception
+            AAAException.throwException(new NullPointerException(), stack, stack.jvmThread.getHeap(), methodArea);
+            return;
+        }
+        
+
         if (method.isNativeMethod()) {
-            // following specification, the object we are looking for is BEFORE all parameters
-            int params = method.getMethodParams().size();
-            
-            // on the peek there should be a object whose method is called
-            SObjectRef objectRef = stack.getCurrentFrame().operandStack.get(params);
-            if(!objectRef.hasNativeObject()){
+
+            if (!objectRef.hasNativeObject()) {
                 throw new LoadingException("Native object expected but not found");
             }
-            
+
             NativeObject nativeObj = objectRef.getNativeObject();
-            
+
             // use reflection to call native object method
             Method methodToInvoke = nativeObj.getClass().getMethod(method.getMethodName(), JVMStack.class, ObjectHeap.class);
-            
-            try{
-            methodToInvoke.invoke(nativeObj, stack, stack.jvmThread.getHeap());
-            }catch(Exception e){
-                
+
+            try {
+                methodToInvoke.invoke(nativeObj, stack, stack.jvmThread.getHeap());
+            } catch (Exception e) {
+
                 // propagate exception inside
                 AAAException.throwException(e, stack, stack.jvmThread.getHeap(), methodArea);
-                
+
             }
             JVMLogger.log(JVMLogger.TAG_INSTR_INVOKE, "InvokeVirtual native: " + method.getMethodName());
         } else {
@@ -59,7 +69,7 @@ public class InvokeVirtualInstruction {
             int methodIndex;
             while ((methodIndex = classFile.getMethodDefIndex(method.getMethodName(), method.getMethodDescriptor())) == -1) {
                 if (classFile.getSuperclassName() == null) {
-                    throw new LoadingException("Invoke virtual lookup failed - method "+method.getMethodName()+" not found");
+                    throw new LoadingException("Invoke virtual lookup failed - method " + method.getMethodName() + " not found");
                 }
                 classFile = classFile.getSuperClass();
             }

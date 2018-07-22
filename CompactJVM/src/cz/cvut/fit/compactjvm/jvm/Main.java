@@ -24,14 +24,14 @@ public class Main {
         }
         
         // load testing class file
-        args = new String[]{
+      /*  args = new String[]{
         "../SatSolver/build/classes/",
         "../CompactJvmLib/build/classes/",
-        "compactjvmlab/CompactJVMLab", 
+        "satsolver/Main", 
         //"../cnf1.txt" // argument
-        "c:\\Data\\Skola\\FIT\\3. semestr\\MI-RUN\\MiRunProject\\CompactJVMLab\\data\\cnf.txt",
-        "c:\\Data\\Skola\\FIT\\3. semestr\\MI-RUN\\MiRunProject\\CompactJVMLab\\data\\cnf_result.txt"
-        };
+        "F:\\cnf.txt",
+        "F:\\cnf_result.txt"
+        };*/
         
         
         try {
@@ -53,12 +53,14 @@ public class Main {
             //JVMLogger.enableLogging(JVMLogger.TAG_INSTR_STORE);
 
             JVMLogger.enableLogging(JVMLogger.TAG_OTHER);
-            //JVMLogger.enableLogging(JVMLogger.TAG_HEAP);
+            JVMLogger.enableLogging(JVMLogger.TAG_HEAP);
             JVMLogger.enableLogging(JVMLogger.TAG_GC);
             JVMLogger.enableLogging(JVMLogger.TAG_PRINT);
             
             String classPath = args[0];
+            if(!classPath.endsWith("/")) classPath = classPath + "/";
             String libraryPath = args[1];
+            if(!libraryPath.endsWith("/")) libraryPath = libraryPath + "/";
             String mainClass = args[2];
             String[] arguments = new String[args.length-3];
             

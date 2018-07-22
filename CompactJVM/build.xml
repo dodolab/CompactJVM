@@ -5,6 +5,14 @@
     <property name="classes.dir" value="${build.dir}/classes" />
     <property name="jar.dir" value="${build.dir}/jar" />
 	<property name="output.file" value="${jar.dir}/CompactJVM.jar" />
+	
+	<property name="src_lib.dir" value="../CompactJVMLib/src" />
+    <property name="build_lib.dir" value="../CompactJVMLib/build" />
+    <property name="classes_lib.dir" value="${build_lib.dir}/classes" />
+    <property name="jar_lib.dir" value="${build_lib.dir}/jar" />
+	<property name="output_lib.file" value="${jar_lib.dir}/CompactJVMLib.jar" />
+	
+	
 	<property name="main-class" value="cz.cvut.fit.compactjvm.jvm.Main" />
 
     <target name="clean">
@@ -12,22 +20,25 @@
     </target>
 	
     <target name="compile">
-        <mkdir dir="${src.dir}"/>
+        <mkdir dir="${classes.dir}"/>
         <javac srcdir="${src.dir}" destdir="${classes.dir}" encoding="utf-8"/>
+		
+		<mkdir dir="${classes_lib.dir}"/>
+        <javac srcdir="${src_lib.dir}" destdir="${classes_lib.dir}" encoding="utf-8"/>
     </target>
 
     <target name="jar">
         <mkdir dir="${jar.dir}"/>
         <jar destfile="${output.file}" basedir="${classes.dir}" encoding="utf-8">
+		     <manifest>
+                <attribute name="Main-Class" value="${main-class}" />
+            </manifest>
+        </jar>
+		
+		<mkdir dir="${jar_lib.dir}"/>
+        <jar destfile="${output_lib.file}" basedir="${classes_lib.dir}" encoding="utf-8">
         </jar>
     </target>
 
-    <target name="run" depends="jar">
-        <java classname="${main-class}" fork="true" >
-        <classpath>
-            <path location="${output.file}" />
-        </classpath>
-    </java>
-    </target>
 
 </project>

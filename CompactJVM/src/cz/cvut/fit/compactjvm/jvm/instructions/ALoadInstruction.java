@@ -22,6 +22,7 @@ public class ALoadInstruction {
         stackFrame.operandStack.push(value);
         
         JVMLogger.log(JVMLogger.TAG_INSTR_LOAD, "ALoad; index: "+index+"; value: "+value);
+        
     }
 
 }

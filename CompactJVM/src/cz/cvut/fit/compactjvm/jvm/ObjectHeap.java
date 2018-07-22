@@ -4,9 +4,11 @@ import cz.cvut.fit.compactjvm.classfile.ClassFile;
 import cz.cvut.fit.compactjvm.exceptions.OutOfHeapMemException;
 import cz.cvut.fit.compactjvm.structures.SGenericRef;
 import cz.cvut.fit.compactjvm.structures.*;
+import java.sql.Struct;
 
 /**
  * Heap of the virtual machine
+ *
  * @author Nick Nemame
  */
 public class ObjectHeap {
@@ -49,7 +51,6 @@ public class ObjectHeap {
         this.jvmThread = thread;
     }
 
-  
     /**
      * Zapise do haldy (index je index v datove casti) Pr: Obsahuje-li zaznam 2
      * slova v hlavicce (1. slovo index tridy, 2. slovo napriklad pro GC), pak
@@ -61,8 +62,8 @@ public class ObjectHeap {
      * @param value
      */
     public <T extends SStruct> void writeToHeap(int reference, int index, T value) {
-        JVMLogger.log(JVMLogger.TAG_HEAP, "Write #"+reference+"#["+index+"]-->"+value);
-        int headerSize = 1; 
+        JVMLogger.log(JVMLogger.TAG_HEAP, "Write #" + reference + "#[" + index + "]-->" + value);
+        int headerSize = 1;
         writeToActiveHeap(reference + headerSize + index, value);
     }
 
@@ -76,47 +77,51 @@ public class ObjectHeap {
     public <T extends SStruct> T readFromHeap(int reference, int index) {
         int headerSize = 1; //(getClassIndex(reference) == ARRAY_INDEX) ? getArrayHeaderSize() : getObjectHeaderSize();
         T output = readFromActiveHeap(reference + headerSize + index);
-        JVMLogger.log(JVMLogger.TAG_HEAP, "Read #"+reference+"#["+index+"]-->"+output);
+        JVMLogger.log(JVMLogger.TAG_HEAP, "Read #" + reference + "#[" + index + "]-->" + output);
         return output;
     }
-    
+
     /**
      * Reads a primitive array from heap, based on reference
+     *
      * @param reference
-     * @return 
+     * @return
      */
-    public SStruct[] readPrimitiveArrayFromHeap(int reference){
+    public SStruct[] readPrimitiveArrayFromHeap(int reference) {
         SArrayRef arrayRef = readFromActiveHeap(reference);
         SStruct[] arr = new SStruct[arrayRef.getSize()];
-        
-        for(int i=0; i<arrayRef.getSize(); i++){
+
+        for (int i = 0; i < arrayRef.getSize(); i++) {
             arr[i] = readFromHeap(reference, i);
         }
         return arr;
     }
-    
+
     /**
      * Reads object array from active heap
+     *
      * @param reference
-     * @return 
+     * @return
      */
-    public SGenericRef[] readObjectArrayFromHeap(int reference){
+    public SGenericRef[] readObjectArrayFromHeap(int reference) {
         SArrayRef arrayRef = readFromActiveHeap(reference);
         SGenericRef[] arr = new SGenericRef[arrayRef.getSize()];
-        
-        JVMLogger.log(JVMLogger.TAG_HEAP, "Read object array #"+reference+"#-->"+arrayRef);
-        
+
+        JVMLogger.log(JVMLogger.TAG_HEAP, "Read object array #" + reference + "#-->" + arrayRef);
+
         // disable logging for that moment (we don't need to have each read in the log)
         boolean loggingEnabled = JVMLogger.loggingEnabled(JVMLogger.TAG_HEAP);
         JVMLogger.disableLogging(JVMLogger.TAG_HEAP);
-        
-        for(int i=0; i<arrayRef.getSize(); i++){
-            SGenericRef ref = readFromHeap(reference,i);
+
+        for (int i = 0; i < arrayRef.getSize(); i++) {
+            SGenericRef ref = readFromHeap(reference, i);
             arr[i] = ref;
         }
-        
-        if(loggingEnabled) JVMLogger.enableLogging(JVMLogger.TAG_HEAP);
-        
+
+        if (loggingEnabled) {
+            JVMLogger.enableLogging(JVMLogger.TAG_HEAP);
+        }
+
         return arr;
     }
 
@@ -128,12 +133,12 @@ public class ObjectHeap {
      */
     public SObjectRef allocObject(ClassFile classFile) throws OutOfHeapMemException {
         int reference = nextFreeSpace;
-        int wordsRequired = /*getObjectHeaderSize() +*/ 1+ classFile.recursiveFieldCount;
+        int wordsRequired = /*getObjectHeaderSize() +*/ 1 + classFile.recursiveFieldCount;
         checkHeapSpace(wordsRequired);
-        
-        JVMLogger.log(JVMLogger.TAG_HEAP, "Allocating object #"+reference+"#[sz="+wordsRequired+"]-->"+classFile.className);
-        
-        SObjectRef ref = new SObjectRef(reference,classFile);
+
+        JVMLogger.log(JVMLogger.TAG_HEAP, "Allocating object #" + reference + "#[sz=" + wordsRequired + "]-->" + classFile.className);
+
+        SObjectRef ref = new SObjectRef(reference, classFile);
         writeToActiveHeap(reference, ref);
         nextFreeSpace += wordsRequired;
         initializeSpace(reference + 1/*getObjectHeaderSize()*/, classFile.recursiveFieldCount);
@@ -149,56 +154,60 @@ public class ObjectHeap {
      * @throws OutOfHeapMemException
      */
     public <T extends SStruct> SArrayRef allocPrimitiveArray(T[] arr, int arraySize) throws OutOfHeapMemException {
-        
+
         int reference = nextFreeSpace;
         int wordsRequired = /*getArrayHeaderSize()*/ 1 + arraySize;
         checkHeapSpace(wordsRequired);
-        
-        JVMLogger.log(JVMLogger.TAG_HEAP, "Allocating primitive array ["+reference+"][sz="+arraySize+"]-->");
+
+        JVMLogger.log(JVMLogger.TAG_HEAP, "Allocating primitive array [" + reference + "][sz=" + arraySize + "]-->");
         JVMLogger.increaseGlobalPadding(4);
-        SArrayRef ref = new SArrayRef(reference,null, arraySize);
+        SArrayRef ref = new SArrayRef(reference, null, arraySize);
         writeToActiveHeap(reference, ref);
-        
+
         // write default values into heap
-        for(int i=0; i<arraySize; i++){
-            writeToHeap(reference, i,arr[i]);
+        for (int i = 0; i < arraySize; i++) {
+            writeToHeap(reference, i, arr[i]);
         }
         JVMLogger.decreaseGlobalPadding(4);
-        nextFreeSpace+=wordsRequired;
+        nextFreeSpace += wordsRequired;
 
         return ref;
     }
 
     /**
      * Allocates an object array
+     *
      * @return
-     * @throws OutOfHeapMemException 
+     * @throws OutOfHeapMemException
      */
-    public SArrayRef allocObjectArray(ClassFile classFile, int arraySize) throws OutOfHeapMemException{
-        
+    public SArrayRef allocObjectArray(ClassFile classFile, int arraySize) throws OutOfHeapMemException {
+
         int reference = nextFreeSpace;
         int wordsRequired = 1 + arraySize;
         checkHeapSpace(wordsRequired);
-        
-        JVMLogger.log(JVMLogger.TAG_HEAP, "Allocating object array #"+reference+"#[sz="+arraySize+"]-->"+classFile.className);
-        
-        SArrayRef arrayRef = new SArrayRef(reference,classFile, arraySize);
+
+        JVMLogger.log(JVMLogger.TAG_HEAP, "Allocating object array #" + reference + "#[sz=" + arraySize + "]-->" + classFile.className);
+
+        SArrayRef arrayRef = new SArrayRef(reference, classFile, arraySize);
         writeToActiveHeap(reference, arrayRef);
-        
+
         JVMLogger.increaseGlobalPadding(4);
         // write references to the heap
-        for(int i=0; i<arraySize; i++){
-            writeToHeap(reference, i,new SObjectRef(reference+1+i,classFile));
+        for (int i = 0; i < arraySize; i++) {
+            writeToHeap(reference, i, new SObjectRef(reference + 1 + i, classFile));
         }
         JVMLogger.decreaseGlobalPadding(4);
-        
-        nextFreeSpace+=wordsRequired;
-        
+
+        nextFreeSpace += wordsRequired;
+
         return arrayRef;
 
     }
-   
-    
+
+    public GarbageCollector getGarbageCollector() {
+        return this.garbageCollector;
+    }
+
     /**
      * Zapise do aktivni casti haldy (index je realny index od zacatku teto
      * casti haldy)
@@ -218,7 +227,7 @@ public class ObjectHeap {
      * @return
      */
     private <T extends SStruct> T readFromActiveHeap(int index) {
-        return (T)heap[index + activeHeapOffset];
+        return (T) heap[index + activeHeapOffset];
     }
 
     /**
@@ -240,33 +249,55 @@ public class ObjectHeap {
      * @return
      */
     public <T extends SStruct> T readFromSpareHeap(int index) {
-        return (T)heap[index + inactiveHeapOffset];
+        return (T) heap[index + inactiveHeapOffset];
     }
-    
+
+    public SStruct[] readPrimitiveArrayFromSpareHeap(int reference) {
+        SArrayRef arrayRef = readFromSpareHeap(reference);
+        SStruct[] arr = new SStruct[arrayRef.getSize()];
+
+        for (int i = 0; i < arrayRef.getSize(); i++) {
+            arr[i] = readFromSpareHeap(reference + 1 + i);
+        }
+        return arr;
+    }
+
     /**
      * Swaps active and inactive heap
      */
-    public void swapHeap(){
-        JVMLogger.log(JVMLogger.TAG_GC, "Swapping heap");
+    public void swapHeap() {
+        JVMLogger.log(JVMLogger.TAG_GC, "Swapping heap, occupied space: "+nextFreeSpace);
         int temp = activeHeapOffset;
         activeHeapOffset = inactiveHeapOffset;
         inactiveHeapOffset = temp;
         nextFreeSpace = 0;
     }
-    
+
     /**
-     * Moves object from old heap based on reference
-     * Note that this method must be called IMMEDIATELY after swapHeap and
-     * before any writing or reading
-     * @param oldReference 
+     * Moves object from old heap based on reference Note that this method must
+     * be called IMMEDIATELY after swapHeap and before any writing or reading
+     *
+     * @param oldReference
      */
-    public void moveObjectFromOldHeap(int oldReference){    
+    public void moveObjectFromOldHeap(int oldReference, int size) {
+        
         SGenericRef ref = readFromSpareHeap(oldReference);
+
         int newIndex = nextFreeSpace++;
         ref.setReference(newIndex);
         writeToActiveHeap(newIndex, ref);
+
+        JVMLogger.log(JVMLogger.TAG_GC, "Object " + ref + " (fldcnt="+size+") moved from " + oldReference + " to " + newIndex);
         
-        JVMLogger.log(JVMLogger.TAG_GC, "Object "+ref+" moved from "+oldReference+" to "+newIndex);
+        for(int i=0; i<(size); i++){
+            SStruct str = readFromSpareHeap(oldReference+i);
+            if(str.isReference()){
+                ((SGenericRef)str).setReference(nextFreeSpace);
+            }
+            
+            writeToActiveHeap(nextFreeSpace++, str);
+            JVMLogger.log(JVMLogger.TAG_GC, "Object "+str+" moved to " + (nextFreeSpace-1));
+        }
     }
 
     private void initializeSpace(int index, int length) {

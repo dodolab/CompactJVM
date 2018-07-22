@@ -6,7 +6,7 @@ package cz.cvut.fit.compactjvm.structures;
  * @author Adam Vesecky
  */
 public class SByte extends SIntable {
-    private final byte value;
+    private byte value;
 
 
     public SByte(byte value) {
@@ -31,4 +31,10 @@ public class SByte extends SIntable {
     public SInt toInt() {
         return new SInt(value);
     }
+
+    @Override
+    public void negate() {
+        value = (byte) -value;
+    }
+    
 }

@@ -31,4 +31,10 @@ public class SChar extends SIntable{
     public SInt toInt() {
         return new SInt(value);
     }
+    
+    @Override
+    public void negate() {
+        //throw new Exception("Char cannot negate");
+    }
+    
 }

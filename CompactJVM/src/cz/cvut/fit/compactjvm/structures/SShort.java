@@ -6,7 +6,7 @@ package cz.cvut.fit.compactjvm.structures;
  * @author Adam Vesecky
  */
 public class SShort extends SIntable{
-    private final short value;
+    private short value;
 
 
     public SShort(short value) {
@@ -31,4 +31,10 @@ public class SShort extends SIntable{
     public SInt toInt() {
         return new SInt(value);
     }
+    
+    @Override
+    public void negate() {
+        value = (short) -value;
+    }
+    
 }

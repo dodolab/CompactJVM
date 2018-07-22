@@ -20,6 +20,7 @@ public class AAAException {
     
     public static void throwException(Exception exc, JVMStack stack, ObjectHeap heap,  MethodArea methodArea) throws OutOfHeapMemException, Exception{
         
+        exc.printStackTrace();
         JVMLogger.log(JVMLogger.TAG_OTHER, "Throwing exception from outside: " + exc.getClass().getName()+" -> "+exc.getMessage());
         
 

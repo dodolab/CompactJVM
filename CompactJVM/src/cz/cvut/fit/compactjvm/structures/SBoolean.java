@@ -6,7 +6,7 @@ package cz.cvut.fit.compactjvm.structures;
  * @author Adam Vesecky
  */
 public class SBoolean extends SIntable {
-    private final boolean value;
+    private boolean value;
 
 
     public SBoolean(boolean value) {
@@ -30,6 +30,11 @@ public class SBoolean extends SIntable {
     @Override
     public SInt toInt() {
         return new SInt(value ? 1 : 0);
+    }
+
+    @Override
+    public void negate() {
+        value = !value;
     }
     
 }

@@ -88,6 +88,9 @@ public class Instruction {
     public static final int IN_ISUB = 0x64; //100
     // multiply two integers
     public static final int IN_IMUL = 0x68; //104
+    // divide two integers
+    public static final int IN_IDIV = 0x6c;
+    
     // push a byte onto the stack as an integer value
     public static final int IN_BIPUSH = 0x10; //16
     // push a short onto the stack as an integer value
@@ -128,8 +131,16 @@ public class Instruction {
     // return an integer from a method
     public static final int IN_IRETURN = 0xac; //172
    
+    // negates integer value
+    public static final int IN_INEG = 0x74;
     // if value is less than or equal to 0, branch to instruction at branchoffset (signed short constructed from unsigned bytes branchbyte1 << 8 + branchbyte2)
     public static final int IN_IFLE = 0x9e;
+    // if value is less than 0, branch to instruction at branchoffset (signed short constructed from unsigned bytes branchbyte1 << 8 + branchbyte2)
+    public static final int IN_IFLT = 0x9b;
+    // if value is greater than or equal to 0, branch to instruction at branchoffset (signed short constructed from unsigned bytes branchbyte1 << 8 + branchbyte2)
+    public static final int IN_IFGE = 0x9c;
+    // if value is greater than 0, branch to instruction at branchoffset (signed short constructed from unsigned bytes branchbyte1 << 8 + branchbyte2)
+    public static final int IN_IFGT = 0x9d;
     // perform no operation
     public static final int IN_NOP = 0x0;
     // increment local variable #index by signed byte const

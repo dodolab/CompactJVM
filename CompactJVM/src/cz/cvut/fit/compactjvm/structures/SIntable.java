@@ -10,4 +10,6 @@ public abstract class SIntable extends SStruct {
     
     public abstract SInt toInt();
     
+    public abstract void negate();
+    
 }

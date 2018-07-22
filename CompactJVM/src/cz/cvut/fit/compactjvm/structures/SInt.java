@@ -6,7 +6,7 @@ package cz.cvut.fit.compactjvm.structures;
  * @author Adam Vesecky
  */
 public class SInt extends SIntable{
-    private final int value;
+    private int value;
 
 
     public SInt(int value) {
@@ -31,4 +31,10 @@ public class SInt extends SIntable{
     public SInt toInt() {
         return this;
     }
+    
+    @Override
+    public void negate() {
+        value = -value;
+    }
+    
 }

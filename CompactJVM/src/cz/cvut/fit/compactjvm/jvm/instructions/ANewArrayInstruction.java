@@ -38,8 +38,6 @@ public class ANewArrayInstruction {
         
         SArrayRef arrayReference = heap.allocObjectArray(cls, size.getValue());
         stackFrame.operandStack.push(arrayReference);
-        
-        JVMLogger.log(JVMLogger.TAG_INSTR_STORE, "New object array: "+className);
-
+        JVMLogger.log(JVMLogger.TAG_INSTR_STORE, "New object array: "+className); 
     } 
 }

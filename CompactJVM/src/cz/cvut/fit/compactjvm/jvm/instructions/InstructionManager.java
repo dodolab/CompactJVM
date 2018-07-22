@@ -56,6 +56,7 @@ public class InstructionManager {
             case Instruction.IN_IADD: IAddInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_ISUB: ISubInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_IMUL: IMulInstruction.run(jvmStack.getCurrentFrame()); break;
+            case Instruction.IN_IDIV : IDivInstruction.run(jvmStack.getCurrentFrame(), heap, methodArea); break;
             case Instruction.IN_BIPUSH: BiPushInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_SIPUSH: SiPushInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_ICONSTM1: IConstIInstruction.run(jvmStack.getCurrentFrame(), -1); break;
@@ -88,6 +89,10 @@ public class InstructionManager {
             case Instruction.IN_BALOAD: BaLoadInstruction.run(jvmStack.getCurrentFrame(), heap);break;
             case Instruction.IN_IALOAD : IALoadInstruction.run(jvmStack.getCurrentFrame(), heap); break;
             case Instruction.IN_IFLE : IfleInstruction.run(jvmStack.getCurrentFrame()); break;
+            case Instruction.IN_IFLT : IfltInstruction.run(jvmStack.getCurrentFrame()); break;
+            case Instruction.IN_IFGE : IfgeInstruction.run(jvmStack.getCurrentFrame()); break;
+            case Instruction.IN_IFGT : IfgtInstruction.run(jvmStack.getCurrentFrame()); break;
+            case Instruction.IN_INEG : INegInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_NOP : NopInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_POP : PopInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_GOTO : GotoInstruction.run(jvmStack.getCurrentFrame()); break;
