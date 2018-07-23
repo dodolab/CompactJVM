@@ -24,7 +24,7 @@ public class SByte extends SIntable {
 
     @Override
     public String toString() {
-        return "byte("+value+")";
+        return "byte("+value+")"+"<id:"+this.id+">";
     }
 
     @Override

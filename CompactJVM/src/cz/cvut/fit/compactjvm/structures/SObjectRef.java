@@ -58,9 +58,9 @@ public class SObjectRef extends SGenericRef{
     @Override
     public String toString() {
         if(this.isNull()){
-            return "object(null)";
+            return "object(null)"+"<id:"+this.id+">";
         }else{
-            return "object#"+this.heapReference+"#("+(this.classFile == null ? "???" : this.classFile.getClassName())+")";
+            return "object#"+this.heapReference+"#("+(this.classFile == null ? "???" : this.classFile.getClassName())+")"+"<id:"+this.id+">";
         }
     }
 

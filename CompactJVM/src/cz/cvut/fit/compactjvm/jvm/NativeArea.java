@@ -92,14 +92,19 @@ public class NativeArea {
      */
     public SObjectRef writeStringToHeap(String stringText) throws OutOfHeapMemException, IOException {
         if (stringText != null) {
+            JVMLogger.log(JVMLogger.TAG_HEAP, "Writing string "+stringText);
             char[] stringData = stringText.toCharArray();
             SChar[] charData = new SChar[stringData.length];
             for (int i = 0; i < charData.length; ++i) {
                 charData[i] = new SChar(stringData[i]);
             }
+            
+            JVMLogger.log(JVMLogger.TAG_HEAP, "Allocating char array");
             SArrayRef charDataRef = heap.allocPrimitiveArray(charData, charData.length);
             ClassFile cls = methodArea.getClassFile("java/lang/String");
+            JVMLogger.log(JVMLogger.TAG_HEAP, "Allocating string object");
             SObjectRef strDataRef = heap.allocObject(cls);
+            JVMLogger.log(JVMLogger.TAG_HEAP, "Connecting array with string");
             heap.writeToHeap(strDataRef.getReference(), 0, charDataRef);
             return strDataRef;
         } else {
@@ -114,6 +119,8 @@ public class NativeArea {
      * @return 
      */
     public String readStringFromHeap(SObjectRef objectRef) {
+        
+        JVMLogger.log(JVMLogger.TAG_HEAP, "Reading string #"+objectRef.getReference()+"#");
         SArrayRef charDataRef = heap.readFromHeap(objectRef.getReference(), 0);
         SStruct[] charData = (SStruct[]) heap.readPrimitiveArrayFromHeap(charDataRef.getReference());
 

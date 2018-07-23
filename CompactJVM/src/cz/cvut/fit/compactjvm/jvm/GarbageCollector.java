@@ -4,6 +4,7 @@ import cz.cvut.fit.compactjvm.classfile.ClassFile;
 import cz.cvut.fit.compactjvm.classfile.FLEntity;
 import cz.cvut.fit.compactjvm.structures.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 /**
@@ -93,13 +94,13 @@ public class GarbageCollector {
                     // object is a simple object
                     SObjectRef objRef = (SObjectRef) reference;
                     markLivingObject(reference.getReference(), objRef.getClassFile().recursiveFieldCount);
-                    JVMLogger.log(JVMLogger.TAG_GC, "Found object " + (objRef.getClassFile() == null ? "xx" : objRef.getClassFile().className));
+                    JVMLogger.log(JVMLogger.TAG_GC, "Found object " + objRef);
                     searchInObjectReference((SObjectRef) reference);
                 } else {
                     // objcet is an array
                     SArrayRef arrRef = (SArrayRef) reference;
-                    markLivingObject(reference.getReference(), arrRef.getArrayType().recursiveFieldCount);
-                    JVMLogger.log(JVMLogger.TAG_GC, "Found array " + (arrRef.getArrayType() == null ? "xx" : arrRef.getArrayType().className));
+                    markLivingObject(reference.getReference(), arrRef.getSize());
+                    JVMLogger.log(JVMLogger.TAG_GC, "Found array " + arrRef);
                     searchInArrayReference((SArrayRef) reference);
                 }
 
@@ -117,7 +118,10 @@ public class GarbageCollector {
         // get class file and all fields
         ClassFile classFile = reference.getClassFile();
         // skip native objects
-        if(classFile.hasNativeMethods()) return;
+        if(classFile.hasNativeMethods()){
+            JVMLogger.decreaseGlobalPadding(1);
+            return;
+        }
         
         FLEntity[] fieldInfos = classFile.fieldInfos;
 
@@ -145,7 +149,7 @@ public class GarbageCollector {
                 if (!fld.isNull()) {
                     JVMLogger.log(JVMLogger.TAG_GC, "Found object array " + field.name + " in " + classFile.className);
                     // mark and continue in recursion
-                    markLivingObject(fld.getReference(), fld.getArrayType().recursiveFieldCount);
+                    markLivingObject(fld.getReference(), fld.getSize());
                     searchInArrayReference(fld);
                 }
             } else if (field.isPrimitiveArray()) {
@@ -175,7 +179,7 @@ public class GarbageCollector {
                     if (fldRef instanceof SArrayRef) {
                         SArrayRef arrRef = (SArrayRef)fldRef;
                         // mark and continue in recursion
-                        markLivingObject(fldRef.getReference(), arrRef.getArrayType().recursiveFieldCount);
+                        markLivingObject(fldRef.getReference(), arrRef.getSize());
                         JVMLogger.log(JVMLogger.TAG_GC, "Found array array " + (arrRef.getArrayType() == null ? "xx" : arrRef.getArrayType().className));
                         searchInArrayReference(arrRef);
                     } else {
@@ -204,6 +208,8 @@ public class GarbageCollector {
     }
 
     private void swapHeap() {
+
+       // heap.logAllHeap();
         // swap heap
         heap.swapHeap();
 
@@ -212,5 +218,6 @@ public class GarbageCollector {
             heap.moveObjectFromOldHeap(livingObj[0], livingObj[1]);
         }
 
+       //heap.logAllHeap();
     }
 }

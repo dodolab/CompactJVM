@@ -109,6 +109,10 @@ public class Instruction {
     public static final int IN_ICONST4 = 0x7; //7
     // load the int value 5 onto the stack
     public static final int IN_ICONST5 = 0x8; //8
+    // load the int value 5 onto the stack
+    public static final int IN_DCONST0 = 0xe; //14
+    // load the int value 5 onto the stack
+    public static final int IN_DCONST1 = 0xf; //15
     
     // load an int from an array
     public static final int IN_CALOAD = 0x34; //52

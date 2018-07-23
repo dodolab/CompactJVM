@@ -28,6 +28,7 @@ public class InvokeStaticInstruction {
         ClassFile classFile = methodArea.getClassFile(method.getMethodClass());
         
         if (method.isNativeMethod()) {
+          //  stack.jvmThread.getHeap().getGarbageCollector().runGC();
             JVMLogger.log(JVMLogger.TAG_INSTR_INVOKE, "Native - InvokeStatic: " + method.getMethodName());
             // call native method
             stack.jvmThread.getNativeArea().callStaticMethod(classFile.getClassName(), method.getMethodName(), stack, method.getMethodParams().size());

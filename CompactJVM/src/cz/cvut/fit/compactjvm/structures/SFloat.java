@@ -24,6 +24,6 @@ public class SFloat extends SStruct {
 
     @Override
     public String toString() {
-        return "float("+value+")";
+        return "float("+value+")"+"<id:"+this.id+">";
     }
 }

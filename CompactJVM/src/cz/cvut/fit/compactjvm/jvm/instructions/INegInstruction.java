@@ -15,8 +15,9 @@ public class INegInstruction {
     public static void run(StackFrame stackFrame) throws LoadingException{
         
         SIntable value = stackFrame.operandStack.pop();
-        value.negate();
-        stackFrame.operandStack.push(value);
-        JVMLogger.log(JVMLogger.TAG_INSTR_LOAD, "INeg: result value "+value.toInt().getValue());
+        SIntable copyValue = (SIntable) value.makeCopy();
+        copyValue.negate();
+        stackFrame.operandStack.push(copyValue);
+        JVMLogger.log(JVMLogger.TAG_INSTR_LOAD, "INeg: result value "+copyValue.toInt().getValue());
     }
 }

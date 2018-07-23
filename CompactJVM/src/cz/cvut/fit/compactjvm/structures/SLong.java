@@ -24,6 +24,6 @@ public class SLong extends SStruct {
 
     @Override
     public String toString() {
-        return "long("+value+")";
+        return "long("+value+")"+"<id:"+this.id+">";
     }
 }

@@ -56,7 +56,8 @@ public class SArrayRef extends SGenericRef {
         if(this.isNull()){
             return "array[null]";
         }else{
-            return "array#"+this.heapReference+"#[sz="+this.size+"]("+(this.classFile == null ? "primitive" : this.classFile.getClassName())+")";
+            return (this.classFile == null ? "p" : "o") +"array#"+this.heapReference+"#[sz="+this.size+"]("+
+                    (this.classFile == null ? "primitive" : this.classFile.getClassName())+")"+"<id:"+this.id+">";
         }
     }
 }

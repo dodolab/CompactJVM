@@ -66,6 +66,8 @@ public class InstructionManager {
             case Instruction.IN_ICONST3: IConstIInstruction.run(jvmStack.getCurrentFrame(), 3); break;
             case Instruction.IN_ICONST4: IConstIInstruction.run(jvmStack.getCurrentFrame(), 4); break;
             case Instruction.IN_ICONST5: IConstIInstruction.run(jvmStack.getCurrentFrame(), 5); break;
+            case Instruction.IN_DCONST0: DConstDInstruction.run(jvmStack.getCurrentFrame(), 0.0d); break;
+            case Instruction.IN_DCONST1: DConstDInstruction.run(jvmStack.getCurrentFrame(), 1.0d); break;
             case Instruction.IN_ATHROW: AThrowInstruction.run(jvmStack,methodArea);break;
             case Instruction.IN_LDC: LdcInstruction.run(jvmStack.getCurrentFrame(), methodArea, heap); break;
                 

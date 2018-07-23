@@ -5,6 +5,7 @@
  */
 package satsolver;
 
+import cz.cvut.fit.compactjvm.proxies.JVMFunctions;
 import java.util.Date;
 
 /**
@@ -70,6 +71,10 @@ public class SATSolver {
     }
     
     private int isSatisfied(VariableEvaluation evaluation) {
+        //JVMFunctions.println("BEGINS CHECK");
+        //JVMFunctions.println(evaluation.getEvaluation()[0]);
+        //JVMFunctions.println(evaluation.getEvaluation()[1]);
+        //JVMFunctions.println(evaluation.getEvaluation()[2]);
         for(int i = 0; i < clauses.size(); ++i) {
             if(isClauseSatisfied(clauses.get(i), evaluation) == 0) {
                 return 0;
@@ -79,11 +84,14 @@ public class SATSolver {
     }
     
     private int isClauseSatisfied(Clause clause, VariableEvaluation evaluation) {
+        //JVMFunctions.println("IsClauseSatisfied");
         int[] evalArray = evaluation.getEvaluation();
         int trueCount = 0;
         for(int i = 0; i < clause.size(); ++i) {
             int literal = clause.get(i);
             int isPositive = literal > 0 ? 1 : 0;
+            //JVMFunctions.println("is positive:");
+            //JVMFunctions.println(literal);
             int literalIndex = Math.abs(literal) - 1;
             int value = evalArray[literalIndex];
             if(isPositive == 0) {
@@ -91,6 +99,7 @@ public class SATSolver {
             }
             trueCount += value;
         }
+        //JVMFunctions.println(trueCount);
         return trueCount > 0 ? 1 : 0;
     }
     

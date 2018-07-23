@@ -24,7 +24,7 @@ public class SChar extends SIntable{
 
     @Override
     public String toString() {
-        return "char("+value+"(";
+        return "char("+value+")"+"<id:"+this.id+">";
     }
     
     @Override

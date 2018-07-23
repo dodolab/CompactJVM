@@ -19,7 +19,7 @@ public class FileLoader {
     Clauses clauses = null;
     int variablesCount;
     
-    public FileLoader(String filename) throws FileNotFoundException, IOException {
+    public FileLoader(String filename) throws Exception {
         
         TextReader reader = new TextReader(filename);
         int clausesCount;
@@ -33,12 +33,15 @@ public class FileLoader {
                 variablesCount = JVMFunctions.parseInt(tokens[2]);
                 clausesCount = JVMFunctions.parseInt(tokens[3]);
                 clauses = new Clauses(clausesCount);
-                JVMFunctions.println("Hezky den");
+                //JVMFunctions.println("Hezky den");
             } else {
-                JVMFunctions.println("JAJAJA");
+                //JVMFunctions.println("JAJAJA");
+                //JVMFunctions.println(instanceString);
                 int[] clauseLiterals = new int[tokens.length - 1];
                 for(int i = 0; i < tokens.length; ++i) {
+                    //JVMFunctions.println(tokens[i]);
                     int value = JVMFunctions.parseInt(tokens[i]);
+                    //JVMFunctions.println(value);
                     if(value == 0) break;
                     clauseLiterals[i] = value;
                 }

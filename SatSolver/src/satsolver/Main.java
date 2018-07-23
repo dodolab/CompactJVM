@@ -7,7 +7,6 @@ package satsolver;
 
 import cz.cvut.fit.compactjvm.proxies.JVMFunctions;
 import cz.cvut.fit.compactjvm.proxies.TextWriter;
-import java.io.IOException;
 
 /**
  * Simple class that will be used for testing CompactJVM project
@@ -17,21 +16,20 @@ import java.io.IOException;
 public class Main {
 
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         
         Clauses clauses;
         int variablesCount;
-        //try {
+        try {
             FileLoader fileLoader = new FileLoader(args[0]);
             clauses = fileLoader.getClauses();
             variablesCount = fileLoader.getVariablesCount();
             SATSolver solver = new SATSolver();
             VariableEvaluation evaluation = solver.solve(clauses, variablesCount);
             outputResult(evaluation, args[1]);
-        //} catch (IOException e) {
-        //    System.out.println(e.getMessage());
-        //    System.exit(1);
-        //}
+        } catch (Exception e) {
+            JVMFunctions.println("Nepodarilo se nacist soubor");
+        }
         
 
     }

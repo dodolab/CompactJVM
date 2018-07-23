@@ -24,7 +24,7 @@ public class SInt extends SIntable{
 
     @Override
     public String toString() {
-        return "int("+value+")";
+        return "int("+value+")"+"<id:"+this.id+">";
     }
 
     @Override

@@ -136,17 +136,19 @@ public class ClassFile {
         String methodDescriptor = ((CPUtf8) cpEntities[nameAndType.descriptorIndex]).value;
 
         int accessFlags = 0;
-
         // get access flags from method info (important for identifying native methods)
+        ClassFile methodCls;
         if (!this.className.equals(methodClass)) {
-            ClassFile methodCls = methodArea.getClassFile(methodClass); 
-            accessFlags = methodCls.getMethod(methodName).accessFlags;
+            methodCls = methodArea.getClassFile(methodClass);
         } else {
-            accessFlags = getMethod(methodName).accessFlags;
+            methodCls = this;
         }
+        
+        MTHEntity methodEntity = methodCls.getMethod(methodName);
+        accessFlags = methodEntity.accessFlags;
 
         MethodDefinition method = new MethodDefinition(methodClass, methodName, methodDescriptor, accessFlags);
-        loadExceptionTable(method, methodDefIndex, methodArea);
+        loadExceptionTable(methodEntity, method, methodDefIndex, methodArea);
 
         return method;
     }
@@ -157,24 +159,27 @@ public class ClassFile {
 
         int accessFlags = 0;
         // get access flags from method info (important for identifying native methods)
+        ClassFile methodCls;
         if (!this.className.equals(methodClass)) {
-            ClassFile methodCls = methodArea.getClassFile(methodClass);
-            accessFlags = methodCls.getMethod(methodName).accessFlags;
+            methodCls = methodArea.getClassFile(methodClass);
         } else {
-            accessFlags = getMethod(methodName).accessFlags;
+            methodCls = this;
         }
 
+        MTHEntity methodEntity = methodCls.getMethod(methodName);
+        accessFlags = methodEntity.accessFlags;
+
         MethodDefinition method = new MethodDefinition(methodClass, methodName, methodDescriptor, accessFlags);
-        loadExceptionTable(method, methodDefIndex, methodArea);
+        loadExceptionTable(methodEntity, method, methodDefIndex, methodArea);
 
         return method;
     }
 
-    private void loadExceptionTable(MethodDefinition method, int methodDefIndex, MethodArea methodArea) throws LoadingException, IOException {
+    private void loadExceptionTable(MTHEntity methodEntity, MethodDefinition method, int methodDefIndex, MethodArea methodArea) throws LoadingException, IOException {
         // get exception table
-        MTHEntity methodDef = getMethod(methodDefIndex);
+        MTHEntity methodDef = methodEntity;
         AttrCode codeAttribute = methodDef.getCodeAttribute();
-        AttrExcTableItem[] attrExceptionTable = codeAttribute.exceptionTable;
+        AttrExcTableItem[] attrExceptionTable = (codeAttribute != null) ? codeAttribute.exceptionTable : null;
 
         // iterate over exception table
         if (attrExceptionTable != null) {

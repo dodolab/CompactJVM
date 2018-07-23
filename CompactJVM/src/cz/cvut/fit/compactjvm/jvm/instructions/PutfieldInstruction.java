@@ -29,7 +29,7 @@ public class PutfieldInstruction {
         SObjectRef reference = stackFrame.operandStack.pop();
         
         NameDesc nd = stackFrame.associatedClass.getNameAndDescriptorByCpIndex(cpIndex);
-        FLEntity fieldInfo = reference.getClassFile().getFieldInfo(nd.name, nd.descriptor, cpIndex);
+        FLEntity fieldInfo = stackFrame.associatedClass.getFieldInfo(nd.name, nd.descriptor, cpIndex);
         
         heap.writeToHeap(reference.getReference(), fieldInfo.dataFieldOffset, value);
         JVMLogger.log(JVMLogger.TAG_INSTR_STORE, "Put field to heap: (reference: "+reference+", value: "+value+")");

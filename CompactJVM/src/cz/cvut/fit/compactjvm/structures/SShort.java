@@ -24,7 +24,7 @@ public class SShort extends SIntable{
 
     @Override
     public String toString() {
-        return "short("+value+")";
+        return "short("+value+")"+"<id:"+this.id+">";
     }
     
     @Override

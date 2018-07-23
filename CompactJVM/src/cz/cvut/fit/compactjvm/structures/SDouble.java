@@ -24,6 +24,6 @@ public class SDouble extends SStruct{
 
     @Override
     public String toString() {
-        return "double("+value+")";
+        return "double("+value+")"+"<id:"+this.id+">";
     }
 }

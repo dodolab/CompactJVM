@@ -24,7 +24,7 @@ public class SBoolean extends SIntable {
 
     @Override
     public String toString() {
-        return "bool("+value +")";
+        return "bool("+value +")"+"<id:"+this.id+">";
     }
 
     @Override
