@@ -19,7 +19,7 @@ public class IfcmpeqInstruction {
         
         SIntable value2 = stackFrame.operandStack.pop();
         SIntable value1 = stackFrame.operandStack.pop();
-        
+
         SInt val1 = value1.toInt();
         SInt val2 = value2.toInt();
         

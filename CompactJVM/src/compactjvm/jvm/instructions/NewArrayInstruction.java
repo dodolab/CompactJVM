@@ -68,7 +68,7 @@ public class NewArrayInstruction {
 
         stackFrame.operandStack.push(arrayReference);
 
-        JVMLogger.log(JVMLogger.TAG_INSTR, "NewArray: size " + size + "; type: "+array[0].getClass().getName());
+        JVMLogger.log(JVMLogger.TAG_INSTR, "NewArray: size " + size + "; type: "+array.getClass().getName());
     }
     
 }

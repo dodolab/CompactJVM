@@ -104,6 +104,9 @@ public class InstructionManager {
             case Instruction.IN_FCONST2: FConstInstruction.run(jvmStack.getCurrentFrame(), 2.0f); break;
             case Instruction.IN_IF_ICMPGE: IfIcmpgeInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_IF_ICMPGT: IfIcmpgtInstruction.run(jvmStack.getCurrentFrame()); break;
+            case Instruction.IN_IF_ICMPLE: IfIcmpleInstruction.run(jvmStack.getCurrentFrame()); break;
+            case Instruction.IN_IF_ACMPEQ: IfAcmpeqInstruction.run(jvmStack.getCurrentFrame()); break;
+            case Instruction.IN_IF_ACMPNE: IfAcmpneInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_IF_ICMPEQ: IfcmpeqInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_IF_ICMPNE: IfcmpneInstruction.run(jvmStack.getCurrentFrame()); break;
             case Instruction.IN_IF_NULL: IfnullInstruction.run(jvmStack.getCurrentFrame());break;

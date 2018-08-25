@@ -163,6 +163,12 @@ public class Instruction {
     public static final int IN_IF_ICMPGE = 0xa2;
     // if value1 is greater than to value2, branch to instruction at branchoffset (signed short constructed from unsigned bytes branchbyte1 << 8 + branchbyte2)
     public static final int IN_IF_ICMPGT = 0xa3; 
+    // if value1 is less than or equal to value2, branch to instruction at branchoffset (signed short constructed from unsigned bytes branchbyte1 << 8 + branchbyte2) 
+    public static final int IN_IF_ICMPLE = 0xa4;
+    // if references are equal, branch to instruction at branchoffset (signed short constructed from unsigned bytes branchbyte1 << 8 + branchbyte2) 
+    public static final int IN_IF_ACMPEQ = 0xa5;
+    // if references are not equal, branch to instruction at branchoffset (signed short constructed from unsigned bytes branchbyte1 << 8 + branchbyte2) 
+    public static final int IN_IF_ACMPNE = 0xa6;
     // if value is null, branch to instruction at branchoffset
     public static final int IN_IF_NULL = 0xc6;
     // if value is not null, branch to instruction at branchoffset

@@ -6,11 +6,11 @@ import compactjvm.jvm.JVMLogger;
 import compactjvm.structures.*;
 
 /**
- * if value1 is greater than or equal to value2, branch to instruction at
- * branchoffset (signed short constructed from unsigned bytes branchbyte1 << 8 +
+ * if value1 is less than or equal to value2, branch to instruction at branchoffset 
+ * (signed short constructed from unsigned bytes branchbyte1 << 8 + branchbyte2) 
  * branchbyte2) @author Adam Vesecky
  */
-public class IfIcmpgtInstruction {
+public class IfIcmpleInstruction {
 
     public static void run(StackFrame stackFrame) throws LoadingException {
 
@@ -22,11 +22,11 @@ public class IfIcmpgtInstruction {
         SInt val1 = value1.toInt();
         SInt val2 = value2.toInt();
 
-        if (val1.getValue() > val2.getValue()) {
+        if (val1.getValue() <= val2.getValue()) {
             stackFrame.setCurrentInstructionIndex(nextInstruction);
-            JVMLogger.log(JVMLogger.TAG_INSTR_JUMP, "IfIcmpgt: " + value1 + " > " + value2 + "; goto " + nextInstruction);
+            JVMLogger.log(JVMLogger.TAG_INSTR_JUMP, "IfIcmple: " + value1 + " <= " + value2 + "; goto " + nextInstruction);
         } else {
-            JVMLogger.log(JVMLogger.TAG_INSTR_JUMP, "IfIcmpgt: " + value1 + " <= " + value2);
+            JVMLogger.log(JVMLogger.TAG_INSTR_JUMP, "IfIcmple: " + value1 + " > " + value2);
         }
     }
 }
