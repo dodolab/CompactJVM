@@ -1,18 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package satsolver;
 
-import cz.cvut.fit.compactjvm.proxies.JVMFunctions;
-import cz.cvut.fit.compactjvm.proxies.TextReader;
+import compactjvm.proxy.JVMFunctions;
+import compactjvm.proxy.TextReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
  *
- * @author Nick Nemame
+ * @author Adam Vesecky
  */
 public class FileLoader {
  

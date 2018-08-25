@@ -1,114 +1,82 @@
-MI-RUN semestrálka
-Autoøi: Adam Vesecký (svecadam), Jan Havlíèek (havlij17) 
-
 
 ------------------------------------------
-Implementace Java Virtual Machine v Javì
+Experimental Java Virtual Machine
 ------------------------------------------
 
-***********************************
-Projekty
-***********************************
-***********************************
+## Projects
+- CompactJVM - virtual machine 
+- CopmactJVMLab - library of dummy objects and native proxy methods, has to be included by a project that runs inside the CompactJVM 
+- SatSolver - an example app for resolving boolean satisfiability
 
-CompactJVM
-- virtuální stroj
+## Parameters
+- path to the root dir of your app 
+- path to the root dir of libraries (compiled CompactJVMLib)
+- namespace of the main class (e.g. satSolver/Main)
+- arguments for excecuted application
 
-parametry:
-- cesta do koøenového adresáøe s aplikací
-- cesta do koøenového adresáøe s knihovnami (zkompilované CompactJVMLib)
-- namespace main tøídy (napø. satSolver/Main)
-- argumenty pro spouštìný program
+## SAT Solver parameters
+- input file with clauses
+- output file for writing
 
--------------------
+## Build 
+- run following commands from within CompactJVM folder
 
-CompactJVMLab
-- knihovna dummy objektù a nativních proxy metod
-- musí být includována projektem, který pobìží v CompactJVM
-
--------------------
-
-SatSolver
-- SAT øešiè
-
-parametry:
-- vstupní soubor s klauzulemi
-- výstupní soubor pro zápis
-
-
-***********************************
-Build:
-***********************************
-***********************************
-
-
-V adresáøi projektù CompactJVM spustit tyto pøíkazy:
+```
 ant compile
-ant jar
+ant run
+```
 
-V adresáøi projektu SatSolver spustit tento pøíkaz:
-ant compile
+- run following commands from within SatSolver folder 
 
+```
+ant compile 
+```
 
-Pro spuštìní projektu SatSolver nad testovacími daty pak staèí v adresáøi CompactJVM/build/jar spustit následující pøíkaz:
+- to execute the SatSolver with a test file you need to go to the `CompactJVM/build/jar` and execute following command:
+
+```
 java -jar CompactJVM.jar ../../../SatSolver/build/classes/ ../../../CompactJVMLib/build/classes/ satSolver/Main ../../../SatSolver/cnf.txt result.txt
+```
 
--- v metodì Main projektu CompactJVM je možno povypínat jednotlivé typy logù
+## Input file
+- line begining with 'c' contains a comment 
+- the first line should contain 'p' letter, followed by 2 values: number of variables (M) and number of clauses (N)
+- N lines follow, containing clauses as numbers divided by spaces. Each number (1-M) represents a variable. If the number is negative, the variable is negated. At the end of each line must be '0' as an ending character.
 
+Example:
 
-***********************************
-Vstupní soubor:
-***********************************
-***********************************
+```
+c test 176
+p 3 4
+1 -2 3
+-1 2 -3
+1 -3
+2 -3
+```
 
-Vstupní soubor odpovídá bìžné konvenci pro zadání SAT problému.
- - øádek zaèánající znakem "c" obsahuje komentáø
- - následuje øádek zaèínající znakem "p" a ten dále obsahuje 2 hodnoty oddìlené mezerou:
-    - 1. poèet promìnných (M)
-    - 2. poèet klauzulí (N)
- - dále následuje N øádkù obsahující klauzule v podobì èísel oddìlených mezerou. Každé èíslo (1 až M) pøedstavuje promìnnou a pokud je èíslo záporné, je promìnná negována. Na konci øádku je ukonèovací znak "0".
- 
- Pøíklad:
- c Testovací soubor cnf
- p 3 4
- 1 -2 3
- -1 2 -3
- 1 -3
- 2 -3
-    
-    
-***********************************
-Výstupní soubor:
-***********************************
-***********************************
+## Output file:
+- contains a message whether or not is the formula satisfiable
+- if the formula is satisfable, the output file will contain an interpretation that satisfies it as follows (e.g. [True True False])
+   
+   
+## Features:
+### Garbage collector
+- Mark&Copy algorithm, searches for objects in use that are to be copied into other half of the heap, the first one will be discared afterwards
 
-Obsahuje zprávu, zda je zadaný výraz splnitelný nebo ne, pokud splnitelný je, jsou vypsány hodnoty True nebo False v poøadí oznaèení promìnných, napø:
-[True True False] znamená promìnná 1 = True, 2 = True, 3 = False.
+### Exceptions 
+- support for exception from within and outside the running application (ArithmeticException, NullPointerException,...)
 
-
-***********************************
-Features:
-***********************************
-***********************************
-
-Garbage collector:
-- použit Mark&Copy, vyhledává používané objekty, které zkopíruje do druhé poloviny heapy, ta první je poté zahozena
-
-Exceptions:
-- podpora výjimek uvnitø i vnì bìžící aplikace (ArithmeticException, NullPointerException)
-
-Nativní metody
-- zápis do souboru a výstup do konzole je øešen pomocí nativních metod
-- tyto metody jsou implementovány v CompactJVM
-
-Dìdiènost
+### Native method 
+- IO operations are handled by native methods, implemented in CompactJVM
 
 
-***********************************
+### Inheritance
 
+## What is not implemented
+- Everything else :-)
+- multithreading, annotations, Java7+ features
 
-
-Seznam implementovaných instrukcí:
+## Supported instructions:
 - aaload
 - aastore
 - aconstnull

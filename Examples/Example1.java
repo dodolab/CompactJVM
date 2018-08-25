@@ -1,6 +1,6 @@
 
 
-import cz.cvut.fit.compactjvm.proxies.*;
+import compactjvm.proxy.*;
 import java.io.IOException;
 
 /**
