@@ -29,13 +29,15 @@ public class InvokeVirtualInstruction {
         MethodDefinition method = stack.getCurrentFrame().associatedClass.getMethodDefinition(methodRefIndex,
                 stack.getCurrentFrame().associatedMethod, methodArea);
 
-        ClassFile classFile = methodArea.getClassFile(method.getMethodClass());
+        //ClassFile classFile = methodArea.getClassFile(method.getMethodClass());
 
         // following specification, the object we are looking for is BEFORE all parameters
         int params = method.getMethodParams().size();
 
         // on the peek there should be a object whose method is called
         SObjectRef objectRef = stack.getCurrentFrame().operandStack.get(params);
+        
+        ClassFile classFile = objectRef.getClassFile();
         
         if(objectRef.isNull()){
             // nullpointer exception

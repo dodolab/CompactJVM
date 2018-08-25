@@ -32,7 +32,7 @@ public class CompactJVM {
         instance = this; 
         ClassFileLoader classLoader = new ClassFileLoader();
         methodArea = new MethodArea(classLoader);
-        heap = new ObjectHeap(methodArea, 10000); //heap je pouze jedna pro jednu instanci JVM, tzn. thready ji sdili
+        heap = new ObjectHeap(methodArea, 1400); //heap je pouze jedna pro jednu instanci JVM, tzn. thready ji sdili
     }
     
     public List<JVMThread> getThreads() {

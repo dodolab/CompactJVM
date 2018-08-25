@@ -1,0 +1,2 @@
+Je splnitelná: 
+[False False True]

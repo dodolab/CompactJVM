@@ -20,11 +20,11 @@ public class Main {
                     + "\n"
                     + "Example: \n"
                     + "java -jar CompactJVM.jar ../SatSolver/build/classes/ ../CompactJvmLab/build/classes compactjvmlab/CompactJVMLab '../cnf1.txt ../cnf1-result.txt'");
-            return;
+          //  return;
         }
         
         // load testing class file
-      /*  args = new String[]{
+     /*   args = new String[]{
         "../SatSolver/build/classes/",
         "../CompactJvmLib/build/classes/",
         "satsolver/Main", 
@@ -53,7 +53,7 @@ public class Main {
             //JVMLogger.enableLogging(JVMLogger.TAG_INSTR_STORE);
 
             JVMLogger.enableLogging(JVMLogger.TAG_OTHER);
-            JVMLogger.enableLogging(JVMLogger.TAG_HEAP);
+            //JVMLogger.enableLogging(JVMLogger.TAG_HEAP);
             JVMLogger.enableLogging(JVMLogger.TAG_GC);
             JVMLogger.enableLogging(JVMLogger.TAG_PRINT);
             
@@ -63,6 +63,8 @@ public class Main {
             if(!libraryPath.endsWith("/")) libraryPath = libraryPath + "/";
             String mainClass = args[2];
             String[] arguments = new String[args.length-3];
+            
+            System.out.println("Lib: "+libraryPath);
             
             for(int i=0; i<arguments.length; i++){
                 arguments[i] = args[i+3];
