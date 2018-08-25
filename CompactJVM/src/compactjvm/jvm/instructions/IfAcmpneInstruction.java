@@ -18,7 +18,7 @@ public class IfAcmpneInstruction {
         
         SGenericRef value2 = stackFrame.operandStack.pop();
         SGenericRef value1 = stackFrame.operandStack.pop();
-        
+     
         if (value2.getReference() != value2.getReference()) {
             stackFrame.setCurrentInstructionIndex(nextInstruction);
             JVMLogger.log(JVMLogger.TAG_INSTR_JUMP, "Ifacmpne: " + value1 + " != " + value2 + "; goto " + nextInstruction);
