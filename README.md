@@ -81,6 +81,7 @@ This is a demonstration project that can be executed in `CompactJVM`
 - line begining with **c** contains a comment 
 - the first line must contain **p** letter, followed by 2 values: number of variables **M** and number of clauses **N**
 - N lines follow, containing clauses as numbers divided by spaces. Each number **1-M** represents a variable. If the number is negative, the variable is negated. At the end of each line must be '0' as an ending character.
+- **You can find several examples inside SatSolver/examples folder**
 
 
 Example:
