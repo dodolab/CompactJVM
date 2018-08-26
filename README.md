@@ -61,7 +61,13 @@ There is no configuration file. If you want to increase heap size or enable or d
 
 ## Implemented instructions:
 ```
-aaload, aastore, aconstnull, aload, anewarray, areturn, astore, athrow, arraylength, baload, bipush, caload, castore, dup, fconst, getstatic, getfield, goto, iaload, iastore, iadd, iconst, idiv, iinc, iload, iloadN, imul, ineg, ireturn, istore, istoreN, isub, ifacmpeq, ifacmpne, ificmpge, ificmpgt, ificmple, ificmpeq, ificmpne, ifeq, ifge, ifgt, iflt, ifle, ifne, ifnonnull, ifnull, invokespecial, invokestatic, invokevirtual, lconstn, lload, lloadn, ldc, newarray, new, nop, pop, putfield, sipush
+aaload, aastore, aconstnull, aload, anewarray, areturn, astore, athrow,
+arraylength, baload, bipush, caload, castore, dup, fconst, getstatic,
+ getfield, goto, iaload, iastore, iadd, iconst, idiv, iinc, iload, iloadN,
+ imul, ineg, ireturn, istore, istoreN, isub, ifacmpeq, ifacmpne, ificmpge,
+ ificmpgt, ificmple, ificmpeq, ificmpne, ifeq, ifge, ifgt, iflt, ifle, ifne,
+ ifnonnull, ifnull, invokespecial, invokestatic, invokevirtual, lconstn,
+ lload, lloadn, ldc, newarray, new, nop, pop, putfield, sipush
 ```
 
 # SAT Solver 
