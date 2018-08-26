@@ -36,5 +36,4 @@ public class SShort extends SIntable{
     public void negate() {
         value = (short) -value;
     }
-    
 }

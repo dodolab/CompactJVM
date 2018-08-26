@@ -1,9 +1,9 @@
 package compactjvm.definitions;
 
 /**
- *
+ * Access flags
  * @author Adam Vesecky
- * Kapitola 4.1. https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html
+ * Chapter 4.1. https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html
  */
 public class ClassAccessFlag {
     public static final int ACC_PUBLIC      = 0x0001;	//Declared public; may be accessed from outside its package.

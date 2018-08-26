@@ -4,7 +4,6 @@ import compactjvm.classfile.ClassFile;
 import compactjvm.classfile.FLEntity;
 import compactjvm.structures.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 
 /**
@@ -196,8 +195,6 @@ public class GarbageCollector {
     }
 
     private void markLivingObject(int reference, int size) {
-        
-        
         if (!referencesToKeep.contains(reference)) {
             Integer[] refSize = new Integer[2];
             refSize[0] = reference;
@@ -208,8 +205,6 @@ public class GarbageCollector {
     }
 
     private void swapHeap() {
-
-       // heap.logAllHeap();
         // swap heap
         heap.swapHeap();
 
@@ -217,7 +212,5 @@ public class GarbageCollector {
         for (Integer[] livingObj : objectsToKeep) {
             heap.moveObjectFromOldHeap(livingObj[0], livingObj[1]);
         }
-
-       //heap.logAllHeap();
     }
 }

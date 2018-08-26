@@ -8,7 +8,9 @@ import compactjvm.structures.*;
 /**
  * if value1 is greater than or equal to value2, branch to instruction at
  * branchoffset (signed short constructed from unsigned bytes branchbyte1 << 8 +
- * branchbyte2) @author Adam Vesecky
+ * branchbyte2) 
+ * 
+ * @author Adam Vesecky
  */
 public class IfIcmpgtInstruction {
 

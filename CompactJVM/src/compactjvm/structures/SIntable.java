@@ -2,7 +2,7 @@
 package compactjvm.structures;
 
 /**
- * Common class for primitive objects that can be casted to int
+ * Base class for primitive objects that can be casted to int
  * 
  * @author Adam Vesecky
  */

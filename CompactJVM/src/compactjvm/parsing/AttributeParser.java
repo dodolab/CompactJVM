@@ -118,8 +118,7 @@ public class AttributeParser {
     
     private AttrCode parseCodeAttribute(ClassFile cls, DataInputStream dis) throws IOException, ParsingException {
         AttrCode attr = new AttrCode();
-        // note: there is indeed an integer
-                attr.length = dis.readInt();
+        attr.length = dis.readInt();
         attr.maxStack = dis.readShort();
         attr.maxLocals = dis.readShort();
         attr.codeLength = dis.readInt();

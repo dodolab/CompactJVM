@@ -6,7 +6,6 @@ import compactjvm.exceptions.OutOfHeapMemException;
 import compactjvm.jvm.ObjectHeap;
 import compactjvm.jvm.StackFrame;
 import compactjvm.structures.SArrayRef;
-import compactjvm.structures.SGenericRef;
 import compactjvm.structures.SInt;
 import compactjvm.structures.SObjectRef;
 import compactjvm.jvm.JVMLogger;

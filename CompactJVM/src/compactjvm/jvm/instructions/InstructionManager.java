@@ -7,11 +7,8 @@ import compactjvm.jvm.ObjectHeap;
 import compactjvm.jvm.JVMLogger;
 
 /**
- * Spusti instrukci prislusnou danemu kodu
- * Obsahuje jvmStack, method area, takze je schopen poskytnout instrukcim pristup
- * ke vsemu, co potrebuji, aby mohly pracovat s operand stackem, lokalnimi promennymi,
- * tridnimi promennymi, aby mohly vyvolavat nove metody - pridavat stack frames,
- * vracet hodnoty - odebirat stack frames
+ * Executes instruction according to its code
+ * 
  * @author Adam Vesecky
  */
 public class InstructionManager {
@@ -119,7 +116,6 @@ public class InstructionManager {
             case Instruction.IN_PUTFIELD: PutfieldInstruction.run(jvmStack, heap, methodArea); break;
             case Instruction.IN_GETFIELD: GetfieldInstruction.run(jvmStack, heap); break;
             case Instruction.IN_INVOKEVIRTUAL: InvokeVirtualInstruction.run(jvmStack, methodArea); break;
-            case Instruction.IN_PUTSTATIC: PutStaticInstruction.run(jvmStack.getCurrentFrame());break;
             case Instruction.IN_GETSTATIC: GetStaticInstruction.run(jvmStack, methodArea); break; 
             case Instruction.IN_CALOAD : CALoadInstruction.run(jvmStack.getCurrentFrame(), heap); break;
             case Instruction.IN_CASTORE : CAStoreInstruction.run(jvmStack.getCurrentFrame(), heap); break;

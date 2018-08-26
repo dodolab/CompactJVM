@@ -5,7 +5,7 @@ package compactjvm.jvm;
 import java.util.Stack;
 
 /**
- * Zakladni stack JVM, ktery obsahuje stack framy
+ * JVM stack that contains frames
  * @author Adam Vesecky
  */
 public class JVMStack {

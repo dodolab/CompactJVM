@@ -45,8 +45,6 @@ public class Instruction {
     public static final int IN_ASTORE3 = 0x4e; // 78
     // get a static field value of a class, where the field is identified by field reference in the constant pool index (index1 << 8 + index2)
     public static final int IN_GETSTATIC = 0xb2;
-    // set static field to value in a class, where the field is identified by a field reference index in constant pool (indexbyte1 << 8 + indexbyte2)
-    public static final int IN_PUTSTATIC = 0xb3;
     // store int value into variable #index
     public static final int IN_ISTORE = 0x36;
     // store int value into variable 0

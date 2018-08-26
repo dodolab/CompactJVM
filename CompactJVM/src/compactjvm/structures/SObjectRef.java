@@ -63,5 +63,4 @@ public class SObjectRef extends SGenericRef{
             return "object#"+this.heapReference+"#("+(this.classFile == null ? "???" : this.classFile.getClassName())+")"+"<id:"+this.id+">";
         }
     }
-
 }

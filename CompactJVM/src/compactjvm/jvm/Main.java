@@ -7,12 +7,9 @@ package compactjvm.jvm;
  */
 public class Main {
 
-     // default size of the heap. Is very low, however
+     // default size of the heap. Is very low because of garbage collector testing
     private static final int DEFAULT_HEAP_SIZE = 1400;
     
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
         if(args.length < 3 || args[0].equals("--help")) {
             System.out.println("Usage:\n"

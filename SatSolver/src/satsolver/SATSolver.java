@@ -4,7 +4,7 @@ import compactjvm.proxy.JVMFunctions;
 import java.util.Date;
 
 /**
- *
+ * Class for solving boolean satisfiability problem
  * @author Adam Vesecky
  */
 public class SATSolver {
@@ -19,11 +19,8 @@ public class SATSolver {
     
     Clauses clauses;
     int variablesCount;
-    /**
-     * @param clauses
-     * @param variablesCount
-     * @return 
-     */
+
+    
     public VariableEvaluation solve(Clauses clauses, int variablesCount) {
         this.clauses = clauses;
         this.variablesCount = variablesCount;
@@ -66,10 +63,6 @@ public class SATSolver {
     }
     
     private int isSatisfied(VariableEvaluation evaluation) {
-        //JVMFunctions.println("BEGINS CHECK");
-        //JVMFunctions.println(evaluation.getEvaluation()[0]);
-        //JVMFunctions.println(evaluation.getEvaluation()[1]);
-        //JVMFunctions.println(evaluation.getEvaluation()[2]);
         for(int i = 0; i < clauses.size(); ++i) {
             if(isClauseSatisfied(clauses.get(i), evaluation) == 0) {
                 return 0;
@@ -79,14 +72,11 @@ public class SATSolver {
     }
     
     private int isClauseSatisfied(Clause clause, VariableEvaluation evaluation) {
-        //JVMFunctions.println("IsClauseSatisfied");
         int[] evalArray = evaluation.getEvaluation();
         int trueCount = 0;
         for(int i = 0; i < clause.size(); ++i) {
             int literal = clause.get(i);
             int isPositive = literal > 0 ? 1 : 0;
-            //JVMFunctions.println("is positive:");
-            //JVMFunctions.println(literal);
             int literalIndex = Math.abs(literal) - 1;
             int value = evalArray[literalIndex];
             if(isPositive == 0) {
@@ -94,8 +84,6 @@ public class SATSolver {
             }
             trueCount += value;
         }
-        //JVMFunctions.println(trueCount);
         return trueCount > 0 ? 1 : 0;
     }
-    
 }

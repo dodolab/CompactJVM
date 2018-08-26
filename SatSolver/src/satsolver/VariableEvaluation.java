@@ -1,9 +1,6 @@
 package satsolver;
 
-/**
- *
- * @author Adam Vesecky
- */
+
 public class VariableEvaluation {
     private int[] evaluation;
     private int[] evaluatedVariables;
@@ -22,13 +19,7 @@ public class VariableEvaluation {
         this.evaluatedVariables = evaluatedVariables;
         this.clausesCount = clausesCount;
     }
-    
-    /**
-     * 
-     * @param variable
-     * @param value
-     * @return 
-     */
+
     public VariableEvaluation getNewEvaluation(int variable, int value) {
         VariableEvaluation clone = getClone();
         clone.evaluateVariable(variable, value);
@@ -82,6 +73,4 @@ public class VariableEvaluation {
             array[i] = 0;
         }
     }
-    
-    
 }

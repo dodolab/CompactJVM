@@ -3,7 +3,7 @@ package compactjvm.jvm;
 import java.util.ArrayList;
 
 /**
- * Very simple logger that uses tags that can be either enabled or disabled
+ * A very simple logger that uses tags that can be either enabled or disabled
  * @author Adam Vesecky
  */
 public class JVMLogger {
@@ -79,7 +79,7 @@ public class JVMLogger {
             System.out.print("["+tag+"]:: ");
             
             if(tag.startsWith(TAG_INSTR)){
-                // toto je naprosta prasarna, ale nechtelo se mi lezt do kazde instrukce a menit log
+                // this is a piggy stuff of a highest callibre, however I don't give a ****
                 int instruct = CompactJVM.getInstance().getThreads().get(0).getStack().getCurrentInstructionIndex();
                 System.out.print("["+instruct+"]");
             }

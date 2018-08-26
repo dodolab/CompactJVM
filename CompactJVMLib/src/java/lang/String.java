@@ -32,7 +32,6 @@ public class String {
     }
     
     public String[] split(String delimiter) {
-        //if(delimiter.length() > 1) throw new Exception("Large delimiters not implemented");
         char delimiterChar = delimiter.charAt(0);
         int matchesCount = getMatchesCount(delimiterChar);
         String[] str = new String[matchesCount+1];

@@ -3,7 +3,6 @@ package compactjvm.jvm.instructions;
 import compactjvm.exceptions.LoadingException;
 import compactjvm.jvm.JVMStack;
 import compactjvm.jvm.JVMLogger;
-import compactjvm.structures.*;
 
 /**
  * Return void from method. The interpreter then returns control to the invoker

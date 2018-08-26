@@ -53,7 +53,7 @@ public class FieldInfoParser {
         return ent;
     }
 
-    //Spocita offset v datove casti kazdeho objektu na heape
+    // calculates an offset in data part of each object in the heap
     private int getFieldOffset(String descriptor) {
         int currentFieldOffset = nextFieldOffset;
         nextFieldOffset += 1;//("J".equals(descriptor) || "D".equals(descriptor)) ? 2 : 1;

@@ -6,7 +6,7 @@ import compactjvm.jvm.JVMLogger;
 import compactjvm.structures.*;
 
 /**
- * store a reference into a local variable #index (or 0, 1, 2, 3)
+ * Store a reference into a local variable #index (or 0, 1, 2, 3)
  * @author Adam Vesecky
  */
 public class AStoreNInstruction {

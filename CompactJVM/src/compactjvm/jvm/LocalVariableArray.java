@@ -6,23 +6,24 @@ import compactjvm.structures.*;
 
 
 /**
- * Velikost slova je v teto implementaci definovana jako int.
- * int, short, byte a float odpovidaji velikosti 1 slova, double a long opodvidaji
- * velikosti 2 slov. Horni slovo doublu a longu by nemelo byt dostupne naprimo.
- * @todo Zvazit kontrolu na to, zda jiz na danem indexu byla nastavena hodnota nebo ne, ackoliv Java na me vlastne asi nezarve, kdyz saham nekam, kde jsem neinicalizoval hodnotu.
- * @todo Pro volani instancni metody je treba do localVariables umistit na pozici 0 referenci na "this"
+ * 
+ * Size of a word is represented by an integer
+ * int, short, byte and float have size of 1 word, double and long have size of 2 words
+ * 
+ * If we invoke a method of an instance, we need to put a reference to "THIS" at the first
+ * index of localVariables 
+ * 
  * @author Adam Vesecky
  */
 public class LocalVariableArray {
     
     /**
-     * Pole slov pro jednotlive lokalni promenne
+     * Array of words for all local variables
      */
     SStruct[] localVariables;
     
     /**
-     * @param size Velikost pole lokalnich promennych, ziskano z ClassFile
-     * @todo pridat moznost vlozit "this" referenci pro instancni volani metody
+     * Size of an array of local variables, taken from ClassFile
      */
     public LocalVariableArray(int size) {
         localVariables = new SStruct[size];

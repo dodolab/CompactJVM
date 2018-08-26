@@ -53,12 +53,8 @@ public class ClassFileLoader {
     }
 
     /**
-     * Nacte class file a zparsuje jej. Zde bude implementovana metoda
-     * vyhledavani souboru - bud striktne podle namespace nebo prohledavanim
-     * celeho CLASSPATH
+     * Loads class file and parses it into structures from compactjvm.classfile
      *
-     * @param className Fully quantified name
-     * @return
      */
     public ClassFile load(String className) throws IOException {
 

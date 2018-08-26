@@ -6,13 +6,10 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Tato trida uchovava parsovane definice trid.
- * Je spolecna pro vsechny instance JVM. Muze byt aplikovan garbage collector.
- * Pokud tato area neobsahuje pozadovanou tridu, pak vyuzije ClassFileLoaderu
- * k jejimu nacteni.
- * @todo Mel by byt thread-safe - If two threads are attempting to find a class named Lava, for example, and Lava has not yet been loaded, only one thread should be allowed to load it while the other one waits"
- * @todo Garbage collector - pokud je trida "unreferenced"
- * @todo Inside-Java-Virtual-Machine, str. 83, Method tables - organizace pro rychly pristup, tabulky instancnich metod
+ * Parsed definitions of all classes, can be applied on Garbage collector
+ * If we are looking for a class and we can't find it inside MethodArea,
+ * we need to go into ClassFileLoader and load that particular class
+ * 
  * @author Adam Vesecky
  */
 public class MethodArea {
@@ -43,11 +40,10 @@ public class MethodArea {
     }
     
     /**
-     * Vrati ClassFile, pokud jej JVM jeste nema naparsovany, musi jej nejprve
-     * nacist a pak naparsovat - momentalne takto lazy-load.
-     * V pripade, ze nacitana Class dedi nejakou jinou tridu, je v zapeti rekurzivne
-     * nactena i tato nadtrida. V ClassFile potom existuje vazba na nadtridu
-     * a zaroven se z nadtridy prepocitaji indexy vlastnosti tridy v halde.
+     * Returns a classfile
+     * If the classfile hasn't been parsed yet, it will be lazy-loaded
+     * If the class is inheriting from another class, we need to load the 
+     * parent class as well
      * @param className
      * @return 
      */
@@ -56,15 +52,14 @@ public class MethodArea {
             try {
                 return classStorage.getClass(className);
             } catch (ClassNotFoundException ex) {
-               // never thrown :-)
+               // will never happen (LOL)
             }
         }
       
-        
         ClassFile classFile = classLoader.load(className);
         classStorage.addClass(classFile);
         
-        //Nacitani podtrid a vytvoreni vazeb mezi ClassFile objekty rodicu a potomku
+        // loading parent classes and bindings 
         ClassFile _classFile = classFile;
         boolean superClassAlreadyLoaded = false;
         while(_classFile.getSuperclassName() != null && !superClassAlreadyLoaded) {
@@ -78,7 +73,7 @@ public class MethodArea {
                 try {
                 _classFile.superClass = classStorage.getClass(_classFile.getSuperclassName());
                 } catch (ClassNotFoundException e) {
-                    // trida by jiz mela byt nactena, nic by se nemelo stat
+                    // will never happen (LOL)
                 }
                 superClassAlreadyLoaded = true;
             }
@@ -114,8 +109,8 @@ public class MethodArea {
     }
     
     /**
-     * Bez informace o predcich tridy nejsme schopni presne spocitat offset vlastnosti
-     * v halde. Proto prepocitame
+     * Field offsets need to be recalculated, because without information about 
+     * parent classes we aren't able to calculate offsets precisely
      */
     private void recalculateFieldOffsets(ClassFile classFile) throws IOException {
         if(!classFile.fieldOffsetsRecalculated) {

@@ -46,6 +46,7 @@ public class NativeArea {
         // parse static method
         String rawClassName = className.substring(className.lastIndexOf("/") + 1);
         if (rawClassName.equals("JVMFunctions")) {
+            // handle special methods
             switch (methodName) {
                 case "println":
                     jvm_println(stack, numParams);

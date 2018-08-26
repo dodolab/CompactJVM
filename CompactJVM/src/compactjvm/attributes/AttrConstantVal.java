@@ -1,7 +1,7 @@
 package compactjvm.attributes;
 
 /**
- *
+ * Attribute constant value
  * @author Adam Vesecky
  */
 public class AttrConstantVal extends Attribute{
