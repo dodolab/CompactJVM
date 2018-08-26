@@ -8,14 +8,14 @@ import compactjvm.jvm.JVMLogger;
 import compactjvm.structures.*;
 
 /**
- * create a new array of references of length count and component type
- * identified by the class reference index (indexbyte1 << 8 + indexbyte2) in the
- * constant pool @author Adam Vesecky
+ * Create a new array of references of length count and component type
+ * identified by the class reference index (indexbyte1 << 8 + indexbyte2) in theconstant pool 
+ * 
+ * @author Adam Vesecky
  */
 public class NewArrayInstruction {
 
     public static void run(StackFrame stackFrame, ObjectHeap heap) throws LoadingException, ClassNotFoundException, OutOfHeapMemException {
-
         int arrayType = stackFrame.getNextInstruction();
 
         SInt size = stackFrame.operandStack.pop();
@@ -65,10 +65,7 @@ public class NewArrayInstruction {
         }
 
         SArrayRef arrayReference = heap.allocPrimitiveArray(array, size.getValue());
-
         stackFrame.operandStack.push(arrayReference);
-
         JVMLogger.log(JVMLogger.TAG_INSTR, "NewArray: size " + size + "; type: "+array.getClass().getName());
     }
-    
 }

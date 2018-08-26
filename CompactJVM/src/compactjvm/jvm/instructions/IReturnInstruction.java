@@ -8,7 +8,7 @@ import compactjvm.structures.*;
 /**
  * Return int from method
  * https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-6.html#jvms-6.5.ireturn
- * @todo plati nejen pro int, ale boolean, byte, char, short - hura doimplementovat
+ * This applies also for boolean, byte, char and short!
  * @author Adam Vesecky
  */
 public class IReturnInstruction {

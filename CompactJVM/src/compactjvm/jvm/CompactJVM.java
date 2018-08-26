@@ -13,7 +13,8 @@ import java.util.List;
 ██   ██║╚██╗  ██╔╝  ██║╚██╔╝██║
 ╚█████╔╝╚████╔╝    ██║ ╚═╝ ██║
  ╚════╝   ╚═══╝  ╚═╝     ╚═╝
- * @authors Adam Vesecky
+ * Java Virtual Machine
+ * @author Adam Vesecky
  * ===========================================================================
  */
 public class CompactJVM {
@@ -27,19 +28,20 @@ public class CompactJVM {
         return instance;
     }
     
-    public CompactJVM(){
+    public CompactJVM(int heapSize){
         // this type of access is only for logger :-)
         instance = this; 
         ClassFileLoader classLoader = new ClassFileLoader();
         methodArea = new MethodArea(classLoader);
-        heap = new ObjectHeap(methodArea, 1400); //heap je pouze jedna pro jednu instanci JVM, tzn. thready ji sdili
+        heap = new ObjectHeap(methodArea, heapSize); // one heap per instance
     }
     
     public List<JVMThread> getThreads() {
         return threads;
     }
     
-    public void loadApplication(String classPath, String libraryPath, String mainClass, String[] arguments) throws IOException, ParsingException{
+    public void loadApplication(String classPath, String libraryPath, String mainClass, String[] arguments) 
+            throws IOException, ParsingException{
         methodArea.initialize(classPath, libraryPath, mainClass, arguments);
     }
     

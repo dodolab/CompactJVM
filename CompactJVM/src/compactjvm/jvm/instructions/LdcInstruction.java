@@ -23,7 +23,6 @@ import java.io.IOException;
  */
 public class LdcInstruction {
  
-    
      public static void run(StackFrame stackFrame, MethodArea methodArea, ObjectHeap heap) throws LoadingException, OutOfHeapMemException, IOException
      {
          // get constant pool index

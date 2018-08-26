@@ -5,9 +5,9 @@ import compactjvm.jvm.JVMLogger;
 
 /**
  * goes to another instruction at branchoffset (signed short constructed from
- * unsigned bytes branchbyte1 << 8 + branchbyte2) @author Adam V
- *
- * esecky
+ * unsigned bytes branchbyte1 << 8 + branchbyte2) 
+ * 
+ * @author Adam Vesecky
  */
 public class GotoInstruction {
 

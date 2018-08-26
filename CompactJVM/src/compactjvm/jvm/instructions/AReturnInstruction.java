@@ -20,8 +20,6 @@ public class AReturnInstruction {
         stack.removeCurrentFrame();
         stack.getCurrentFrame().operandStack.push(valueToReturn);
         
-        
         JVMLogger.log(JVMLogger.TAG_INSTR, "AReturn: "+valueToReturn);
-
     }
 }

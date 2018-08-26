@@ -24,5 +24,4 @@ public class IAddInstruction {
         SStruct value = new SInt(operand1.getValue() + operand2.getValue());
         stackFrame.operandStack.push(value);
     }
-
 }

@@ -26,7 +26,6 @@ public class GetfieldInstruction {
         
         FLEntity fieldInfo;
         
-        
         SObjectRef reference = stackFrame.operandStack.pop();
         NameDesc nd = stackFrame.associatedClass.getNameAndDescriptorByCpIndex(cpIndex);
         fieldInfo = stackFrame.associatedClass.getFieldInfo(nd.name, nd.descriptor, cpIndex);

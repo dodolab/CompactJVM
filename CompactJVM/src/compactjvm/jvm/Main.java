@@ -2,11 +2,14 @@ package compactjvm.jvm;
 
 
 /**
- *
+ * Main class for CompactJVM
  * @author Adam Vesecky
  */
 public class Main {
 
+     // default size of the heap. Is very low, however
+    private static final int DEFAULT_HEAP_SIZE = 1400;
+    
     /**
      * @param args the command line arguments
      */
@@ -53,7 +56,7 @@ public class Main {
                 arguments[i] = args[i+3];
             }
             
-            CompactJVM jvm = new CompactJVM();
+            CompactJVM jvm = new CompactJVM(DEFAULT_HEAP_SIZE);
             jvm.loadApplication(classPath, libraryPath, mainClass, arguments);
             jvm.start();
         } catch (Exception e) {

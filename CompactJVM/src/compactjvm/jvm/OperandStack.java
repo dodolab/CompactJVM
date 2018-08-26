@@ -5,12 +5,9 @@ import compactjvm.structures.*;
 import java.util.Stack;
 
 /**
- * Predstavuje zasobnik operandu volanych instrukci. Stejne jako v poli
- * lokalnich promennych, pracuje zasobnik nad "slovy", pricemz tato implementace
- * pocita se slovem delky velikosti typu INT. Pokud tedy budeme chtit nacitat
- * operand typu long a double, pak musime z interniho zasobniku nacist dve
- * slova.
- *
+ * Stack of invoked instructions, operates with words of a length of INT
+ * Thus, if we need to operate with longs and doubles, we need to read
+ * two values from the stack
  * @author Adam Vesecky
  */
 public class OperandStack {
@@ -34,7 +31,6 @@ public class OperandStack {
      * @throws LoadingException 
      */
     public <T extends SStruct> T get(int level) throws LoadingException{
-        // don't touch it!
         SStruct ent = operandStack.get(operandStack.size() - level - 1);
         T entity = (T) ent;
 
@@ -67,5 +63,4 @@ public class OperandStack {
     public <T extends SStruct> void push(T value) {
         operandStack.push(value);
     }
-
 }

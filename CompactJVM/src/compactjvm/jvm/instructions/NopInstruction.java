@@ -4,7 +4,7 @@ import compactjvm.jvm.StackFrame;
 import compactjvm.jvm.JVMLogger;
 
 /**
- * perform no operation
+ * Perform no operation
  * @author Adam Vesecky
  */
 public class NopInstruction {

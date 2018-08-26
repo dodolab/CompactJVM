@@ -11,22 +11,21 @@ import compactjvm.structures.SObjectRef;
 import java.io.IOException;
 
 /**
- *
- * JVM Thread je vlakno v ramci jedne instance JVM stroje.
- * Oddeleno od samotneho JVM pro pripad, ze bychom chteli implementovat vlakna.
+ * A Single JVM thread
  * 
- * Kazdy JVM Thread obdrzi sdilenou "method area" vytvori vlastni soukromy JVM Stack
- *
- * Kazdy JVM Thread dale obdrzi nazev tridy a metody, ktera definuje zacatek behu
- * programu daneho vlakna.
+ * Every thread receives a shared "methdo area" and creates their own private JVM Stack
+ * Every thread also receives a name of the class and method, defining the beginning of the code of given thread
+ * 
+ * Multithreading is not supported at the moment (Why should I bother anyway??!)
  * 
  * @author Adam Vesecky
  */
 public class JVMThread {
     
-    private final InstructionManager instructionManager; //spousti pozadovane instrukce, poskytuje instrukcim potrebne datove zdroje
+    // manager that executes instructions, providing them with necessary sources
+    private final InstructionManager instructionManager; 
     private final JVMStack jvmStack;
-    private final MethodArea methodArea; //sdilena s ostatnimi JVM vlakny
+    private final MethodArea methodArea; // shared with other threads
     private final ObjectHeap heap; // shared with others threads
 
     private NativeArea nativeArea;
@@ -54,14 +53,14 @@ public class JVMThread {
     }
     
     /**
-     * Spusti beh programu v tomto threadu
+     * Executes the application in this thread
      */
     public void run() throws LoadingException, ClassNotFoundException, OutOfHeapMemException, ArrayOutOfBoundsException, Exception {
         
         String className = methodArea.getMainClass();
         // get main method
         ClassFile classFile = methodArea.getClassFile(className);
-        int mainMethodDefIndex = classFile.getMethodDefIndex("main", "([Ljava/lang/String;)V");
+        int mainMethodDefIndex = classFile.getMethodDefIndex("main", "([Ljava/lang/String;)V"); // main method descriptor. What a magic!
         MethodDefinition def = classFile.getMethodDefinition(mainMethodDefIndex, methodArea, className, "main", "()V");
         StackFrame currentFrame = new StackFrame(classFile, mainMethodDefIndex, def, this);
         initializeArguments(currentFrame);
@@ -69,35 +68,31 @@ public class JVMThread {
         
         while(!jvmStack.isEmpty() && jvmStack.getCurrentFrame().hasMoreInstructions()) {
             instructionManager.runInstruction(jvmStack.getCurrentFrame().getNextInstruction());
-        }
-       
+        }       
     }
 
     /**
-     * Zapise do haldy vsechny stringy a pole techto stringu.
-     * Referenci na toto pole ulozi do prvniho StackFrame do prvni lokalni promenne
-     * @param frame
-     * @throws OutOfHeapMemException
-     * @throws IOException 
+     * Writes all strings and their arrays into the heap
+     * Stores the reference for this array into the first StackFrame and the first local variable
+     * 
      */
     public void initializeArguments(StackFrame frame) throws OutOfHeapMemException, IOException, LoadingException {
-        //vlozim stringy do heapy
+        //put strings into heap
         String[] args = methodArea.getArgs();
         SObjectRef[] argsRef = new SObjectRef[args.length];
         for(int i = 0; i < args.length; ++i) {
             argsRef[i] = nativeArea.writeStringToHeap(args[i]);
         }
-        //vlozim pole referenci na stringy do heapy
+        // put the string array reference into heap
         SArrayRef argArrayRef = heap.allocObjectArray(methodArea.getClassFile("java/lang/String"), argsRef.length);
         for(int i = 0; i < args.length; ++i) {
             heap.writeToHeap(argArrayRef.getReference(), i, argsRef[i]);
         }
-        //ulozim referenci na pole stringu do prvni lokalni promenne
+        // save the reference into the first local variable
         frame.localVariables.setVar(0, argArrayRef);
     }
     
     public ObjectHeap getHeap(){
         return this.heap;
     }
-    
 }

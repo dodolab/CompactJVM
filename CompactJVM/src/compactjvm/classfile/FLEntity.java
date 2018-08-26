@@ -4,7 +4,6 @@ import compactjvm.attributes.Attribute;
 
 /**
  * Field info entity
- *
  * @author Adam Vesecky
  */
 public class FLEntity {
@@ -15,9 +14,10 @@ public class FLEntity {
     public int attributesCount;
     public String name;
     public String descriptor;
-    public int dataFieldOffset; //index, na jakem se v datove casti kazdeho objektu na halde nachazi dany field
+    // index at which we can find it in the data part of the heap
+    public int dataFieldOffset; 
 
-    public Attribute[] attrs; // attributes
+    public Attribute[] attrs; 
 
     public boolean isReference() {
         return descriptor.startsWith("L");
@@ -30,5 +30,4 @@ public class FLEntity {
     public boolean isObjectArray() {
         return descriptor.startsWith("[L");
     }
-
 }

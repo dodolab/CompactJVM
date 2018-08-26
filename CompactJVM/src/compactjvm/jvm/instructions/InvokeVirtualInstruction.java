@@ -58,14 +58,12 @@ public class InvokeVirtualInstruction {
             try {
                 methodToInvoke.invoke(nativeObj, stack, stack.jvmThread.getHeap());
             } catch (Exception e) {
-
                 // propagate exception inside
                 AAAException.throwException(e, stack, stack.jvmThread.getHeap(), methodArea);
-
             }
             JVMLogger.log(JVMLogger.TAG_INSTR_INVOKE, "InvokeVirtual native: " + method.getMethodName());
         } else {
-            //Lookup metody v rodicovskych tridach, pokud neni nalezena v aktualni tride
+            // lookup of the method inside parent classes, if we failed looking for it inside the current class
             int methodIndex;
             while ((methodIndex = classFile.getMethodDefIndex(method.getMethodName(), method.getMethodDescriptor())) == -1) {
                 if (classFile.getSuperclassName() == null) {
@@ -82,65 +80,46 @@ public class InvokeVirtualInstruction {
         }
     }
 
-    /**
-     * Nactu ze zasobniku
-     *
-     * @param currentFrame
-     * @param newFrame
-     * @param method
-     */
     public static void loadArgumentsToLocalVariables(StackFrame currentFrame, StackFrame newFrame, MethodDefinition method) throws LoadingException {
 
         JVMLogger.log(JVMLogger.TAG_INSTR, "LoadArgumentsToLocalVariables");
 
-        int locIndex = method.getMethodParamsWordsCount() + 1; // +1 kvuli tomu, ze 1. prvek je objectRef
-        //Kdyz od locIndex odectu pocet slov vkladaneho argumentu, pak dostanu index,
-        //na ktery mam do lokalnich promennych argument vlozit
+        int locIndex = method.getMethodParamsWordsCount() + 1; // +1 because the first item is objectRef
         for (int i = method.getMethodParams().size() - 1; i >= 0; --i) {
             switch (method.getMethodParams().get(i)) {
-                // local variable is set once below (powerful generics will distinct types)
 
                 case "Z": //boolean
                     locIndex -= WordParser.BOOLEAN_WORDS;
-                    //newFrame.localVariables.setBoolean(locIndex, currentFrame.operandStack.popBoolean());
                     break;
                 case "B": //byte
                     locIndex -= WordParser.BYTE_WORDS;
-                    //newFrame.localVariables.setByte(locIndex, currentFrame.operandStack.popByte());
                     break;
                 case "C": //char
                     locIndex -= WordParser.CHAR_WORDS;
-                    //newFrame.localVariables.setChar(locIndex, currentFrame.operandStack.popChar());
                     break;
                 case "S": //short
                     locIndex -= WordParser.SHORT_WORDS;
-                    //newFrame.localVariables.setShort(locIndex, currentFrame.operandStack.popShort());
                     break;
                 case "I": //int
                     locIndex -= WordParser.INT_WORDS;
-                    //newFrame.localVariables.setInt(locIndex, currentFrame.operandStack.popInt());
                     break;
                 case "J": //long
                     locIndex -= WordParser.LONG_WORDS;
-                    //newFrame.localVariables.setLong(locIndex, currentFrame.operandStack.popLong());
                     break;
                 case "F": //float
                     locIndex -= WordParser.FLOAT_WORDS;
-                    //newFrame.localVariables.setFloat(locIndex, currentFrame.operandStack.popFloat());
                     break;
                 case "D": //double
                     locIndex -= WordParser.DOUBLE_WORDS;
-                    //newFrame.localVariables.setDouble(locIndex, currentFrame.operandStack.popDouble());
                     break;
                 default: //array, class, ...
                     locIndex -= WordParser.REFERENCE_WORDS;
-                    //newFrame.localVariables.setInt(locIndex, currentFrame.operandStack.popInt());
                     break;
             }
 
             newFrame.localVariables.setVar(locIndex, currentFrame.operandStack.pop());
         }
-        //nastavi na pozici 0 lokalnich promennych referenci na objekt
+        // set the reference to the object at 0 index of the local variable array
         newFrame.localVariables.setVar(0, currentFrame.operandStack.pop());
     }
 

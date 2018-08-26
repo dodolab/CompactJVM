@@ -12,22 +12,25 @@ import compactjvm.exceptions.LoadingException;
  */
 public class StackFrame {
 
-    public LocalVariableArray localVariables; //obsahuje lokalni promenne
+    // local variables
+    public LocalVariableArray localVariables;
+    // operands
     public OperandStack operandStack; //ukladaji se zde operandy, instrukce
-    public final ClassFile associatedClass; //trida, na niz se tato metoda vola
-    public final int associatedMethod; //index metody v ClassFile
-    private AttrCode codeAttribute; //obsahuje instrukce pro vykonani metody
-    private int currentInstructionIndex; //index v poli instrukci
-    public MethodDefinition methodDefinition = null; //Definice metody - nazev tridy, nazev metody, rozparsovany descriptor
+    // the class this method is called on
+    public final ClassFile associatedClass;
+    // index of the method inside a class file
+    public final int associatedMethod;
+    // instructions for executing this method
+    private AttrCode codeAttribute;
+    // index inside an array of instructions
+    private int currentInstructionIndex;
+    // definition of the method (class name, method name, descriptor)
+    public MethodDefinition methodDefinition = null;
 
     public JVMThread jvmThread;
 
     /**
      * Creates a new stack frame
-     *
-     * @param classFile
-     * @param invokedMethod
-     * @param methodDefinition
      *
      */
     public StackFrame(ClassFile classFile, int invokedMethod, MethodDefinition methodDefinition, JVMThread jvmThread) throws LoadingException {
@@ -39,42 +42,34 @@ public class StackFrame {
     }
 
     /**
-     * Inicializuje frame - nacte seznam instrukci z volane metody -
-     * inicializuje pole lokalnich promennych a zasobnik operandu
+     * Initializes a frame - loads a list of all instruction from invoked method
      */
     private void initializeFrame() throws LoadingException {
         codeAttribute = associatedClass.getMethod(associatedMethod).getCodeAttribute();
         int localVariablesCount = codeAttribute.maxLocals;
         localVariables = new LocalVariableArray(localVariablesCount);
         operandStack = new OperandStack();
-        /* @todo - budu muset nacitat kod metody podle dedicnosti, muze to byt kod metody ze superclass atd. */
         currentInstructionIndex = 0;
     }
 
-    /**
-     * Zjisti, zda metoda jeste obsahuje dalsi instrukce
-     *
-     * @return
-     */
     public boolean hasMoreInstructions() {
         return currentInstructionIndex < codeAttribute.codeLength;
     }
 
     /**
-     * Ziska kod dalsi instrukce
-     *
-     * @return
+     * Gets a code of the next instruction
      */
     public byte getNextInstruction() {
         return readNextCodeByte();
     }
 
     /**
-     * Nacte parametry nactene instrukce - instrukce si rekne, kolik bytovych
-     * parametru vyzaduje, ale sama si do codeAttribute nesaha
+     * Loads parameters of currently loaded instruction - the instruction itself
+     * determines how many parameters it requires
      *
-     * @param paramsCount Pozadovany pocet parametru
-     * @return parametry v poli podle toho, jak sli za sebou v bytecode
+     * @param paramsCount number of required parameters
+     * @return parameters in an array. Their order is the same as in the
+     * bytecode
      */
     public byte[] loadInstructionParams(int paramsCount) {
         byte[] params = new byte[paramsCount];
@@ -86,22 +81,23 @@ public class StackFrame {
 
     /**
      * Loads goto jump
-     * @return 
+     *
+     * @return
      */
     public int loadInstructionJumpAddr() {
         byte[] bytes = loadInstructionParams(2);
         int val = (bytes[0] << 8) | bytes[1];
-              
+
         int nextInstruction = this.currentInstructionIndex + val - 3;
-        if(nextInstruction < 0){
+        if (nextInstruction < 0) {
             nextInstruction = 256 + nextInstruction;
         }
-        
+
         return nextInstruction;
     }
 
     /**
-     * Nacte prave jeden parametr, pokud jej instrukce vyzaduje.
+     * Loads one parameter
      *
      * @return
      */
@@ -123,12 +119,12 @@ public class StackFrame {
      * @param val
      */
     public void setCurrentInstructionIndex(int val) {
-        
-        if(val < 0){
-            val = 256+val;
-            JVMLogger.log(JVMLogger.TAG_INSTR_JUMP, "Correcture in jump: "+val);
+
+        if (val < 0) {
+            val = 256 + val;
+            JVMLogger.log(JVMLogger.TAG_INSTR_JUMP, "Correcture in jump: " + val);
         }
-        
+
         currentInstructionIndex = val;
     }
 
@@ -142,10 +138,8 @@ public class StackFrame {
     }
 
     /**
-     * Nacte dalsi byte z kodu a posune index, vyuziva se pri nacteni instrukci
-     * a jejich parametru z bytecodu
+     * Loads the next byte from the code and moves the index
      *
-     * @return
      */
     private byte readNextCodeByte() {
         byte nextByte = codeAttribute.code[currentInstructionIndex];

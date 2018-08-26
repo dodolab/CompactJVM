@@ -21,10 +21,11 @@ import java.util.Map;
 
 /**
  * Class file with all its methods, entities and fields
- * 
+ *
  * @author Adam Vesecky
  */
 public class ClassFile {
+
     public short majorVersion;
     public short minorVersion;
     public short cpSize; // constant pool size
@@ -48,13 +49,14 @@ public class ClassFile {
     public int[] classVariables;
     public int index; // index of parsed class
 
-    public boolean fieldOffsetsRecalculated = false; //Pri inicializaci je prepocitat offset vlastnosti, jak budou ukladana na halde podle predku tridy
+    // during the reinitialization, it is necessary to recalculate offset of the field
+    // in order to store it inside a heap according to the ancestors of the class
+    public boolean fieldOffsetsRecalculated = false;
     public ClassFile superClass = null;
     public String className;
 
     /**
-     * Ziska nazev tridy z constant poolu
-     *
+     * Gets name of the class from the constant pool
      */
     public String getClassName() {
         CPClass stringEntity = (CPClass) cpEntities[thisClassIndex];
@@ -66,7 +68,7 @@ public class ClassFile {
     }
 
     /**
-     * Get name of superclass
+     * Gets name of superclass
      *
      */
     public String getSuperclassName() {
@@ -82,7 +84,7 @@ public class ClassFile {
     }
 
     /**
-     * Ziska Entitu odpovidajici pozadovane metode
+     * Gets an entity corresponding to a given method
      *
      */
     public MTHEntity getMethod(int index) throws LoadingException {
@@ -101,11 +103,11 @@ public class ClassFile {
                 return methodInfos[i];
             }
         }
-        
-        if(this.getSuperclassName() != null){
+
+        if (this.getSuperclassName() != null) {
             return this.getSuperClass().getMethod(name);
         }
- 
+
         throw new LoadingException("Method " + name + " not found in class " + this.className);
     }
 
@@ -120,8 +122,8 @@ public class ClassFile {
     }
 
     /**
-     * Nacte z constant poolu informace o metode, ktera je reprezentovana
-     * zadanym indexem. nacte nazev tridy, nazev metody a descriptor.
+     * Loads info about a given method from the constant pool, represented
+     * by a given index. Loads a name of the class, name of its method and a descriptor
      *
      */
     public MethodDefinition getMethodDefinition(int methodRefIndex, int methodDefIndex, MethodArea methodArea) throws LoadingException, IOException {
@@ -143,7 +145,7 @@ public class ClassFile {
         } else {
             methodCls = this;
         }
-        
+
         MTHEntity methodEntity = methodCls.getMethod(methodName);
         accessFlags = methodEntity.accessFlags;
 
@@ -175,7 +177,8 @@ public class ClassFile {
         return method;
     }
 
-    private void loadExceptionTable(MTHEntity methodEntity, MethodDefinition method, int methodDefIndex, MethodArea methodArea) throws LoadingException, IOException {
+    private void loadExceptionTable(MTHEntity methodEntity, MethodDefinition method, int methodDefIndex, MethodArea methodArea) 
+            throws LoadingException, IOException {
         // get exception table
         MTHEntity methodDef = methodEntity;
         AttrCode codeAttribute = methodDef.getCodeAttribute();
@@ -209,7 +212,6 @@ public class ClassFile {
 
     /**
      * Loads field definition from constant pool according to selected index
-     *
      */
     public FieldDefinition getFieldDefinition(int fieldRefIndex) throws LoadingException {
         if (cpEntities[fieldRefIndex].tag != ConstantPoolType.CPT_Fieldref) {
@@ -228,8 +230,7 @@ public class ClassFile {
     }
 
     /**
-     * Ziska index v methodIndex
-     *
+     * Gets an index of a method definition
      */
     public int getMethodDefIndex(String methodName, String methodDescriptor) {
         for (int i = 0; i < methodInfos.length; ++i) {
@@ -242,8 +243,7 @@ public class ClassFile {
     }
 
     /**
-     * Gets name and descriptor by cp index
-     *
+     * Gets a name and a descriptor by cp (constantPool) index
      */
     public NameDesc getNameAndDescriptorByCpIndex(int cpIndex) {
         CPFieldRef fieldRef = (CPFieldRef) cpEntities[cpIndex];
@@ -258,8 +258,7 @@ public class ClassFile {
     }
 
     /**
-     * Gets field info based on its name, descriptor and constant pool index
-     *
+     * Gets a field info based on its name, descriptor and a constant pool index
      */
     public FLEntity getFieldInfo(String name, String descriptor, int cpIndex) throws LoadingException {
 
@@ -282,7 +281,7 @@ public class ClassFile {
     private boolean constructed = false;
 
     /**
-     * Initializes class, invoking <clinit> method
+     * Initialises a class, invoking <clinit> method
      */
     public void constructClass(JVMStack stack, MethodArea methodArea) throws LoadingException, Exception {
         if (!constructed) {
@@ -291,40 +290,38 @@ public class ClassFile {
             int methodDef = this.getMethodDefIndex("<clinit>", "()V");
 
             // no <clinit> method available
-            if(methodDef == -1){
+            if (methodDef == -1) {
                 return;
             }
-            
+
             MethodDefinition method = this.getMethodDefinition(methodDef, methodArea, className, "<clinit>", "()V");
             StackFrame initFrame = new StackFrame(this, methodDef, method, stack.jvmThread);
             stack.push(initFrame);
             stack.jvmThread.getInstructionManager().runInstruction(initFrame.getNextInstruction());
         }
     }
-    
+
     /**
-     * Gets true, if the classfile has at least one native method
-     * Objects with native methods are usually connected with own implementations
-     * in compactjvm.natives package
+     * Gets true, if the classfile has at least one native method Objects with
+     * native methods are usually connected with own implementations in
+     * compactjvm.natives package
      */
-    public boolean hasNativeMethods(){
-        for(MTHEntity ent : this.methodInfos){
-            if(ent.isNativeMethod()) return true;
+    public boolean hasNativeMethods() {
+        for (MTHEntity ent : this.methodInfos) {
+            if (ent.isNativeMethod()) {
+                return true;
+            }
         }
         return false;
     }
-    
 
     /**
-     * Gets field index by selected name and descriptor
-     *
-     * @param fieldName
-     * @param fieldDescriptor
-     * @return
+     * Gets field index by given name and a descriptor
      */
     private FLEntity getFieldInfo(String fieldName, String fieldDescriptor) throws LoadingException {
         for (FLEntity fieldInfo : fieldInfos) {
-            if (((CPUtf8) cpEntities[fieldInfo.nameIndex]).value.equals(fieldName) && ((CPUtf8) cpEntities[fieldInfo.descriptorIndex]).value.equals(fieldDescriptor)) {
+            if (((CPUtf8) cpEntities[fieldInfo.nameIndex]).value.equals(fieldName) && 
+                    ((CPUtf8) cpEntities[fieldInfo.descriptorIndex]).value.equals(fieldDescriptor)) {
                 return fieldInfo;
             }
         }

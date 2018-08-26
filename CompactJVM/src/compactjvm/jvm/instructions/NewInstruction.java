@@ -16,7 +16,7 @@ import compactjvm.structures.*;
 import java.io.IOException;
 
 /**
- * creates a new instance of class specified by two next bytes
+ * Creates a new instance of class specified by two next bytes
  * @author Adam Vesecky
  */
 public class NewInstruction {

@@ -7,7 +7,6 @@ import java.util.List;
 
 /**
  * Field definition entity, created when a field is needed by an instruction
- *
  * @author Adam Vesecky
  */
 public final class FieldDefinition {

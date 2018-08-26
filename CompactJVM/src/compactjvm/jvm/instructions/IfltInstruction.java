@@ -19,7 +19,7 @@ public class IfltInstruction {
         if(value.getValue() < 0){
             stackFrame.setCurrentInstructionIndex(nextInstruction);
             JVMLogger.log(JVMLogger.TAG_INSTR_JUMP, "Iflt: "+value+" < 0; goto "+nextInstruction);
-        }else{
+        } else {
             JVMLogger.log(JVMLogger.TAG_INSTR_JUMP, "Iflt: "+value+" >= 0");
         }
     }

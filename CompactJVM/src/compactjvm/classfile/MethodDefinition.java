@@ -1,13 +1,13 @@
 package compactjvm.classfile;
 
-import compactjvm.attributes.AttrExcTableItem;
 import compactjvm.definitions.MethodAccessFlag;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Pouzije se pri volani metody, kdy musim z constant poolu nacist tyto hodnoty
- * a pote je v instrukci zpracovat
+ * Definition of a method, usable mainly during the first call of the method,
+ * when we need to load all these values from CP and process them in the instruction
+ *
  * @author Adam Vesecky
  */
 public final class MethodDefinition {
@@ -57,14 +57,11 @@ public final class MethodDefinition {
     }
     
     /**
-     * Spocte pocet slov, ktere je potreba alokovat na parametry v poli lokalnich promennych.
-     * @todo zjistit, jak se delaji pole, jestli je to typ "reference", stejne tak instance objektu.
-     * @return 
+     * Calculates number of words needed for allocation of parameters in an local variable array
      */
     public int getMethodParamsWordsCount() {
         int wordsCount = 0;
         for(String param : methodParams) {
-            //if(param.charAt(0) == '[') wordsCount += 1;
             wordsCount += ("L".equals(param) || "D".equals(param)) ? 2 : 1;
         }
         return wordsCount;
@@ -75,8 +72,6 @@ public final class MethodDefinition {
     }
     
     private void parseMethodDescriptor() {
-        //String staticTypes = "ZBCSIJFD"; //Z=boolean, B=byte, C=char, S=short,I=int, J=long, F=float, D=double
-        //String objectTypes = "L([^;]);";
         int paramsStart = methodDescriptor.indexOf("(") + 1;
         int paramsEnd = methodDescriptor.indexOf(")");
         String _params = methodDescriptor.substring(paramsStart, paramsEnd);
@@ -86,15 +81,15 @@ public final class MethodDefinition {
     }
     
     private void parseReturnType(String _returnType) {
-        returnType = _returnType.replaceAll("[L;]", ""); //Muze zacinat [ jako pole a pak bud jeden znak nebo L...;
+        // may begin with [ as an array, followed by one letter or L
+        returnType = _returnType.replaceAll("[L;]", ""); 
     }
     
     /**
-     * Zparsuje string s parametry a vytvori list, ktery obsahuje bud znaky
-     * definujici jednoduche typy nebo nazvy trid, popripade pokud hodnota zacina
-     * znakem [, pak predstavuje pole tohoto typu.
-     * @todo Co generiky, kaslem na ne, jak to vypada?
-     * @param _params 
+     * Parses a string with parameters and creates a list, containing either
+     * primitive field definition or class names
+     * If the value begins with [, it represents an array of given type
+     * Generics are not supported, because they suck
      */
     private void parseMethodParams(String _params) {
         boolean isArrayParam = false;
@@ -105,25 +100,23 @@ public final class MethodDefinition {
             if(_paramsChars[i] == '[') {
                 isArrayParam = true;
             } else if(_paramsChars[i] == 'L') {
-                //Zacinam nacitat nazev tridy
+                // begining to load name of the class
                 classNameReading = true;
             } else if(_paramsChars[i] == ';') {
-                //Nacetl jsem cely nazev tridy
+                // parsed a complete name of the class
                 String className = buff.toString();
                 methodParams.add((isArrayParam ? "[" : "") + className);
                 buff.delete(0, buff.length());
                 classNameReading = false;
                 isArrayParam = false;
             } else if(classNameReading) {
-                //nacitam nazev tridy - jsem mezi L a ;
+                // loading name of the class -> between L and ;
                 buff.append(_paramsChars[i]);
             } else {
-                //Nacitam znaky identifikujici zakladni typy
+                // loading letters identifying primitive types
                 methodParams.add((isArrayParam ? "[" : "") + _paramsChars[i]);
                 isArrayParam = false;
             }
-                
         }
     }
-
 }

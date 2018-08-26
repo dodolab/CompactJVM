@@ -22,12 +22,10 @@ public class IAStoreInstruction {
         SArrayRef arrayRef = stackFrame.operandStack.pop();
         
         if(index.getValue() >= arrayRef.getSize()){
-            
+            // throw an exception directly into the running program
             AAAException.throwException(new ArrayOutOfBoundsException("Maximum index is "+(arrayRef.getSize() - 1)+", "+index.getValue()+" given.")
                     , stackFrame.jvmThread.getStack(), heap, methodArea);
-            
-            //throw new ArrayOutOfBoundsException("Maximum index is "+(arrayRef.getSize() - 1)+", "+index.getValue()+" given.");
-            return;
+                        return;
         }
         
         heap.writeToHeap(arrayRef.getReference(), index.getValue(), valueToAdd);

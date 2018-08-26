@@ -20,7 +20,7 @@ public class IfnonnullInstruction {
         if(!value.isNull()){
             stackFrame.setCurrentInstructionIndex(nextInstruction);
             JVMLogger.log(JVMLogger.TAG_INSTR_JUMP, "Ifnonnull: "+value+" is not null; goto "+nextInstruction);
-        }else{
+        } else {
             JVMLogger.log(JVMLogger.TAG_INSTR_JUMP, "Ifnonnull: "+value+" is null");
         }
     }

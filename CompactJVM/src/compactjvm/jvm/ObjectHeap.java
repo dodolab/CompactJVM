@@ -18,20 +18,19 @@ import java.util.logging.Logger;
  */
 public class ObjectHeap {
 
-    // Halda - puleni haldy je definovano pomoci activeHeapOffset a inactiveHeapOffset
-    // Pri stridani se budou tyto dve hodnoty stridat
+    // THE HEAP. ActiveHeapOffset and inactiveHeapOffset determines which
+    // half is the active one 
     private SStruct[] heap;
 
     private GarbageCollector garbageCollector;
 
-    // Offset aktivni a neaktivni casti (0 nebo polovina velikosti)
+    // offset of active and inactive part
     private int activeHeapOffset;
     private int inactiveHeapOffset;
 
-    //Velikost aktivni haldy, tzn. velikost jedne poloviny.
     private int heapSize;
 
-    //index prvniho volneho mista v aktivni casti haldy (0 - heapSize)
+    // index of the first free space <0-heapSize>
     private int nextFreeSpace;
 
     private MethodArea methodArea;
@@ -40,7 +39,7 @@ public class ObjectHeap {
     public ObjectHeap(MethodArea methodArea, int size) {
         this.methodArea = methodArea;
         heap = new SStruct[size];
-        heapSize = size / 2;
+        heapSize = size / 2; // only one half is an active heap
         activeHeapOffset = 0;
         inactiveHeapOffset = heapSize;
         nextFreeSpace = 0;
@@ -57,14 +56,10 @@ public class ObjectHeap {
     }
 
     /**
-     * Zapise do haldy (index je index v datove casti) Pr: Obsahuje-li zaznam 2
-     * slova v hlavicce (1. slovo index tridy, 2. slovo napriklad pro GC), pak
-     * pokud zadam chci zapsat na index = 0, pak zapise na misto reference + 2 +
-     * index = reference + 2.
-     *
-     * @param reference
-     * @param index
-     * @param value
+     * Writes a new value into the heap
+     * Example: If the record contains 2 words in its head (1 word for the 
+     * index of the class, 1 word for e.g. GC), it will be written at (reference+2+index)
+     * 
      */
     public <T extends SStruct> void writeToHeap(int reference, int index, T value) {
         int headerSize = 1;
@@ -72,23 +67,17 @@ public class ObjectHeap {
     }
 
     /**
-     * Cte z haldy stejne jako u zapisu, index je index v datove casti.
-     *
-     * @param reference
-     * @param index
-     * @return
+     * Reads a value from a heap
      */
     public <T extends SStruct> T readFromHeap(int reference, int index) {
-        int headerSize = 1; //(getClassIndex(reference) == ARRAY_INDEX) ? getArrayHeaderSize() : getObjectHeaderSize();
+        int headerSize = 1;
         T output = readFromActiveHeap(reference + headerSize + index);
         return output;
     }
 
     /**
-     * Reads a primitive array from heap, based on reference
+     * Reads a primitive array from a heap, based on reference
      *
-     * @param reference
-     * @return
      */
     public SStruct[] readPrimitiveArrayFromHeap(int reference) {
         SArrayRef arrayRef = readFromActiveHeap(reference);
@@ -101,10 +90,8 @@ public class ObjectHeap {
     }
 
     /**
-     * Reads object array from active heap
+     * Reads an object array from an active heap
      *
-     * @param reference
-     * @return
      */
     public SGenericRef[] readObjectArrayFromHeap(int reference) {
         SArrayRef arrayRef = readFromActiveHeap(reference);
@@ -129,19 +116,21 @@ public class ObjectHeap {
     }
 
     /**
-     * Alokuje misto pro data objektu a vrati referenci na objekt
-     *
+     * Allocates a space for the data of the object and returns a reference 
+     * for that particular object
+     * 
      * @param classFile
      * @return
      */
     public SObjectRef allocObject(ClassFile classFile) throws OutOfHeapMemException {
 
-        int wordsRequired = /*getObjectHeaderSize() +*/ 1 + classFile.recursiveFieldCount;
+        int wordsRequired = 1 + classFile.recursiveFieldCount;
         checkHeapSpace(wordsRequired);
         int reference = nextFreeSpace;
 
         JVMLogger.log(JVMLogger.TAG_HEAP, "Allocating object #" + reference + "#[sz=" + wordsRequired + "]-->" + classFile.className);
 
+        // and this, gentlemen, may be faster then malloc in C !!!
         SObjectRef ref = new SObjectRef(reference, classFile);
         writeToActiveHeap(reference, ref);
         nextFreeSpace += wordsRequired;
@@ -150,16 +139,13 @@ public class ObjectHeap {
     }
 
     /**
-     * Alokuje misto pro pole
+     * Allocates a space for an array
      *
-     * @param itemSize velikost jedne polozky
-     * @param arraySize pocet prvku pole
-     * @return
-     * @throws OutOfHeapMemException
+     * @param arraySize number of items of the array
      */
     public <T extends SStruct> SArrayRef allocPrimitiveArray(T[] arr, int arraySize) throws OutOfHeapMemException {
 
-        int wordsRequired = /*getArrayHeaderSize()*/ 1 + arraySize;
+        int wordsRequired = 1 + arraySize;
         checkHeapSpace(wordsRequired);
         int reference = nextFreeSpace;
 
@@ -181,8 +167,6 @@ public class ObjectHeap {
     /**
      * Allocates an object array
      *
-     * @return
-     * @throws OutOfHeapMemException
      */
     public SArrayRef allocObjectArray(ClassFile classFile, int arraySize) throws OutOfHeapMemException {
         
@@ -213,11 +197,9 @@ public class ObjectHeap {
     }
 
     /**
-     * Zapise do aktivni casti haldy (index je realny index od zacatku teto
-     * casti haldy)
+     * Writes into an active part of the heap (index is a real index calculated
+     * from the beginning of this part of the heap)
      *
-     * @param index
-     * @param value
      */
     private <T extends SStruct> void writeToActiveHeap(int index, T value) {
         try {
@@ -233,11 +215,9 @@ public class ObjectHeap {
     }
 
     /**
-     * Cte z aktivni casti haldy (index je realny index od zacatku teto casti
-     * haldy)
+     * Reads from an active part of the heap (index is a real index calculated
+     * from the beginning of this part of the heap)
      *
-     * @param index
-     * @return
      */
     private <T extends SStruct> T readFromActiveHeap(int index) {
         T value = (T) heap[index + activeHeapOffset];
@@ -246,22 +226,16 @@ public class ObjectHeap {
     }
 
     /**
-     * Zapise do aktualne nekativni casti haldy (index je realny index od
-     * zacatku teto casti haldy)
+     * Writes to an inactive part of the heap
      *
-     * @param index
-     * @param value
      */
     private <T extends SStruct> void writeToSpareHeap(int index, T value) {
         heap[index + inactiveHeapOffset] = value;
     }
 
     /**
-     * Cte z aktualne neaktivni casti haldy (index je realny index od zacatku
-     * teto casti haldy)
+     * Reads from an inactive part of the heap
      *
-     * @param index
-     * @return
      */
     public <T extends SStruct> T readFromSpareHeap(int index) {
         return (T) heap[index + inactiveHeapOffset];
@@ -340,11 +314,8 @@ public class ObjectHeap {
     }
 
     /**
-     * Zkontroluje, zda se do haldy vejde urcity pocet slov, pokud ne, spusti
-     * GC.
+     * Checks if the heap contains enough space. If not, a GC will be invoked
      *
-     * @param wordsRequired
-     * @throws OutOfHeapMemException
      */
     private void checkHeapSpace(int wordsRequired) throws OutOfHeapMemException {
         if (isFull(wordsRequired)) {
@@ -356,12 +327,7 @@ public class ObjectHeap {
     }
 
     /**
-     * Zjisti, zda se vejde potrebny pocet slov do haldy
-     *
-     * @todo neni lepsi spoustet GC napriklad uz pri 70% zaplneni treba? Nebo to
-     * bychom museli spoustet ve vedlejsim vlakne?
-     * @param wordsRequired
-     * @return
+     * Checks if the heap is full
      */
     private boolean isFull(int wordsRequired) {
         return (heapSize - nextFreeSpace) <= wordsRequired;

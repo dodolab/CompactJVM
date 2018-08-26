@@ -6,8 +6,8 @@ import compactjvm.jvm.JVMLogger;
 import compactjvm.structures.*;
 
 /**
- * Nacte velikost pole, ktere je dano referenci v zasobniku. Do zasobniku
- * nasledne ulozime tuto velikost pole.
+ * Loads a size of an array as determined in the reference of the stack
+ * 
  * @author Adam Vesecky
  */
 public class ArrayLengthInstruction {

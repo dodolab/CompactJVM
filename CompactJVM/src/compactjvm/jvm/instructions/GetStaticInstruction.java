@@ -11,14 +11,11 @@ import compactjvm.jvm.JVMLogger;
 
 
 /**
+ * Gets static field from class
  * @author Adam Vesecky
  */
 public class GetStaticInstruction {
     
-    /**
-     * Gets static field from class
-     * @param stackFrame 
-     */
     public static void run(JVMStack stack, MethodArea methodArea) throws LoadingException, Exception {
         
         StackFrame current = stack.getCurrentFrame();
@@ -31,10 +28,8 @@ public class GetStaticInstruction {
         ClassFile cls = methodArea.getClassFile(fieldClass);
         cls.constructClass(stack, methodArea);
         
-        
         current.operandStack.push(field.getValue());
         JVMLogger.log(JVMLogger.TAG_INSTR_LOAD, "GetStatic :" +field.getValue());
-        
     }
 
 }

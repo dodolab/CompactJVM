@@ -22,12 +22,12 @@ public class FileLoader {
         String instanceString;
         while ((instanceString = reader.nextLine()) != null) {
             String[] tokens = instanceString.split(" ");
-            // TODO something is wrong with the EQUALS method!
-            if(tokens[0].equals("c")) {
+            // String.equals somehow doesn't work ...
+            if(tokens[0].charAt(0) == 'c') { 
                 JVMFunctions.println(instanceString.substring(2));
-            } else if(tokens[0].equals("p")) {
-                variablesCount = JVMFunctions.parseInt(tokens[2]);
-                clausesCount = JVMFunctions.parseInt(tokens[3]);
+            } else if(tokens[0].charAt(0) == 'p') {
+                variablesCount = JVMFunctions.parseInt(tokens[1]);
+                clausesCount = JVMFunctions.parseInt(tokens[2]);
                 clauses = new Clauses(clausesCount);
             } else {
                 int[] clauseLiterals = new int[tokens.length - 1];

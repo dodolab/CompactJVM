@@ -3,10 +3,14 @@
 Experimental Java Virtual Machine
 ------------------------------------------
 
+Budget: 100 hours
+
 ## Projects
 - CompactJVM - virtual machine 
 - CopmactJVMLab - library of dummy objects and native proxy methods, has to be included by a project that runs inside the CompactJVM 
 - SatSolver - an example app for resolving boolean satisfiability
+
+## Logger, heap size
 
 ## Parameters
 - path to the root dir of your app 
@@ -35,7 +39,7 @@ ant compile
 - to execute the SatSolver with a test file you need to go to the `CompactJVM/build/jar` and execute following command:
 
 ```
-java -jar CompactJVM.jar ../../../SatSolver/build/classes/ ../../../CompactJVMLib/build/classes/ satSolver/Main ../../../SatSolver/cnf.txt result.txt
+java -jar CompactJVM.jar ../../SatSolver/build/classes ../../CompactJVMLib/build/classes satSolver/Main ../../SatSolver/examples/cnf_3_12.txt result.txt
 ```
 
 ## Input file
@@ -74,7 +78,29 @@ p 3 4
 
 ## What is not implemented
 - Everything else :-)
-- multithreading, annotations, Java7+ features
+- multithreading, annotations, generics, anonymous objects, Java7+ features
+
+## Packages
+- compactjvm.attributes
+-- attributes providing information about exceptions, constants, methods and fields
+- compactjvm.classfile
+-- entities describing classfile such as method definitions, exception tables and field definitions 
+- compactjvm.cpentities
+-- constant pool entity descriptors (primitive types, classes, interfaces, strings)
+- compactjvm.definitions
+-- enums, instruction set, attribute types
+- compactjvm.exceptions 
+-- exceptions the JVM may throw (e.g. ArrayOutOfBoundsException)
+- compactjvm.jvm 
+-- core of the virtual machine (stack frame, heap, logger, garbage collector)
+- compactjvm.jvm.instructions 
+-- instructions and their implementation
+- compactjvm.natives 
+-- implementations of several native classes (FileReader, TextReader and TextWriter)
+- compactjvm.parsing
+-- classes for parsing a class file 
+- compactjvm.structures
+-- bytecode entities (primitive fields, pointers, array references, objects)
 
 ## Supported instructions:
 - aaload
@@ -109,8 +135,11 @@ p 3 4
 - istore
 - istoreN
 - isub
+- ifacmpeq
+- ifacmpne
 - ificmpge
 - ificmpgt
+- ificmple
 - ificmpeq
 - ificmpne
 - ifeq
@@ -132,7 +161,6 @@ p 3 4
 - new
 - nop
 - pop
-- putstatic
 - putfield
 - sipush
 

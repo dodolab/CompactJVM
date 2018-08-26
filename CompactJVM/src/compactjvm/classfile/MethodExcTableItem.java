@@ -1,8 +1,6 @@
 
 package compactjvm.classfile;
 
-import compactjvm.classfile.ClassFile;
-
 /**
  * The same entity as AttrExcTableItem but it is used in MethodDefinition entity
  * 
